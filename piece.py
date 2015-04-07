@@ -65,8 +65,6 @@ ACTMAP = {
     'a4':{'ab': {'NE': ['b5', 'c6', 'd7', 'e8'], 'SE': ['b3', 'c2', 'd1'], }, 'ak': {'m': ['a5', 'b5', 'b4', 'b3', 'a3'], 't': ['a5', 'b5', 'b4', 'b3', 'a3'], }, 'an': {'m': ['b2', 'c3', 'c5', 'b6'], 't': ['b2', 'c3', 'c5', 'b6'], }, 'aq': {'NE': ['b5', 'c6', 'd7', 'e8'], 'N': ['a5', 'a6', 'a7', 'a8'], 'S': ['a3', 'a2', 'a1'], 'E': ['b4', 'c4', 'd4', 'e4', 'f4', 'g4', 'h4'], 'SE': ['b3', 'c2', 'd1'], }, 'ar': {'N': ['a5', 'a6', 'a7', 'a8'], 'S': ['a3', 'a2', 'a1'], 'E': ['b4', 'c4', 'd4', 'e4', 'f4', 'g4', 'h4'], }, 'bp': {'e': ['b3'], 'm': ['a3'], 't': ['b3'], }, 'wp': {'m': ['a5'], 't': ['b5'], }},
 }
 
-
-
 class Piece():
     def __init__(self, color, type_, location):
         self.color = color
@@ -79,7 +77,7 @@ class Piece():
     def __repr__(self):
         return self.color + self.type_ + '@' + self.location
 
-    def generate_moves(self):
+    def lookup_moves(self):
         if self.color =='w':
             opposite_color = 'b'
         else:
