@@ -1,2 +1,7 @@
-# py3chess
-start from scratch on chess game with lessons learned from last attempt
+py3chess
+===========
+
+Chess engine featuring move validation and stupid AI
+####################################################
+
+
