@@ -1,30 +1,33 @@
 import unittest
 
+from piece import Piece
+from move import Move, MoveException
+
 class PieceTest(unittest.TestCase):
 
-    def test_initialization(self):
-        from piece import Piece
+    def test_piece_initialization(self):
         test_piece = Piece('w', 'p', 'e2')
         self.assertEqual('wp@e2',repr(test_piece))
 
+    def test_generate_moves_on_empty_board(self):
+        test_piece = Piece('w', 'p', 'e2')
+        self.assertEqual({'m': ['e3'], 't': ['d3', 'f3'], 'm2': ['e4']}, test_piece.generate_moves())
+
+        test_piece = Piece('w', 'p', 'e8')
+        self.assertEqual({}, test_piece.generate_moves())
+
 class MoveTest(unittest.TestCase):
 
-    def test_initialization(self):
-        from piece import Piece
-        from move import Move, MoveException
-
+    def test_move_initialization(self):
         test_piece = Piece('w', 'p', 'e2')
         test_move = Move(test_piece, 'e2', 'm2', 'e4', 'e4')
-        self.assertEqual('e2',repr(test_move))
+        self.assertEqual('e4',repr(test_move))
 
-    def test_initialization(self):
-        from piece import Piece
-        from move import Move, MoveException
-
+        # ensure piece location matches the move origin
         test_piece = Piece('w', 'p', 'e2')
         self.assertRaises(MoveException, Move, test_piece, 'e4', 'm', 'e5', 'e5')
 
-    
+
 
 if __name__ == "__main__":
     try: unittest.main()
@@ -39,7 +42,7 @@ if __name__ == "__main__":
 
 #     #init
 #     zboard = chesslib.board()
-    
+
 #     def test_show(self):
 #         self.zboard.initialset()
 #         zshow = self.zboard.show()
@@ -53,7 +56,7 @@ if __name__ == "__main__":
 # |wp|wp|wp|wp|wp|wp|wp|wp|
 # |wr|wn|wb|wq|wk|wb|wn|wr|
 # """,zshow)
-            
+
 #     def test_piecebypos_n_posbypiece_n_repr(self):
 #         self.zboard.initialset()
 #         zpiece = self.zboard.piece_by_sq('e2')
@@ -80,7 +83,7 @@ if __name__ == "__main__":
 #         self.assertEqual('bp@f5',repr(self.zboard.piece_by_sq('f5')))
 #         self.assertEqual(None,self.zboard.piece_by_sq('h8'))
 #         self.assertEqual('wp@h7',repr(self.zboard.piece_by_sq('h7')))
-            
+
 #     def test_piecefy(self):
 #         self.zboard.piecefy({'h8': '  ', 'h2': '  ', 'h3': '  ', 'h1': 'wr', 'h6': '  ', 'h7': 'wp', 'h4': '  ', 'h5': '  ', 'd8': 'bq', 'a8': 'br', 'd6': '  ', 'd7': 'bp', 'd4': '  ', 'd5': '  ', 'd2': 'wp', 'd3': '  ', 'd1': 'wq', 'g7': 'bp', 'g6': '  ', 'g5': 'wp', 'g4': '  ', 'g3': '  ', 'g2': '  ', 'g1': '  ', 'g8': 'bn', 'c8': 'bb', 'c3': 'bn', 'c2': 'wp', 'c1': 'wb', 'c7': 'bp', 'c6': '  ', 'c5': '  ', 'c4': '  ', 'f1': 'wb', 'f2': 'wp', 'f3': '  ', 'f4': '  ', 'f5': 'bp', 'f6': '  ', 'f7': '  ', 'f8': 'bb', 'b4': '  ', 'b5': '  ', 'b6': '  ', 'b7': 'bp', 'b1': 'wn', 'b2': 'wp', 'b3': '  ', 'b8': '  ', 'a1': 'wr', 'a3': '  ', 'a2': 'wp', 'a5': '  ', 'e8': 'bk', 'a7': 'bp', 'a6': '  ', 'e5': '  ', 'e4': 'wn', 'e7': 'bp', 'e6': '  ', 'e1': 'wk', 'e3': '  ', 'e2': 'wp', 'a4': '  '})
 #         self.assertEqual("""|br|  |bb|bq|bk|bb|bn|  |
@@ -92,7 +95,7 @@ if __name__ == "__main__":
 # |wp|wp|wp|wp|wp|wp|  |  |
 # |wr|wn|wb|wq|wk|wb|  |wr|
 # """,self.zboard.show())
-    
+
 #     def test_expand_pawns_knights(self):
 #         self.zboard.piecefy({'h8': '  ', 'h2': '  ', 'h3': '  ', 'h1': 'wr', 'h6': '  ', 'h7': 'wp', 'h4': '  ', 'h5': '  ', 'd8': 'bq', 'a8': 'br', 'd6': '  ', 'd7': 'bp', 'd4': '  ', 'd5': '  ', 'd2': 'wp', 'd3': '  ', 'd1': 'wq', 'g7': 'bp', 'g6': '  ', 'g5': 'wp', 'g4': '  ', 'g3': '  ', 'g2': '  ', 'g1': '  ', 'g8': 'bn', 'c8': 'bb', 'c3': 'bn', 'c2': 'wp', 'c1': 'wb', 'c7': 'bp', 'c6': '  ', 'c5': '  ', 'c4': '  ', 'f1': 'wb', 'f2': 'wp', 'f3': '  ', 'f4': '  ', 'f5': 'bp', 'f6': '  ', 'f7': '  ', 'f8': 'bb', 'b4': '  ', 'b5': '  ', 'b6': '  ', 'b7': 'bp', 'b1': 'wn', 'b2': 'wp', 'b3': '  ', 'b8': '  ', 'a1': 'wr', 'a3': '  ', 'a2': 'wp', 'a5': '  ', 'e8': 'bk', 'a7': 'bp', 'a6': '  ', 'e5': '  ', 'e4': 'wn', 'e7': 'bp', 'e6': '  ', 'e1': 'wk', 'e3': '  ', 'e2': 'wp', 'a4': '  '})
 #         #print(self.zboard.show())
@@ -112,7 +115,7 @@ if __name__ == "__main__":
 #         self.assertEqual(set(['Nf6','Ng3','Nxc3','Nc5','Nd6']),set([ x[2] for x in self.zboard.piece_by_sq('e4').expand(self.zboard.board)]))
 #         #knight at c3
 #         self.assertEqual(set([('t', 'd1', 'Nxd1'),('t', 'a2', 'Nxa2'),('t', 'e2', 'Nxe2'),('m', 'b5', 'Nb5'),('m', 'a4', 'Na4'),('t', 'b1', 'Nxb1'),('m', 'd5', 'Nd5'),('t', 'e4', 'Nxe4')]),set(self.zboard.piece_by_sq('c3').expand(self.zboard.board)))
-       
+
 #     def test_add(self):
 #         self.zboard.piecefy({'h8': '  ', 'h2': '  ', 'h3': '  ', 'h1': 'wr', 'h6': '  ', 'h7': 'wp', 'h4': '  ', 'h5': '  ', 'd8': 'bq', 'a8': 'br', 'd6': '  ', 'd7': 'bp', 'd4': '  ', 'd5': '  ', 'd2': 'wp', 'd3': '  ', 'd1': 'wq', 'g7': 'bp', 'g6': '  ', 'g5': 'wp', 'g4': '  ', 'g3': '  ', 'g2': '  ', 'g1': '  ', 'g8': 'bn', 'c8': 'bb', 'c3': 'bn', 'c2': 'wp', 'c1': 'wb', 'c7': 'bp', 'c6': '  ', 'c5': '  ', 'c4': '  ', 'f1': 'wb', 'f2': 'wp', 'f3': '  ', 'f4': '  ', 'f5': 'bp', 'f6': '  ', 'f7': '  ', 'f8': 'bb', 'b4': '  ', 'b5': '  ', 'b6': '  ', 'b7': 'bp', 'b1': 'wn', 'b2': 'wp', 'b3': '  ', 'b8': '  ', 'a1': 'wr', 'a3': '  ', 'a2': 'wp', 'a5': '  ', 'e8': 'bk', 'a7': 'bp', 'a6': '  ', 'e5': '  ', 'e4': 'wn', 'e7': 'bp', 'e6': '  ', 'e1': 'wk', 'e3': '  ', 'e2': 'wp', 'a4': '  '})
 #         for p in self.zboard.fullset():
@@ -129,7 +132,7 @@ if __name__ == "__main__":
 #         self.assertEqual('bq@e5',repr(self.zboard.piece_by_sq('e5')))
 #         self.assertEqual('bb@d7',repr(self.zboard.piece_by_sq('d7')))
 #         self.assertEqual('wr@b7',repr(self.zboard.piece_by_sq('b7')))
-    
+
 #     def test_expand_bishop_rook_queen_king(self):
 #         self.zboard.piecefy({'h8': '  ', 'h2': '  ', 'h3': '  ', 'h1': 'wr', 'h6': '  ', 'h7': '  ', 'h4': '  ', 'h5': '  ', 'd8': 'bq', 'a8': 'br', 'd6': '  ', 'd7': 'bb', 'd4': '  ', 'd5': '  ', 'd2': '  ', 'd3': '  ', 'd1': 'wq', 'g7': '  ', 'g6': '  ', 'g5': '  ', 'g4': '  ', 'g3': '  ', 'g2': '  ', 'g1': '  ', 'g8': 'bn', 'c8': 'bb', 'c3': 'bn', 'c2': '  ', 'c1': 'wb', 'c7': '  ', 'c6': '  ', 'c5': '  ', 'c4': '  ', 'f1': 'wb', 'f2': '  ', 'f3': '  ', 'f4': '  ', 'f5': '  ', 'f6': '  ', 'f7': '  ', 'f8': 'bb', 'b4': '  ', 'b5': 'wb', 'b6': '  ', 'b7': 'wr', 'b1': 'wn', 'b2': '  ', 'b3': '  ', 'b8': '  ', 'a1': 'wr', 'a3': '  ', 'a2': '  ', 'a5': '  ', 'e8': 'bk', 'a7': '  ', 'a6': '  ', 'e5': 'bq', 'e4': 'wn', 'e7': '  ', 'e6': '  ', 'e1': 'wk', 'e3': '  ', 'e2': '  ', 'a4': '  '})
 #         #print('\n'+self.zboard.show())
@@ -157,7 +160,7 @@ if __name__ == "__main__":
 #         self.assertEqual(set([('m', 'f5', 'Bf5'),('m', 'g4', 'Bg4'),('m', 'e6', 'Be6'),('t', 'b5', 'Bxb5'),('m', 'c6', 'Bc6'),('m', 'h3', 'Bh3')]),set(self.zboard.piece_by_sq('d7').expand(self.zboard.board)))
 #         #bishop at c1
 #         self.assertTrue(('m','e3','Be3') in self.zboard.piece_by_sq('c1').expand(self.zboard.board))
-        
+
 #         #rook at a8
 #         self.assertEqual(set(['Rxa1', 'Ra2', 'Ra3','Ra4','Ra5','Ra6','Ra7','Rb8']),set([ x[2] for x in self.zboard.piece_by_sq('a8').expand(self.zboard.board)]))
 #         #rook at b7
@@ -201,7 +204,7 @@ if __name__ == "__main__":
 #         #king at e1
 #         self.assertTrue(('c','c1','O-O-O') in self.zboard.piece_by_sq('e1').expand(self.zboard.board))
 #         self.assertTrue(('c','g1','O-O') in self.zboard.piece_by_sq('e1').expand(self.zboard.board))
-    
+
 #     def test_move_exceptions(self):
 #         self.zboard.piecefy({'h8': '  ', 'h2': '  ', 'h3': '  ', 'h1': 'wr', 'h6': '  ', 'h7': '  ', 'h4': '  ', 'h5': '  ', 'd8': 'bq', 'a8': 'br', 'd6': '  ', 'd7': 'bb', 'd4': '  ', 'd5': '  ', 'd2': '  ', 'd3': '  ', 'd1': 'wq', 'g7': '  ', 'g6': '  ', 'g5': '  ', 'g4': '  ', 'g3': '  ', 'g2': '  ', 'g1': '  ', 'g8': 'bn', 'c8': 'bb', 'c3': 'bn', 'c2': '  ', 'c1': 'wb', 'c7': '  ', 'c6': '  ', 'c5': '  ', 'c4': '  ', 'f1': 'wb', 'f2': '  ', 'f3': '  ', 'f4': '  ', 'f5': '  ', 'f6': '  ', 'f7': '  ', 'f8': 'bb', 'b4': '  ', 'b5': 'wb', 'b6': '  ', 'b7': 'wr', 'b1': 'wn', 'b2': '  ', 'b3': '  ', 'b8': '  ', 'a1': 'wr', 'a3': '  ', 'a2': '  ', 'a5': '  ', 'e8': 'bk', 'a7': '  ', 'a6': '  ', 'e5': 'bq', 'e4': 'wn', 'e7': '  ', 'e6': '  ', 'e1': 'wk', 'e3': '  ', 'e2': '  ', 'a4': '  '})
 #         #print(self.zboard.piece_by_sq('c3'))
@@ -223,7 +226,7 @@ if __name__ == "__main__":
 #         |  |  |  |  |  |  |  |  |
 #         |wr|wn|wb|wq|wk|wb|  |wr|
 #         """
-        
+
 #         self.assertTrue(self.zboard.sq_in_check('e1','b'))
 #         self.assertTrue(self.zboard.sq_in_check('e2','b'))
 #         self.assertFalse(self.zboard.sq_in_check('f2','b'))
@@ -235,8 +238,8 @@ if __name__ == "__main__":
 #         #print '\n'+self.zboard.show()
 #         #print self.zboard.valids(self.zboard.piece_by_sq('d8'))
 #         self.assertFalse(('m', 'c7', 'Kc7')in self.zboard.valids(self.zboard.piece_by_sq('d8')))
-        
-    
+
+
 #     def test_prevalidate_against_checks(self):
 #         #note:since we dont have the the game class, we will use the _piecefy_ to reset the board back after executing every expansion for evaluation
 #         self.zboard.piecefy({'h8': '  ', 'h2': '  ', 'h3': '  ', 'h1': 'wr', 'h6': '  ', 'h7': '  ', 'h4': '  ', 'h5': '  ', 'd8': 'bq', 'a8': 'br', 'd6': '  ', 'd7': 'bb', 'd4': '  ', 'd5': '  ', 'd2': '  ', 'd3': '  ', 'd1': 'wq', 'g7': '  ', 'g6': '  ', 'g5': '  ', 'g4': '  ', 'g3': '  ', 'g2': '  ', 'g1': '  ', 'g8': 'bn', 'c8': 'bb', 'c3': 'bn', 'c2': '  ', 'c1': 'wb', 'c7': '  ', 'c6': '  ', 'c5': '  ', 'c4': '  ', 'f1': 'wb', 'f2': '  ', 'f3': '  ', 'f4': '  ', 'f5': '  ', 'f6': '  ', 'f7': '  ', 'f8': 'bb', 'b4': '  ', 'b5': 'wb', 'b6': '  ', 'b7': 'wr', 'b1': 'wn', 'b2': '  ', 'b3': '  ', 'b8': '  ', 'a1': 'wr', 'a3': '  ', 'a2': '  ', 'a5': '  ', 'e8': 'bk', 'a7': '  ', 'a6': '  ', 'e5': 'bq', 'e4': 'wn', 'e7': '  ', 'e6': '  ', 'e1': 'wk', 'e3': '  ', 'e2': '  ', 'a4': '  '})
@@ -274,19 +277,19 @@ if __name__ == "__main__":
 #                     v = self.zboard.prevalidate_all_moves(p,e)
 #                 else:
 #                     v = self.zboard.prevalidate_move(p,e)
-                    
+
 #                 if not v:
 #                     reductions.append(e)
-                
+
 #             resulting_expansions[zkey] = [x for x in expansions if x not in reductions]
 
 #         # the knight at e4, will have the expansion list reduced to []
-#         self.assertEqual([],resulting_expansions['e4']) 
+#         self.assertEqual([],resulting_expansions['e4'])
 #         #bishop at d7 previously had [('m', 'f5', 'Bf5'),('m', 'g4', 'Bg4'),('m', 'e6', 'Be6'),('t', 'b5', 'Bxb5'),('m', 'c6', 'Bc6'),('m', 'h3', 'Bh3')], but now
 #         self.assertEqual(set([('t', 'b5', 'Bxb5'),('m', 'c6', 'Bc6')]),set(resulting_expansions['d7']))
 #         #king at e1 -- validated the move to e2 as it's hit by the knight at c3
 #         self.assertFalse(('m','e2','Ke2') in resulting_expansions['e1'])
-            
+
 #         self.zboard.piecefy({'h8': '  ', 'h2': '  ', 'h3': '  ', 'h1': 'wr', 'h6': '  ', 'h7': '  ', 'h4': '  ', 'h5': '  ', 'd8': '  ', 'a8': 'br', 'd6': '  ', 'd7': 'bb', 'd4': '  ', 'd5': '  ', 'd2': '  ', 'd3': '  ', 'd1': '  ', 'g7': '  ', 'g6': '  ', 'g5': '  ', 'g4': '  ', 'g3': '  ', 'g2': '  ', 'g1': '  ', 'g8': '  ', 'c8': '  ', 'c3': 'bn', 'c2': '  ', 'c1': '  ', 'c7': '  ', 'c6': '  ', 'c5': '  ', 'c4': '  ', 'f1': '  ', 'f2': '  ', 'f3': '  ', 'f4': '  ', 'f5': '  ', 'f6': '  ', 'f7': '  ', 'f8': '  ', 'b4': '  ', 'b5': 'wb', 'b6': '  ', 'b7': 'wr', 'b1': '  ', 'b2': '  ', 'b3': '  ', 'b8': '  ', 'a1': 'wr', 'a3': '  ', 'a2': '  ', 'a5': '  ', 'e8': 'bk', 'a7': '  ', 'a6': '  ', 'e5': 'bq', 'e4': 'wn', 'e7': '  ', 'e6': '  ', 'e1': 'wk', 'e3': '  ', 'e2': '  ', 'a4': '  '})
 #         #print('\n'+self.zboard.show())
 #         """
@@ -307,7 +310,7 @@ if __name__ == "__main__":
 #                 reductions.append(e)
 #         self.assertTrue(('c','c1','O-O-O') in reductions)
 
-    
+
 #     def test_valids_expansion(self):
 #         self.zboard.piecefy({'h8': '  ', 'h2': '  ', 'h3': '  ', 'h1': 'wr', 'h6': '  ', 'h7': '  ', 'h4': '  ', 'h5': '  ', 'd8': '  ', 'a8': 'br', 'd6': '  ', 'd7': 'bb', 'd4': '  ', 'd5': '  ', 'd2': '  ', 'd3': '  ', 'd1': '  ', 'g7': '  ', 'g6': '  ', 'g5': '  ', 'g4': '  ', 'g3': '  ', 'g2': '  ', 'g1': '  ', 'g8': '  ', 'c8': '  ', 'c3': 'bn', 'c2': '  ', 'c1': '  ', 'c7': '  ', 'c6': '  ', 'c5': '  ', 'c4': '  ', 'f1': '  ', 'f2': '  ', 'f3': '  ', 'f4': '  ', 'f5': '  ', 'f6': '  ', 'f7': '  ', 'f8': '  ', 'b4': '  ', 'b5': 'wb', 'b6': '  ', 'b7': 'wr', 'b1': '  ', 'b2': '  ', 'b3': '  ', 'b8': '  ', 'a1': 'wr', 'a3': '  ', 'a2': '  ', 'a5': '  ', 'e8': 'bk', 'a7': '  ', 'a6': '  ', 'e5': 'bq', 'e4': 'wn', 'e7': '  ', 'e6': '  ', 'e1': 'wk', 'e3': '  ', 'e2': '  ', 'a4': '  '})
 #         #print('\n'+self.zboard.show())
@@ -325,7 +328,7 @@ if __name__ == "__main__":
 #         #king at e1 should not expand to e2 as it's hit by the N@c3
 #         self.assertEqual(set([('m', 'd2', 'Kd2'),('m', 'f2', 'Kf2'),('m', 'f1', 'Kf1'),('c', 'g1', 'O-O')]),set(self.zboard.valids(self.zboard.piece_by_sq('e1'))))
 
-    
+
 #     def test_decode_move(self):
 #         zgame = chesslib.game()
 #         zgame.zboard.piecefy({'h8': '  ', 'h2': '  ', 'h3': '  ', 'h1': 'wr', 'h6': '  ', 'h7': '  ', 'h4': '  ', 'h5': '  ', 'd8': '  ', 'a8': 'br', 'd6': '  ', 'd7': 'bb', 'd4': '  ', 'd5': '  ', 'd2': '  ', 'd3': '  ', 'd1': '  ', 'g7': '  ', 'g6': '  ', 'g5': '  ', 'g4': '  ', 'g3': '  ', 'g2': '  ', 'g1': '  ', 'g8': '  ', 'c8': '  ', 'c3': 'bn', 'c2': '  ', 'c1': '  ', 'c7': '  ', 'c6': '  ', 'c5': '  ', 'c4': '  ', 'f1': '  ', 'f2': '  ', 'f3': '  ', 'f4': '  ', 'f5': '  ', 'f6': '  ', 'f7': '  ', 'f8': '  ', 'b4': '  ', 'b5': 'wb', 'b6': '  ', 'b7': 'wr', 'b1': '  ', 'b2': '  ', 'b3': '  ', 'b8': '  ', 'a1': 'wr', 'a3': '  ', 'a2': '  ', 'a5': '  ', 'e8': 'bk', 'a7': '  ', 'a6': '  ', 'e5': 'bq', 'e4': 'wn', 'e7': '  ', 'e6': '  ', 'e1': 'wk', 'e3': '  ', 'e2': '  ', 'a4': '  '})
@@ -367,7 +370,7 @@ if __name__ == "__main__":
 
 #         #e.p.
 #         self.assertEqual((zgame.zboard.piece_by_sq('g5'),'g5','e','f6','gxf6'),zgame.decode_move('gxf6',zgame.turnset()))
-        
+
 #     def test_game_cycle_n_mate(self):
 #         zgame = chesslib.game()
 #         self.assertEqual('1-0',zgame.cycle(['1. e4','e5','2. Bc4','a6','3. Qf3','b5','Qxf7#'],0,verbose=0))
@@ -384,7 +387,7 @@ if __name__ == "__main__":
 #         zgame.zboard.piecefy({'h8': '  ', 'h2': '  ', 'h3': '  ', 'h1': '  ', 'h6': '  ', 'h7': '  ', 'h4': '  ', 'h5': '  ', 'd8': '  ', 'a8': '  ', 'd6': '  ', 'd7': '  ', 'd4': '  ', 'd5': '  ', 'd2': '  ', 'd3': '  ', 'd1': '  ', 'g7': '  ', 'g6': '  ', 'g5': '  ', 'g4': '  ', 'g3': '  ', 'g2': '  ', 'g1': '  ', 'g8': '  ', 'c8': '  ', 'c3': '  ', 'c2': '  ', 'c1': '  ', 'c7': '  ', 'c6': '  ', 'c5': '  ', 'c4': '  ', 'f1': '  ', 'f2': '  ', 'f3': '  ', 'f4': '  ', 'f5': '  ', 'f6': '  ', 'f7': '  ', 'f8': '  ', 'b4': '  ', 'b5': '  ', 'b6': '  ', 'b7': '  ', 'b1': '  ', 'b2': '  ', 'b3': '  ', 'b8': '  ', 'a1': '  ', 'a3': '  ', 'a2': '  ', 'a5': '  ', 'e8': 'bk', 'a7': '  ', 'a6': '  ', 'e5': 'bq', 'e4': '  ', 'e7': '  ', 'e6': '  ', 'e1': 'wk', 'e3': '  ', 'e2': 'wq', 'a4': '  '})
 #         self.assertEqual('1/2-1/2',zgame.cycle(['Kd1','Qxe2','Kxe2','Ke7'],0,verbose=0))# draw -- should trigger on Kxe2
 #         ### insert here test for King + light piece vs King draws ###
-        
+
 #         # Repetition Draw
 #         zgame = chesslib.game()
 #         zgame.zboard.piecefy({'h8': 'bk', 'h2': '  ', 'h3': '  ', 'h1': '  ', 'h6': '  ', 'h7': '  ', 'h4': '  ', 'h5': '  ', 'd8': '  ', 'a8': '  ', 'd6': '  ', 'd7': '  ', 'd4': '  ', 'd5': '  ', 'd2': '  ', 'd3': '  ', 'd1': '  ', 'g7': '  ', 'g6': '  ', 'g5': '  ', 'g4': '  ', 'g3': '  ', 'g2': '  ', 'g1': '  ', 'g8': '  ', 'c8': '  ', 'c3': '  ', 'c2': '  ', 'c1': '  ', 'c7': '  ', 'c6': '  ', 'c5': '  ', 'c4': '  ', 'f1': '  ', 'f2': '  ', 'f3': '  ', 'f4': '  ', 'f5': '  ', 'f6': '  ', 'f7': '  ', 'f8': '  ', 'b4': '  ', 'b5': '  ', 'b6': '  ', 'b7': '  ', 'b1': '  ', 'b2': '  ', 'b3': '  ', 'b8': '  ', 'a1': '  ', 'a3': '  ', 'a2': '  ', 'a5': '  ', 'e8': '  ', 'a7': '  ', 'a6': '  ', 'e5': 'bq', 'e4': '  ', 'e7': '  ', 'e6': '  ', 'e1': 'wk', 'e3': '  ', 'e2': 'wq', 'a4': '  '})
@@ -420,9 +423,9 @@ if __name__ == "__main__":
 #         zgame.zboard = copy.deepcopy(some_game.zboard)
 #         zgame.cycle(aidepth=2,verbose=0)
 #         #print zgame.full_notation
-        
 
-                
-    
+
+
+
 
 
