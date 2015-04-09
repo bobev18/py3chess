@@ -45,7 +45,8 @@ class BoardTest(unittest.TestCase):
     def test_board_initialization(self):
         test_board = Board(TEST_POSITION1)
         self.assertEqual(POSITION1_VIEW,repr(test_board))
-        # self.assertEqual('wn@e4', repr(test_board.lookup_by_square('e4')))
+        self.assertIsInstance(test_board.state['e4'], Piece)
+        self.assertEqual('wn@e4', repr(test_board.state['e4']))
 
 
 

@@ -77,6 +77,9 @@ class Piece():
     def __repr__(self):
         return self.color + self.type_ + '@' + self.location
 
+    def designation(self):
+        return self.color + self.type_
+
     def lookup_moves(self):
         if self.color =='w':
             opposite_color = 'b'
