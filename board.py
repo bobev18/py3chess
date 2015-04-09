@@ -39,19 +39,24 @@ class Board():
             result+='\n'
         return result
 
-    def add_piece(self, color, type_, location):
-        try: # for CT@XY
-            type_ = color[1]
-            location = color[-2:]
-            color = color[0]
-        except IndexError:
-            pass
+    def add_piece(self, color, type_='', location=''):
+        if isinstance(color, Piece):
+            new_piece = color
+            location = new_piece.location
+        else:
+            try: # for CT@XY
+                type_ = color[1]
+                location = color[-2:]
+                color = color[0]
+            except IndexError:
+                pass
 
-        if self.state[location]:
-            message = 'Are you blind - there is another piece at that spot: ' + repr(self.state[location])
-            raise MoveException(message)
+            if self.state[location]:
+                message = 'Are you blind - there is another piece at that spot: ' + repr(self.state[location])
+                raise MoveException(message)
 
-        new_piece = Piece(color, type_, location)
+            new_piece = Piece(color, type_, location)
+
         if new_piece.color == 'w':
             self.white.append(new_piece)
             if new_piece.type_ == 'k':
@@ -72,5 +77,18 @@ class Board():
         # self.white_checked = self.sq_in_check(self.wk,'b')
         # self.black_checked = self.sq_in_check(self.bk,'w')
 
-    def lookup_by_square(self, square):
-        pass
+    def remove_piece(self, location):
+        if isinstance(location, Piece):
+            piece = location
+        else:
+            piece = self.state[location]
+
+        if not piece:
+            message = 'Trying to move the air at ' + location
+            raise MoveException(message)
+
+        self.state[location] = None
+        if piece.color == 'w':
+            self.white.remove(piece)
+        else:
+            self.black.remove(piece)

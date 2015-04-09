@@ -48,6 +48,33 @@ class BoardTest(unittest.TestCase):
         self.assertIsInstance(test_board.state['e4'], Piece)
         self.assertEqual('wn@e4', repr(test_board.state['e4']))
 
+    def test_piece_addition_to_board(self):
+        test_board = Board()
+        self.assertIsNone(test_board.state['e4'])
+        test_board.add_piece('w', 'n', 'e4')
+        self.assertIsInstance(test_board.state['e4'], Piece)
+        self.assertEqual('wn@e4', repr(test_board.state['e4']))
+
+        self.assertIsNone(test_board.state['c3'])
+        test_board.add_piece('bn@c3')
+        self.assertEqual('bn@c3', repr(test_board.state['c3']))
+
+        new_piece = Piece('w', 'n', 'b1')
+        self.assertIsNone(test_board.state['b1'])
+        test_board.add_piece(new_piece)
+        self.assertEqual('wn@b1', repr(test_board.state['b1']))
+
+    def test_piece_removal_from_board(self):
+        test_board = Board(TEST_POSITION1)
+        self.assertEqual('wn@e4', repr(test_board.state['e4']))
+        test_board.remove_piece('e4')
+        self.assertIsNone(test_board.state['e4'])
+
+
+
+
+
+
 
 
 
