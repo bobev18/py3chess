@@ -30,11 +30,10 @@ class Board():
         for i in range(8,0,-1):
             result += '|'
             for j in range(97,105):
-                piece = '  '
                 try:
                     piece = self.state[chr(j)+str(i)].designation()
                 except AttributeError:
-                    pass
+                    piece = '  '
                 result += piece + '|'
             result+='\n'
         return result
@@ -92,3 +91,24 @@ class Board():
             self.white.remove(piece)
         else:
             self.black.remove(piece)
+
+    def relocate(self, from_, to):
+        if isinstance(from_, Piece):
+            piece = from_
+            # from_ = piece.location  ## altering value here, may also change it on a higher level if the obj is mutable
+            origin = piece.location
+        else:
+            piece = self.state[from_]
+            origin = from_
+
+        if self.state[to]:
+            msg = 'Are you blind - there is another piece at that spot: ' + repr(self.state[to])
+            raise MoveException(msg)
+
+        piece.location = to
+        piece.x = ord(piece.location[0])-96
+        piece.y = int(piece.location[1])
+
+        self.state[to] = piece
+        self.state[origin] = None
+

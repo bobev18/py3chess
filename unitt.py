@@ -70,7 +70,18 @@ class BoardTest(unittest.TestCase):
         test_board.remove_piece('e4')
         self.assertIsNone(test_board.state['e4'])
 
-
+    def test_piece_relocation(self):
+        test_board = Board(TEST_POSITION1)
+        # self.zboard.initialset()
+        self.assertIsNone(test_board.state['b8'])
+        test_board.relocate('c3', 'b8')
+        self.assertEqual('bn@b8', repr(test_board.state['b8']))
+        test_board.relocate('e4', 'g1')
+        self.assertEqual('wn@g1', repr(test_board.state['g1']))
+        test_board.relocate('g5','g2')
+        self.assertEqual('wp@g2', repr(test_board.state['g2']))
+        test_board.relocate(test_board.state['f5'], 'f7')
+        self.assertEqual('bp@f7', repr(test_board.state['f7']))
 
 
 
