@@ -33,12 +33,8 @@ class MoveTest(unittest.TestCase):
 
     def test_move_initialization(self):
         test_piece = Piece('w', 'p', 'e2')
-        test_move = Move(test_piece, 'e2', 'm2', 'e4', 'e4')
-        self.assertEqual('e4',repr(test_move))
-
-        # ensure piece location matches the move origin
-        test_piece = Piece('w', 'p', 'e2')
-        self.assertRaises(MoveException, Move, test_piece, 'e4', 'm', 'e5', 'e5')
+        test_move = Move(test_piece, 'm2', 'e4', 'e4')
+        self.assertEqual('e4', repr(test_move))
 
 class BoardTest(unittest.TestCase):
 
@@ -84,7 +80,45 @@ class BoardTest(unittest.TestCase):
         self.assertEqual('bp@f7', repr(test_board.state['f7']))
 
 
+    def test_expand_pawns_knights(self):
+        test_board = Board(TEST_POSITION1)
+        # |br|  |bb|bq|bk|bb|bn|  |
+        # |bp|bp|bp|bp|bp|  |bp|wp|
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |  |  |  |bp|wp|  |
+        # |  |  |  |  |wn|  |  |  |
+        # |  |  |bn|  |  |  |  |  |
+        # |wp|wp|wp|wp|wp|wp|  |  |
+        # |wr|wn|wb|wq|wk|wb|  |wr|
 
+        #pawn capture right
+        b3_moves = test_board.naive_moves(test_board.state['b2'])
+        self.assertIsInstance(b3_moves[0], Move)
+        for move in b3_moves:
+            if move.type_ == 't':
+                bxc3 = move
+        self.assertEqual(test_board.state['b2'], bxc3.piece)
+        self.assertEqual('b2', bxc3.origin)
+        self.assertEqual('t', bxc3.type_)
+        self.assertEqual('c3', bxc3.destination)
+        self.assertEqual('bxc3', bxc3.notation)
+
+
+
+        # #pawn capture left
+        # self.assertEqual(set([('m','d4','d4'), ('m','d3','d3'), ('t','c3','dxc3')]),set(self.zboard.piece_by_sq('d2').expand(self.zboard.board)))
+        # #blocked pawn
+        # self.assertEqual([],self.zboard.piece_by_sq('c2').expand(self.zboard.board))
+        # self.assertEqual([('m', 'e3', 'e3')],self.zboard.piece_by_sq('e2').expand(self.zboard.board))
+        # #en passant without consideration of last move
+        # self.assertEqual(set([('e', 'f6', 'gxf6'),('m', 'g6', 'g6')]),set(self.zboard.piece_by_sq('g5').expand(self.zboard.board)))
+        # #promote pawn h7
+        # self.assertEqual(set([('p', 'h8', 'h8R'),('p', 'h8', 'h8N'),('p', 'h8', 'h8B'),('p', 'h8', 'h8Q'),('+', 'g8', 'hxg8R'),('+', 'g8', 'hxg8N'),('+', 'g8', 'hxg8B'),('+', 'g8', 'hxg8Q')]),set(self.zboard.piece_by_sq('h7').expand(self.zboard.board)))
+
+        # #knight at e4
+        # self.assertEqual(set(['Nf6','Ng3','Nxc3','Nc5','Nd6']),set([ x[2] for x in self.zboard.piece_by_sq('e4').expand(self.zboard.board)]))
+        # #knight at c3
+        # self.assertEqual(set([('t', 'd1', 'Nxd1'),('t', 'a2', 'Nxa2'),('t', 'e2', 'Nxe2'),('m', 'b5', 'Nb5'),('m', 'a4', 'Na4'),('t', 'b1', 'Nxb1'),('m', 'd5', 'Nd5'),('t', 'e4', 'Nxe4')]),set(self.zboard.piece_by_sq('c3').expand(self.zboard.board)))
 
 
 

@@ -112,3 +112,67 @@ class Board():
         self.state[to] = piece
         self.state[origin] = None
 
+    def naive_moves(self, piece):
+        preliminary = piece.lookup_moves()
+        results = []
+
+        # moving to empty square
+        for destination in preliminary['m']:
+            if not self.state[destination]:
+                results.append(Move(piece, 'm', destination, piece.notation + destination))
+
+        # for pawn jumps over empty square
+        for destination in preliminary['m2']:
+            if not self.state[destination] and ((piece.color == 'w' and not self.state[destination[0]+'3']) or (piece.color == 'b' and not self.state[destination[0]+'6'])):
+                results.append(Move(piece, 'm2', destination, piece.notation + destination))
+
+        # taking non empty square
+        for destination in preliminary['t']:
+            if self.state[destination].color != piece.color:
+                if piece.notation == '':
+                    results.append(Move(piece, 't', destination, piece.location[0] + capture_sign + destination))
+                else:
+                    results.append(Move(piece, 't', destination, piece.notation + capture_sign + destination))
+
+        # promote on empty
+        for destination in preliminary['p']:
+            if not self.state[destination[:2]]:
+                results.append(Move(piece, 'p', destination[:2], destination, ))
+                rez.append(('p',destination[:2],destination))
+
+        # capture-promote on non empty
+        for destination in preliminary['+']:
+            if self.state[destination[:2]][0]==oppcol:
+                if pdesignation=='':
+                    pdesignation = self.sq[0]
+                rez.append(('+',destination[:2],pdesignation+capture_sign+destination))
+
+        # en passant - destination empty, side non empty of opposite color
+        for destination in preliminary['e']:
+            if self.state[destination]=='  ' and self.state[destination[0]+self.sq[1]]==oppcol+'p':
+                pdesignation = self.sq[0]
+                rez.append(('e',destination,pdesignation+capture_sign+destination))
+
+        # castle - all
+        for destination in preliminary['c']:
+            if self.state[destination]=='  ':
+                if destination[0]=='g':
+                    if self.state['f'+self.sq[1]]=='  ' and self.state['g'+self.sq[1]]=='  ' and self.state['h'+self.sq[1]]== self.col+'r':
+                        rez.append(('c',destination,'O-O'))
+                else:
+                    if self.state['b'+self.sq[1]]=='  ' and self.state['c'+self.sq[1]]=='  ' and self.state['d'+self.sq[1]]=='  ' and self.state['a'+self.sq[1]]== self.col+'r':
+                        rez.append(('c',destination,'O-O-O'))
+
+        #
+        for direct in ['NE','SE','SW','NW','N','E','S','W']:
+            for destination in preliminary[direct]:
+                if self.state[destination]=='  ':
+                    rez.append(('m',destination,pdesignation+destination))
+                else:
+                    if self.state[destination][0]==oppcol:
+                        rez.append(('t',destination,pdesignation+capture_sign+destination))
+                    break
+
+        return rez
+
+

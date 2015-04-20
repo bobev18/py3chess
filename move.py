@@ -5,17 +5,13 @@ class MoveException(Exception):
 
 class Move():
 
-	def __init__(self, piece, origin, type_, destination, notation):
-		if piece.location == origin:
-			self.piece = piece
-		else:
-			message = "piece " + str(piece) + " location does not match the origin " + origin
-			raise MoveException(message)
-
-		self.origin = origin
+	def __init__(self, piece, type_, destination, notation, promote_to = None):
+		self.piece = piece
+		self.origin = piece.location
 		self.type_ = type_
 		self.destination = destination
 		self.notation = notation
+		self.promote_to = promote_to
 
 	def __repr__(self):
 		return self.notation

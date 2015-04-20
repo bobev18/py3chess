@@ -80,6 +80,12 @@ class Piece():
     def designation(self):
         return self.color + self.type_
 
+    def notation(self):
+        if self.type_ == 'p':
+            return ''
+        else:
+            return self.type_.upper()
+
     def lookup_moves(self):
         if self.color =='w':
             opposite_color = 'b'
@@ -88,10 +94,8 @@ class Piece():
 
         if self.type_ == 'p':
             key_type = self.color + 'p'
-            notation_type = ''
         else:
             key_type = 'a' + self.type_
-            notation_type = self.type_.upper()
 
         try:
             possible_moves = ACTMAP[self.location][key_type]
