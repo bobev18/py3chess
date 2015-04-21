@@ -107,7 +107,7 @@ class Board():
             result+='\n'
         return result
 
-    def add_piece(self, color, type_='', location=''):
+    def add_piece(self, color, type_=None, location=None):
         if isinstance(color, Piece):
             new_piece = color
             location = new_piece.location
@@ -142,8 +142,8 @@ class Board():
             if init_state[square] != '  ':
                 self.add_piece(init_state[square][0], init_state[square][1], square)
 
-        # self.white_checked = self.sq_in_check(self.wk,'b')
-        # self.black_checked = self.sq_in_check(self.bk,'w')
+        self.white_checked = self.is_in_check(self.white_king.location, 'b')
+        self.black_checked = self.is_in_check(self.black_king.location, 'w')
 
     def remove_piece(self, location):
         if isinstance(location, Piece):
@@ -209,7 +209,7 @@ class Board():
         # taking non empty square
         for destination in preliminary['t']:
             if self.state[destination] and self.state[destination].color != piece.color:
-                results.append(Move(piece, 't', destination, piece.notation() + CAPTURE_SIGN + destination))
+                results.append(Move(piece, 't', destination, piece.notation() + CAPTURE_SIGN + destination, self.state[destination]))
 
         # promote on empty
         for destination in preliminary['p']:
@@ -221,27 +221,27 @@ class Board():
         for destination in preliminary['+']:
             if self.state[destination] and self.state[destination].color != piece.color:
                 for option in ['N', 'B', 'R', 'Q']:
-                    results.append(Move(piece, '+', destination, piece.notation() + CAPTURE_SIGN + destination + option, option))
+                    results.append(Move(piece, '+', destination, piece.notation() + CAPTURE_SIGN + destination + option, [option, self.state[destination]]))
 
         # en passant - destination empty, side non empty of opposite color
         for destination in preliminary['e']:
             opponent = self.state[destination[0] + piece.location[1]]
             if opponent and opponent.color != piece.color and opponent.type_ == 'p' and not self.state[destination]:
-                results.append(Move(piece, 'e', destination, piece.notation() + CAPTURE_SIGN + destination))
+                results.append(Move(piece, 'e', destination, piece.notation() + CAPTURE_SIGN + destination, opponent))
 
         # castle - all
         for destination in preliminary['c']:
             if not self.state[destination]:
                 if piece.color == 'w':
                     if destination[0] == 'g' and self.state['h1'] and self.state['h1'].designation() == 'wr' and not self.state['f1']:
-                        results.append(Move(piece, 'c', destination, 'O-O'))
+                        results.append(Move(piece, 'c', destination, 'O-O', self.state['h1']))
                     if destination[0] == 'c' and self.state['a1'] and self.state['a1'].designation() == 'wr' and not self.state['d1'] and not self.state['b1']:
-                        results.append(Move(piece, 'c', destination, 'O-O-O'))
+                        results.append(Move(piece, 'c', destination, 'O-O-O', self.state['a1']))
                 else:
                     if destination[0] == 'g' and self.state['h8'] and self.state['h8'].designation() == 'br' and not self.state['f8']:
-                        results.append(Move(piece, 'c', destination, 'O-O'))
+                        results.append(Move(piece, 'c', destination, 'O-O', self.state['h8']))
                     if destination[0] == 'c' and self.state['a8'] and self.state['a8'].designation() == 'br' and not self.state['d8'] and not self.state['b8']:
-                        results.append(Move(piece, 'c', destination, 'O-O-O'))
+                        results.append(Move(piece, 'c', destination, 'O-O-O', self.state['a8']))
 
         #
         for direction in ['NE','SE','SW','NW','N','E','S','W']:
@@ -250,7 +250,7 @@ class Board():
                     results.append(Move(piece, 'm', destination, piece.notation() + destination))
                 else:
                     if self.state[destination].color != piece.color:
-                        results.append(Move(piece, 't', destination, piece.notation() + CAPTURE_SIGN + destination))
+                        results.append(Move(piece, 't', destination, piece.notation() + CAPTURE_SIGN + destination, self.state[destination]))
                     break
 
         return results
@@ -291,3 +291,132 @@ class Board():
                     break # the direction is blocked if an enemy piece doesnt operate in that direction or own piece
 
         return False
+
+    def execute_move(self, move):
+        pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # def valid_moves(self, piece):
+    #     return [ move for move in piece.naive_moves() if self.validate_move(piece, move) ]
+
+    # def validate_move(self, piece, move):
+    #     if piece.color == 'w':
+    #         opposite_color = 'b'
+    #     else:
+    #         opposite_color = 'w'
+
+    #     # is_in_check & discover_check will not work properly unless all effects of a move are applied
+
+    #     # execute move on state level
+    #     #  we can only work with state, since
+
+    #     # if piece.type_ == 'k':
+    #     #     # to ensure directional checks pass through the square currently occupied by the king we need to lift it form the board/state
+    #     #     king = self.state[location]
+    #     #     self.state[location] = None
+    #     #     is_in_check = self.is_in_check(move.designation, opposite_color)
+    #     #     self.state[location] = king
+
+    #     if (self.white_checked or self.black_checked) and piece != self.white_king and piece != self.black_king:
+    #         self.state[piece.location] = None
+
+    #         is_in_check = self.is_in_check(move.destination, opposite_color)
+    #         self.state[piece.location] = piece
+
+
+    #     if piece == self.white_king or piece == self.black_king:
+    #         self.state[piece.location] = None
+    #         is_in_check = self.is_in_check(move.destination, opposite_color)
+    #         self.state[piece.location] = piece
+
+
+
+    #         if piece.col == 'w':
+    #             opposite_col = 'b'
+    #             castle_row = '1'
+    #             ksq = self.wk
+    #         else:
+    #             opposite_col = 'w'
+    #             castle_row = '8'
+    #             ksq = self.bk
+
+    #         if verbose>0:
+    #             print 'opp col',opposite_col,'ksq',ksq
+
+    #         if piece.type=='k':
+    #             if move[0]=='c':
+    #                 is_in_check = is_in_check or self.sq_in_check(ksq,opposite_col) # the current sq
+    #                 if move[2].count('O')==2:
+    #                     ksq='f'+castle_row
+    #                 if move[2].count('O')==3:
+    #                     ksq='d'+castle_row
+    #                 is_in_check = is_in_check or self.sq_in_check(ksq,opposite_col) # jump-over sq
+    #         else:
+    #             is_in_check = self.sq_in_check(ksq,opposite_col)
+
+    #         if verbose > 0:
+    #             print 'move',move
+    #             print 'checking check against',ksq
+    #             print('is_in_check',is_in_check)
+
+    #         return not is_in_check # False == invalid move
+
+
+    #     else:
+    #         if piece.col == 'w':
+    #             opposite_col = 'b'
+    #             ksq = self.wk
+    #         else:
+    #             opposite_col = 'w'
+    #             ksq = self.bk
+
+    #         is_in_check = self.discover_check(ksq,opposite_col,origin_sq)
+
+    #         if verbose > 0:
+    #             print 'origin_sq',origin_sq
+    #             print 'checking check against',ksq, self.piece_by_sq(ksq)
+    #             print('is_in_check',is_in_check)
+
+    #         return not is_in_check # False == invalid move
+
+
+
+
+
+    #     if verbose>0:
+    #         print 'is_valid',is_valid
+    #     if not is_valid:
+    #         self.process_actions(undo,verbose)
+    #         return None
+    #     # --- end of invalidation ---
+
+    #     self.backtrack.append(self.hashit()) # this is used to check on stalemate by repetition
+    #     undo.append(['data',self.wk,self.bk,self.winch,self.binch,])
+    #     if piece.col == 'w':
+    #         self.binch = self.sq_in_check(self.bk,piece.col,'',verbose)
+    #         if piece.type == 'k':
+    #             self.wk = exp[1]
+    #     else:
+    #         if piece.type == 'k':
+    #             self.bk = exp[1]
+    #         self.winch = self.sq_in_check(self.wk,piece.col,'',verbose)
+
+    #     return undo
+
+

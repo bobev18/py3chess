@@ -16,6 +16,7 @@ POSITION1_VIEW = """
 |wr|wn|wb|wq|wk|wb|  |wr|
 """
 TEST_POSITION2 = {'h8':'  ', 'h2':'  ', 'h3':'  ', 'h1':'wr', 'h6':'  ', 'h7':'  ', 'h4':'  ', 'h5':'  ', 'd8':'bq', 'a8':'br', 'd6':'  ', 'd7':'bb', 'd4':'  ', 'd5':'  ', 'd2':'  ', 'd3':'  ', 'd1':'wq', 'g7':'  ', 'g6':'  ', 'g5':'  ', 'g4':'  ', 'g3':'  ', 'g2':'  ', 'g1':'  ', 'g8':'bn', 'c8':'bb', 'c3':'bn', 'c2':'  ', 'c1':'wb', 'c7':'  ', 'c6':'  ', 'c5':'  ', 'c4':'  ', 'f1':'wb', 'f2':'  ', 'f3':'  ', 'f4':'  ', 'f5':'  ', 'f6':'  ', 'f7':'  ', 'f8':'bb', 'b4':'  ', 'b5':'wb', 'b6':'  ', 'b7':'wr', 'b1':'wn', 'b2':'  ', 'b3':'  ', 'b8':'  ', 'a1':'wr', 'a3':'  ', 'a2':'  ', 'a5':'  ', 'e8':'bk', 'a7':'  ', 'a6':'  ', 'e5':'bq', 'e4':'wn', 'e7':'  ', 'e6':'  ', 'e1':'wk', 'e3':'  ', 'e2':'  ', 'a4':'  '}
+TEST_POSITION3 = {'h5':'  ', 'g2':'  ', 'f8':'  ', 'g5':'  ', 'd8':'  ', 'd4':'  ', 'c6':'  ', 'e2':'  ', 'b6':'  ', 'd3':'  ', 'b3':'  ', 'f1':'  ', 'a8':'br', 'a7':'  ', 'b1':'  ', 'f3':'  ', 'a6':'  ', 'a2':'  ', 'b2':'  ', 'h6':'  ', 'e3':'  ', 'f6':'  ', 'b7':'wr', 'd5':'  ', 'e4':'wn', 'd6':'  ', 'g7':'  ', 'e6':'  ', 'f2':'  ', 'g6':'  ', 'h7':'  ', 'c1':'  ', 'f4':'  ', 'd2':'  ', 'g1':'  ', 'a1':'wr', 'e8':'bk', 'c8':'  ', 'e5':'bq', 'e7':'  ', 'a4':'  ', 'h4':'  ', 'b5':'wb', 'c3':'bn', 'b4':'  ', 'g3':'  ', 'f7':'  ', 'c7':'  ', 'h1':'wr', 'h8':'  ', 'g8':'  ', 'a3':'  ', 'a5':'  ', 'f5':'  ', 'c4':'  ', 'e1':'wk', 'd7':'bb', 'g4':'  ', 'b8':'  ', 'h2':'  ', 'd1':'  ', 'h3':'  ', 'c5':'  ', 'c2':'  '}
 
 class PieceTest(unittest.TestCase):
 
@@ -36,6 +37,16 @@ class MoveTest(unittest.TestCase):
         test_piece = Piece('w', 'p', 'e2')
         test_move = Move(test_piece, 'm2', 'e4', 'e4')
         self.assertEqual('e4', repr(test_move))
+
+    def test_move_action_generation(self):
+        test_piece = Piece('w', 'n', 'e4')
+        taken_piece = Piece('b', 'n', 'c3')
+        test_move = Move(test_piece, 't', 'c3', 'Nxc3', taken_piece)
+        self.assertEqual('Nxc3', repr(test_move))
+        self.assertEqual(taken_piece, test_move.taken)
+        execution_actions, undo_actions = test_move.actions()
+        self.assertEqual([['remove', taken_piece], ['relocate', test_piece, 'c3']], execution_actions)
+        self.assertEqual([['relocate', 'c3', 'e4'], ['add', taken_piece]], undo_actions)
 
 class BoardTest(unittest.TestCase):
 
@@ -160,14 +171,17 @@ class BoardTest(unittest.TestCase):
 
         #castling without check validation
         self.assertNotIn('O-O-O', [ z.notation for z in test_board.naive_moves(test_board.state['e8']) ])
-        test_board.remove_piece('b1')
-        test_board.remove_piece('c1')
-        test_board.remove_piece('d1')
-        test_board.remove_piece('f1')
-        test_board.remove_piece('c8')
-        test_board.remove_piece('d8')
-        test_board.remove_piece('f8')
-        test_board.remove_piece('g8')
+        # test_board.remove_piece('b1')
+        # test_board.remove_piece('c1')
+        # test_board.remove_piece('d1')
+        # test_board.remove_piece('f1')
+        # test_board.remove_piece('c8')
+        # test_board.remove_piece('d8')
+        # test_board.remove_piece('f8')
+        # test_board.remove_piece('g8')
+        # print(test_board)
+        # print(test_board.state)
+        test_board = Board(TEST_POSITION3)
         # |br|  |  |  |bk|  |  |  |
         # |  |wr|  |bb|  |  |  |  |
         # |  |  |  |  |  |  |  |  |
@@ -201,6 +215,67 @@ class BoardTest(unittest.TestCase):
         self.assertFalse(test_board.is_in_check('f2','b'))
         self.assertFalse(test_board.is_in_check('d2','b'))
         self.assertTrue(test_board.is_in_check('h8','w'))
+
+    def test_execute_move(self):
+        test_board = Board(TEST_POSITION1)
+        # |br|  |bb|bq|bk|bb|bn|  |
+        # |bp|bp|bp|bp|bp|  |bp|wp|
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |  |  |  |bp|wp|  |
+        # |  |  |  |  |wn|  |  |  |
+        # |  |  |bn|  |  |  |  |  |
+        # |wp|wp|wp|wp|wp|wp|  |  |
+        # |wr|wn|wb|wq|wk|wb|  |wr|
+
+        b1_moves = test_board.naive_moves(test_board.state['b1'])
+        capture_move = [ z for z in b1_moves if z.type_ == 't' ][0]
+        self.assertIsInstance(test_board.state['c3'], Piece)
+        self.assertEqual('bn@c3', repr(test_board.state['c3']))
+        self.assertEqual(14, len(test_board.black))
+        test_board.execute_move(capture_move)
+        self.assertIsInstance(test_board.state['c3'], Piece)
+        # self.assertEqual('wn@c3', repr(test_board.state['c3']))
+        # self.assertEqual(13, len(test_board.black))
+
+
+
+
+
+
+
+
+    # def test_validions_against_checks(self):
+    #     test_board = Board(TEST_POSITION2)
+    #     # |br|  |bb|bq|bk|bb|bn|  |
+    #     # |  |wr|  |bb|  |  |  |  |
+    #     # |  |  |  |  |  |  |  |  |
+    #     # |  |wb|  |  |bq|  |  |  |
+    #     # |  |  |  |  |wn|  |  |  |
+    #     # |  |  |bn|  |  |  |  |  |
+    #     # |  |  |  |  |  |  |  |  |
+    #     # |wr|wn|wb|wq|wk|wb|  |wr|
+
+    #     # the knight at e4, will have the expansion list reduced to []
+    #     self.assertEqual([], test_board.valid_moves(test_board.state['e4']))
+    #     #bishop at d7 previously had [('m', 'f5', 'Bf5'),('m', 'g4', 'Bg4'),('m', 'e6', 'Be6'),('t', 'b5', 'Bxb5'),('m', 'c6', 'Bc6'),('m', 'h3', 'Bh3')], but now
+    #     self.assertEqual(set([('Bxb5', 'Bc6')]), set([ z.notation for z in test_board.valid_moves(test_board.state['d7']) ]))
+    #     #king at e1 -- validated the move to e2 as it's hit by the knight at c3
+    #     self.assertNotIn('Ke2', [ z.notation for z in test_board.valid_moves(test_board.state['e1']) ])
+
+    #     test_board = Board(TEST_POSITION3)
+    #     # |br|  |  |  |bk|  |  |  |
+    #     # |  |wr|  |bb|  |  |  |  |
+    #     # |  |  |  |  |  |  |  |  |
+    #     # |  |wb|  |  |bq|  |  |  |
+    #     # |  |  |  |  |wn|  |  |  |
+    #     # |  |  |bn|  |  |  |  |  |
+    #     # |  |  |  |  |  |  |  |  |
+    #     # |wr|  |  |  |wk|  |  |wr|
+
+    #     #king at e1 should not expand queen side castle dure to N@c3 hitting d1
+    #     naive_moves = set([ z.notation for z in test_board.naive_moves(test_board.state['e1']) ])
+    #     valid_moves = set([ z.notation for z in test_board.valid_moves(test_board.state['e1']) ])
+    #     self.assertTrue(set(['O-O-O']), naive_moves - valid_moves)
 
 
 
