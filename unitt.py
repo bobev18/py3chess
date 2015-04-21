@@ -79,6 +79,10 @@ class BoardTest(unittest.TestCase):
         test_board.relocate(test_board.state['f5'], 'f7')
         self.assertEqual('bp@f7', repr(test_board.state['f7']))
 
+        test_board = Board(TEST_POSITION2)
+        self.assertRaises(MoveException, test_board.relocate, 'c8', 'c3')
+        self.assertRaises(MoveException, test_board.relocate, 'b8', 'b6')
+
     def test_naive_moves_for_pawns_knights(self):
         test_board = Board(TEST_POSITION1)
         # |br|  |bb|bq|bk|bb|bn|  |
@@ -180,6 +184,23 @@ class BoardTest(unittest.TestCase):
         self.assertIn('O-O', [ z.notation for z in test_board.naive_moves(test_board.state['e1']) ])
         self.assertIn('O-O-O', [ z.notation for z in test_board.naive_moves(test_board.state['e1']) ])
 
+    def test_determining_checks(self):
+        test_board = Board(TEST_POSITION2)
+        test_board.remove_piece('e4')
+        # |br|  |bb|bq|bk|bb|bn|  |
+        # |  |wr|  |bb|  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |wb|  |  |bq|  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |bn|  |  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |wr|wn|wb|wq|wk|wb|  |wr|
+
+        self.assertTrue(test_board.is_in_check('e1','b'))
+        self.assertTrue(test_board.is_in_check('e2','b'))
+        self.assertFalse(test_board.is_in_check('f2','b'))
+        self.assertFalse(test_board.is_in_check('d2','b'))
+        self.assertTrue(test_board.is_in_check('h8','w'))
 
 
 
