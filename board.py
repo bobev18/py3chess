@@ -1,6 +1,8 @@
 from piece import Piece
 from move import Move, MoveException
 
+CAPTURE_SIGN = 'x'
+
 EMPTYBOARD = {'a8':None, 'b8':None, 'c8':None, 'd8':None, 'e8':None, 'f8':None, 'g8':None, 'h8':None,
               'a7':None, 'b7':None, 'c7':None, 'd7':None, 'e7':None, 'f7':None, 'g7':None, 'h7':None,
               'a6':None, 'b6':None, 'c6':None, 'd6':None, 'e6':None, 'f6':None, 'g6':None, 'h6':None,
@@ -113,66 +115,74 @@ class Board():
         self.state[origin] = None
 
     def naive_moves(self, piece):
-        preliminary = piece.lookup_moves()
         results = []
+        preliminary = piece.lookup_moves()
+        for move_type in ['m','m2','mk','t','p','+','e','c','NE','SE','SW','NW','N','E','S','W']:
+            if not move_type in preliminary.keys():
+                preliminary[move_type] = []
 
         # moving to empty square
         for destination in preliminary['m']:
             if not self.state[destination]:
-                results.append(Move(piece, 'm', destination, piece.notation + destination))
+                results.append(Move(piece, 'm', destination, destination))
 
         # for pawn jumps over empty square
         for destination in preliminary['m2']:
             if not self.state[destination] and ((piece.color == 'w' and not self.state[destination[0]+'3']) or (piece.color == 'b' and not self.state[destination[0]+'6'])):
-                results.append(Move(piece, 'm2', destination, piece.notation + destination))
+                results.append(Move(piece, 'm2', destination, destination))
+
+        # moving K to empty square
+        for destination in preliminary['mk']:
+            if not self.state[destination]:
+                results.append(Move(piece, 'mk', destination, piece.notation() + destination))
 
         # taking non empty square
         for destination in preliminary['t']:
-            if self.state[destination].color != piece.color:
-                if piece.notation == '':
-                    results.append(Move(piece, 't', destination, piece.location[0] + capture_sign + destination))
-                else:
-                    results.append(Move(piece, 't', destination, piece.notation + capture_sign + destination))
+            if self.state[destination] and self.state[destination].color != piece.color:
+                results.append(Move(piece, 't', destination, piece.notation() + CAPTURE_SIGN + destination))
 
         # promote on empty
         for destination in preliminary['p']:
-            if not self.state[destination[:2]]:
-                results.append(Move(piece, 'p', destination[:2], destination, ))
-                rez.append(('p',destination[:2],destination))
+            if not self.state[destination]:
+                for option in ['N', 'B', 'R', 'Q']:
+                    results.append(Move(piece, 'p', destination, destination + option, option))
 
         # capture-promote on non empty
         for destination in preliminary['+']:
-            if self.state[destination[:2]][0]==oppcol:
-                if pdesignation=='':
-                    pdesignation = self.sq[0]
-                rez.append(('+',destination[:2],pdesignation+capture_sign+destination))
+            if self.state[destination] and self.state[destination].color != piece.color:
+                for option in ['N', 'B', 'R', 'Q']:
+                    results.append(Move(piece, '+', destination, piece.notation() + CAPTURE_SIGN + destination + option, option))
 
         # en passant - destination empty, side non empty of opposite color
         for destination in preliminary['e']:
-            if self.state[destination]=='  ' and self.state[destination[0]+self.sq[1]]==oppcol+'p':
-                pdesignation = self.sq[0]
-                rez.append(('e',destination,pdesignation+capture_sign+destination))
+            opponent = self.state[destination[0] + piece.location[1]]
+            if opponent and opponent.color != piece.color and opponent.type_ == 'p' and not self.state[destination]:
+                results.append(Move(piece, 'e', destination, piece.notation() + CAPTURE_SIGN + destination))
 
         # castle - all
         for destination in preliminary['c']:
-            if self.state[destination]=='  ':
-                if destination[0]=='g':
-                    if self.state['f'+self.sq[1]]=='  ' and self.state['g'+self.sq[1]]=='  ' and self.state['h'+self.sq[1]]== self.col+'r':
-                        rez.append(('c',destination,'O-O'))
+            if not self.state[destination]:
+                if piece.color == 'w':
+                    if destination[0] == 'g' and self.state['h1'] and self.state['h1'].designation() == 'wr' and not self.state['f1']:
+                        results.append(Move(piece, 'c', destination, 'O-O'))
+                    if destination[0] == 'c' and self.state['a1'] and self.state['a1'].designation() == 'wr' and not self.state['d1'] and not self.state['b1']:
+                        results.append(Move(piece, 'c', destination, 'O-O-O'))
                 else:
-                    if self.state['b'+self.sq[1]]=='  ' and self.state['c'+self.sq[1]]=='  ' and self.state['d'+self.sq[1]]=='  ' and self.state['a'+self.sq[1]]== self.col+'r':
-                        rez.append(('c',destination,'O-O-O'))
+                    if destination[0] == 'g' and self.state['h8'] and self.state['h8'].designation() == 'br' and not self.state['f8']:
+                        results.append(Move(piece, 'c', destination, 'O-O'))
+                    if destination[0] == 'c' and self.state['a8'] and self.state['a8'].designation() == 'br' and not self.state['d8'] and not self.state['b8']:
+                        results.append(Move(piece, 'c', destination, 'O-O-O'))
 
         #
-        for direct in ['NE','SE','SW','NW','N','E','S','W']:
-            for destination in preliminary[direct]:
-                if self.state[destination]=='  ':
-                    rez.append(('m',destination,pdesignation+destination))
+        for direction in ['NE','SE','SW','NW','N','E','S','W']:
+            for destination in preliminary[direction]:
+                if not self.state[destination]:
+                    results.append(Move(piece, 'm', destination, piece.notation() + destination))
                 else:
-                    if self.state[destination][0]==oppcol:
-                        rez.append(('t',destination,pdesignation+capture_sign+destination))
+                    if self.state[destination].color != piece.color:
+                        results.append(Move(piece, 't', destination, piece.notation() + CAPTURE_SIGN + destination))
                     break
 
-        return rez
+        return results
 
 
