@@ -3,14 +3,27 @@ from move import Move, MoveException
 
 CAPTURE_SIGN = 'x'
 
-EMPTYBOARD = {'a8':None, 'b8':None, 'c8':None, 'd8':None, 'e8':None, 'f8':None, 'g8':None, 'h8':None,
+S2P =   {
+        'a1':(1,1),'a2':(1,2),'a3':(1,3),'a4':(1,4),'a5':(1,5),'a6':(1,6),'a7':(1,7),'a8':(1,8),
+        'b1':(2,1),'b2':(2,2),'b3':(2,3),'b4':(2,4),'b5':(2,5),'b6':(2,6),'b7':(2,7),'b8':(2,8),
+        'c1':(3,1),'c2':(3,2),'c3':(3,3),'c4':(3,4),'c5':(3,5),'c6':(3,6),'c7':(3,7),'c8':(3,8),
+        'd1':(4,1),'d2':(4,2),'d3':(4,3),'d4':(4,4),'d5':(4,5),'d6':(4,6),'d7':(4,7),'d8':(4,8),
+        'e1':(5,1),'e2':(5,2),'e3':(5,3),'e4':(5,4),'e5':(5,5),'e6':(5,6),'e7':(5,7),'e8':(5,8),
+        'f1':(6,1),'f2':(6,2),'f3':(6,3),'f4':(6,4),'f5':(6,5),'f6':(6,6),'f7':(6,7),'f8':(6,8),
+        'g1':(7,1),'g2':(7,2),'g3':(7,3),'g4':(7,4),'g5':(7,5),'g6':(7,6),'g7':(7,7),'g8':(7,8),
+        'h1':(8,1),'h2':(8,2),'h3':(8,3),'h4':(8,4),'h5':(8,5),'h6':(8,6),'h7':(8,7),'h8':(8,8),
+        }
+
+EMPTYBOARD = {
+              'a8':None, 'b8':None, 'c8':None, 'd8':None, 'e8':None, 'f8':None, 'g8':None, 'h8':None,
               'a7':None, 'b7':None, 'c7':None, 'd7':None, 'e7':None, 'f7':None, 'g7':None, 'h7':None,
               'a6':None, 'b6':None, 'c6':None, 'd6':None, 'e6':None, 'f6':None, 'g6':None, 'h6':None,
               'a5':None, 'b5':None, 'c5':None, 'd5':None, 'e5':None, 'f5':None, 'g5':None, 'h5':None,
               'a4':None, 'b4':None, 'c4':None, 'd4':None, 'e4':None, 'f4':None, 'g4':None, 'h4':None,
               'a3':None, 'b3':None, 'c3':None, 'd3':None, 'e3':None, 'f3':None, 'g3':None, 'h3':None,
               'a2':None, 'b2':None, 'c2':None, 'd2':None, 'e2':None, 'f2':None, 'g2':None, 'h2':None,
-              'a1':None, 'b1':None, 'c1':None, 'd1':None, 'e1':None, 'f1':None, 'g1':None, 'h1':None,}
+              'a1':None, 'b1':None, 'c1':None, 'd1':None, 'e1':None, 'f1':None, 'g1':None, 'h1':None,
+              }
 
 INVERSE_HIT_MAP = {
 'a1':{'king': ['a2', 'b2', 'b1'], 'E': ['b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'h1'], 'knight': ['b3', 'c2'], 'wpawn': [], 'NE': ['b2', 'c3', 'd4', 'e5', 'f6', 'g7', 'h8'], 'N': ['a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8'], 'bpawn': ['b2'], 'S': [], 'W': [], 'SW': [], 'SE': [], 'NW': []},
@@ -145,11 +158,13 @@ class Board():
         self.white_checked = self.is_in_check(self.white_king.location, 'b')
         self.black_checked = self.is_in_check(self.black_king.location, 'w')
 
-    def remove_piece(self, location):
-        if isinstance(location, Piece):
-            piece = location
+    def remove_piece(self, location_):
+        if isinstance(location_, Piece):
+            piece = location_
+            location = piece.location
         else:
-            piece = self.state[location]
+            piece = self.state[location_]
+            location = location_
 
         if not piece:
             message = 'Trying to move the air at ' + location
@@ -161,7 +176,7 @@ class Board():
         else:
             self.black.remove(piece)
 
-    def relocate(self, from_, to):
+    def relocate_piece(self, from_, to):
         if isinstance(from_, Piece):
             piece = from_
             # from_ = piece.location  ## altering value here, may also change it on a higher level if the obj is mutable
@@ -243,7 +258,7 @@ class Board():
                     if destination[0] == 'c' and self.state['a8'] and self.state['a8'].designation() == 'br' and not self.state['d8'] and not self.state['b8']:
                         results.append(Move(piece, 'c', destination, 'O-O-O', self.state['a8']))
 
-        #
+        # directional
         for direction in ['NE','SE','SW','NW','N','E','S','W']:
             for destination in preliminary[direction]:
                 if not self.state[destination]:
@@ -292,8 +307,116 @@ class Board():
 
         return False
 
+    def process_actions(self, actions):
+        # common routine of the exec_move and undo_move
+        for act in actions:
+            if act['act'] == 'relocate_piece':
+                self.relocate_piece(*act['args'])
+            elif act['act'] == 'remove_piece':
+                self.remove_piece(*act['args'])
+            elif act['act'] == 'add_piece':
+                self.add_piece(*act['args'])
+            elif act['act'] == 'data':
+                self.white_checked = act['args'][0]
+                self.black_checked = act['args'][1]
+
     def execute_move(self, move):
-        pass
+        # the function that applies actions to the piece set (and thus the board)
+        actions, undo = move.actions()
+        self.process_actions(actions)
+        if not self.validate_move(move):
+            self.process_actions(undo)
+            return None
+        # --- end of invalidation ---
+
+        # self.backtrack.append(self.hashit()) # this is used to check on stalemate by repetition
+        undo.append({'act':'data', 'args':[self.white_checked, self.black_checked]})
+        if move.piece.color == 'w':
+            self.black_checked = self.is_in_check(self.black_king.location, 'w')
+        else:
+            self.white_checked = self.is_in_check(self.white_king.location, 'b')
+
+        return undo
+
+    def validate_move(self, move):
+        if move.piece.color == 'w':
+            opposite_color = 'b'
+            castle_row = '1'
+        else:
+            opposite_color = 'w'
+            castle_row = '8'
+
+        # is_in_check & discover_check will not work properly unless all effects of a move are applied to board.state
+
+        if move.piece.type_ == 'k':
+            # king's landing
+            is_in_check = self.is_in_check(move.destination, opposite_color)
+            if move.type_ == 'c':
+                # king's origin
+                is_in_check = is_in_check or self.is_in_check(move.origin, opposite_color)
+                if move.notation.count('O') == 2:
+                    jump_over = 'f' + castle_row
+                else:
+                    jump_over = 'd' + castle_row
+                # jump over
+                is_in_check = is_in_check or self.is_in_check(jump_over, opposite_color)
+
+            return not is_in_check # False == invalid move
+        else: # not moving the king
+            if self.white_checked or self.black_checked:
+                return not self.is_in_check(move.origin, opposite_color)
+            else:
+                return not self.discover_check(self.white_king.location, move.origin, opposite_color)
+
+    def discover_check(self, king_location, move_origin, by_color):
+        # checks specific file, rank or diagonal for a threath
+        # origin_x = ord(king_location[0])-96
+        # origin_y = int(king_location[1])
+        # destination_x = ord(move_origin[0])-96
+        # destination_y = int(move_origin[1])
+
+        origin_x, origin_y = S2P[king_location]
+        destination_x, destination_y = S2P[move_origin]
+        dx = origin_x - destination_x
+        dy = origin_y - destination_y
+        direction = ''
+        if dx == 0:
+            if dy > 0:
+                direction = 'S'
+            else:
+                direction = 'N'
+        if dy == 0:
+            if dx > 0:
+                direction = 'W'
+            else:
+                direction = 'E'
+        if dx == dy:
+            if dx > 0:
+                direction = 'SW'
+            else:
+                direction = 'NE'
+        if dx == -dy:
+            if dx > 0:
+                direction = 'NW'
+            else:
+                direction = 'SE'
+
+        if direction == '':
+            return False
+
+        if len(direction) == 1: # i.e. direction in ['N','E','S','W']
+            actuators = ['q', 'r']
+        else:
+            actuators = ['q', 'b']
+
+        for i in range(len(INVERSE_HIT_MAP[king_location][direction])):
+            hitter = INVERSE_HIT_MAP[king_location][direction][i]
+            if self.state[hitter]:
+                if self.state[hitter].color == by_color and self.state[hitter].type_ in actuators:
+                    return True
+                break # the direction is blocked if an enemy piece doesnt operate in that direction or own piece
+
+        return False
 
 
 
@@ -301,122 +424,5 @@ class Board():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-    # def valid_moves(self, piece):
-    #     return [ move for move in piece.naive_moves() if self.validate_move(piece, move) ]
-
-    # def validate_move(self, piece, move):
-    #     if piece.color == 'w':
-    #         opposite_color = 'b'
-    #     else:
-    #         opposite_color = 'w'
-
-    #     # is_in_check & discover_check will not work properly unless all effects of a move are applied
-
-    #     # execute move on state level
-    #     #  we can only work with state, since
-
-    #     # if piece.type_ == 'k':
-    #     #     # to ensure directional checks pass through the square currently occupied by the king we need to lift it form the board/state
-    #     #     king = self.state[location]
-    #     #     self.state[location] = None
-    #     #     is_in_check = self.is_in_check(move.designation, opposite_color)
-    #     #     self.state[location] = king
-
-    #     if (self.white_checked or self.black_checked) and piece != self.white_king and piece != self.black_king:
-    #         self.state[piece.location] = None
-
-    #         is_in_check = self.is_in_check(move.destination, opposite_color)
-    #         self.state[piece.location] = piece
-
-
-    #     if piece == self.white_king or piece == self.black_king:
-    #         self.state[piece.location] = None
-    #         is_in_check = self.is_in_check(move.destination, opposite_color)
-    #         self.state[piece.location] = piece
-
-
-
-    #         if piece.col == 'w':
-    #             opposite_col = 'b'
-    #             castle_row = '1'
-    #             ksq = self.wk
-    #         else:
-    #             opposite_col = 'w'
-    #             castle_row = '8'
-    #             ksq = self.bk
-
-    #         if verbose>0:
-    #             print 'opp col',opposite_col,'ksq',ksq
-
-    #         if piece.type=='k':
-    #             if move[0]=='c':
-    #                 is_in_check = is_in_check or self.sq_in_check(ksq,opposite_col) # the current sq
-    #                 if move[2].count('O')==2:
-    #                     ksq='f'+castle_row
-    #                 if move[2].count('O')==3:
-    #                     ksq='d'+castle_row
-    #                 is_in_check = is_in_check or self.sq_in_check(ksq,opposite_col) # jump-over sq
-    #         else:
-    #             is_in_check = self.sq_in_check(ksq,opposite_col)
-
-    #         if verbose > 0:
-    #             print 'move',move
-    #             print 'checking check against',ksq
-    #             print('is_in_check',is_in_check)
-
-    #         return not is_in_check # False == invalid move
-
-
-    #     else:
-    #         if piece.col == 'w':
-    #             opposite_col = 'b'
-    #             ksq = self.wk
-    #         else:
-    #             opposite_col = 'w'
-    #             ksq = self.bk
-
-    #         is_in_check = self.discover_check(ksq,opposite_col,origin_sq)
-
-    #         if verbose > 0:
-    #             print 'origin_sq',origin_sq
-    #             print 'checking check against',ksq, self.piece_by_sq(ksq)
-    #             print('is_in_check',is_in_check)
-
-    #         return not is_in_check # False == invalid move
-
-
-
-
-
-    #     if verbose>0:
-    #         print 'is_valid',is_valid
-    #     if not is_valid:
-    #         self.process_actions(undo,verbose)
-    #         return None
-    #     # --- end of invalidation ---
-
-    #     self.backtrack.append(self.hashit()) # this is used to check on stalemate by repetition
-    #     undo.append(['data',self.wk,self.bk,self.winch,self.binch,])
-    #     if piece.col == 'w':
-    #         self.binch = self.sq_in_check(self.bk,piece.col,'',verbose)
-    #         if piece.type == 'k':
-    #             self.wk = exp[1]
-    #     else:
-    #         if piece.type == 'k':
-    #             self.bk = exp[1]
-    #         self.winch = self.sq_in_check(self.wk,piece.col,'',verbose)
-
-    #     return undo
 
 

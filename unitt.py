@@ -45,8 +45,8 @@ class MoveTest(unittest.TestCase):
         self.assertEqual('Nxc3', repr(test_move))
         self.assertEqual(taken_piece, test_move.taken)
         execution_actions, undo_actions = test_move.actions()
-        self.assertEqual([['remove', taken_piece], ['relocate', test_piece, 'c3']], execution_actions)
-        self.assertEqual([['relocate', 'c3', 'e4'], ['add', taken_piece]], undo_actions)
+        self.assertEqual([{'act':'remove_piece', 'args':[taken_piece]}, {'act':'relocate_piece', 'args':[test_piece, 'c3']}], execution_actions)
+        self.assertEqual([{'act':'relocate_piece', 'args':['c3', 'e4']}, {'act':'add_piece', 'args':[taken_piece]}], undo_actions)
 
 class BoardTest(unittest.TestCase):
 
@@ -81,18 +81,18 @@ class BoardTest(unittest.TestCase):
     def test_piece_relocation(self):
         test_board = Board(TEST_POSITION1)
         self.assertIsNone(test_board.state['b8'])
-        test_board.relocate('c3', 'b8')
+        test_board.relocate_piece('c3', 'b8')
         self.assertEqual('bn@b8', repr(test_board.state['b8']))
-        test_board.relocate('e4', 'g1')
+        test_board.relocate_piece('e4', 'g1')
         self.assertEqual('wn@g1', repr(test_board.state['g1']))
-        test_board.relocate('g5', 'g2')
+        test_board.relocate_piece('g5', 'g2')
         self.assertEqual('wp@g2', repr(test_board.state['g2']))
-        test_board.relocate(test_board.state['f5'], 'f7')
+        test_board.relocate_piece(test_board.state['f5'], 'f7')
         self.assertEqual('bp@f7', repr(test_board.state['f7']))
 
         test_board = Board(TEST_POSITION2)
-        self.assertRaises(MoveException, test_board.relocate, 'c8', 'c3')
-        self.assertRaises(MoveException, test_board.relocate, 'b8', 'b6')
+        self.assertRaises(MoveException, test_board.relocate_piece, 'c8', 'c3')
+        self.assertRaises(MoveException, test_board.relocate_piece, 'b8', 'b6')
 
     def test_naive_moves_for_pawns_knights(self):
         test_board = Board(TEST_POSITION1)
@@ -171,16 +171,6 @@ class BoardTest(unittest.TestCase):
 
         #castling without check validation
         self.assertNotIn('O-O-O', [ z.notation for z in test_board.naive_moves(test_board.state['e8']) ])
-        # test_board.remove_piece('b1')
-        # test_board.remove_piece('c1')
-        # test_board.remove_piece('d1')
-        # test_board.remove_piece('f1')
-        # test_board.remove_piece('c8')
-        # test_board.remove_piece('d8')
-        # test_board.remove_piece('f8')
-        # test_board.remove_piece('g8')
-        # print(test_board)
-        # print(test_board.state)
         test_board = Board(TEST_POSITION3)
         # |br|  |  |  |bk|  |  |  |
         # |  |wr|  |bb|  |  |  |  |
@@ -200,15 +190,18 @@ class BoardTest(unittest.TestCase):
 
     def test_determining_checks(self):
         test_board = Board(TEST_POSITION2)
+        self.assertFalse(test_board.discover_check('e8', 'd7', 'w'))
+        self.assertFalse(test_board.discover_check('e1', 'e4', 'b'))
         test_board.remove_piece('e4')
-        # |br|  |bb|bq|bk|bb|bn|  |
+        self.assertTrue(test_board.discover_check('e1', 'e4', 'b'))
+        # |br|  |  |  |bk|  |  |  |
         # |  |wr|  |bb|  |  |  |  |
         # |  |  |  |  |  |  |  |  |
         # |  |wb|  |  |bq|  |  |  |
         # |  |  |  |  |  |  |  |  |
         # |  |  |bn|  |  |  |  |  |
         # |  |  |  |  |  |  |  |  |
-        # |wr|wn|wb|wq|wk|wb|  |wr|
+        # |wr|  |  |  |wk|  |  |wr|
 
         self.assertTrue(test_board.is_in_check('e1','b'))
         self.assertTrue(test_board.is_in_check('e2','b'))
@@ -232,10 +225,31 @@ class BoardTest(unittest.TestCase):
         self.assertIsInstance(test_board.state['c3'], Piece)
         self.assertEqual('bn@c3', repr(test_board.state['c3']))
         self.assertEqual(14, len(test_board.black))
-        test_board.execute_move(capture_move)
+        undo = test_board.execute_move(capture_move)
+        self.assertIsNotNone(undo)
         self.assertIsInstance(test_board.state['c3'], Piece)
-        # self.assertEqual('wn@c3', repr(test_board.state['c3']))
-        # self.assertEqual(13, len(test_board.black))
+        self.assertEqual('wn@c3', repr(test_board.state['c3']))
+        self.assertEqual(13, len(test_board.black))
+
+        test_board = Board(TEST_POSITION2)
+        # |br|  |  |  |bk|  |  |  |
+        # |  |wr|  |bb|  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |wb|  |  |bq|  |  |  |
+        # |  |  |  |  |wn|  |  |  |
+        # |  |  |bn|  |  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |wr|  |  |  |wk|  |  |wr|
+
+        e4_moves = test_board.naive_moves(test_board.state['e4'])
+        capture_move = [ z for z in e4_moves if z.type_ == 't' ][0]
+        self.assertIsInstance(test_board.state['c3'], Piece)
+        self.assertEqual('bn@c3', repr(test_board.state['c3']))
+        undo = test_board.execute_move(capture_move)
+        # move fails
+        self.assertIsNone(undo)
+        self.assertEqual('bn@c3', repr(test_board.state['c3']))
+        self.assertEqual('wn@e4', repr(test_board.state['e4']))
 
 
 
