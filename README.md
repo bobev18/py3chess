@@ -46,3 +46,6 @@ Migrated the checks:
 
 from add_piece to spawn_pieces, as this is the only situation where this may occur, while add_piece is called from few more places
 
+The need for having all valid moves instead of all naive moves, and validation at execution, is needed to compare input notation, to the notation of all valid moves;
+ If we compare against naive moves, we may accept prompt, then fail validation during execution. That would entail returning to prompt, but that's not an option in terms of cycle structure
+

@@ -287,6 +287,10 @@ class BoardTest(unittest.TestCase):
         self.assertEqual('wk@e1', repr(test_game.board.state['e1']))
         self.assertEqual(16, len(test_game.board.black))
 
+    def test_start_game(self):
+        test_game = Game()
+        self.assertEqual('1/2-1/2', test_game.start())
+
 
 
     # def test_validions_against_checks(self):
