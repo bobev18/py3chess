@@ -3,7 +3,7 @@ from move import Move, MoveException
 
 CAPTURE_SIGN = 'x'
 
-S2P =   {
+SQUARE2COORDS =   {
         'a1':(1,1),'a2':(1,2),'a3':(1,3),'a4':(1,4),'a5':(1,5),'a6':(1,6),'a7':(1,7),'a8':(1,8),
         'b1':(2,1),'b2':(2,2),'b3':(2,3),'b4':(2,4),'b5':(2,5),'b6':(2,6),'b7':(2,7),'b8':(2,8),
         'c1':(3,1),'c2':(3,2),'c3':(3,3),'c4':(3,4),'c5':(3,5),'c6':(3,6),'c7':(3,7),'c8':(3,8),
@@ -140,12 +140,8 @@ class Board():
 
         if new_piece.color == 'w':
             self.white.append(new_piece)
-            if new_piece.type_ == 'k':
-                self.white_king = new_piece
         else:
             self.black.append(new_piece)
-            if new_piece.type_ == 'k':
-                self.black_king = new_piece
 
         self.state[location] = new_piece
 
@@ -154,6 +150,10 @@ class Board():
         for square in init_state.keys():
             if init_state[square] != '  ':
                 self.add_piece(init_state[square][0], init_state[square][1], square)
+                if init_state[square]  == 'wk':
+                    self.white_king = self.state[square]
+                if init_state[square]  == 'bk':
+                    self.black_king = self.state[square]
 
         self.white_checked = self.is_in_check(self.white_king.location, 'b')
         self.black_checked = self.is_in_check(self.black_king.location, 'w')
@@ -270,6 +270,71 @@ class Board():
 
         return results
 
+    def process_actions(self, actions):
+        # common routine of the exec_move and undo_move
+        for act in actions:
+            if act['act'] == 'relocate_piece':
+                self.relocate_piece(*act['args'])
+            elif act['act'] == 'remove_piece':
+                self.remove_piece(*act['args'])
+            elif act['act'] == 'add_piece':
+                self.add_piece(*act['args'])
+            elif act['act'] == 'data':
+                self.white_checked = act['args'][0]
+                self.black_checked = act['args'][1]
+
+    def execute_move(self, move):
+        # the function that applies actions to the piece set (and thus the board)
+        actions, undo = move.actions()
+        self.process_actions(actions)
+        if not self.validate_move(move):
+            self.process_actions(undo)
+            return None
+        # --- end of invalidation ---
+
+        # self.backtrack.append(self.hashit()) # this is used to check on stalemate by repetition
+        undo.append({'act':'data', 'args':[self.white_checked, self.black_checked]})
+        if move.piece.color == 'w':
+            self.black_checked = self.is_in_check(self.black_king.location, 'w')
+        else:
+            self.white_checked = self.is_in_check(self.white_king.location, 'b')
+
+        return undo
+
+    def undo_actions(self, actions):
+        self.process_actions(actions)
+        # self.backtrack.pop() # backtrack is used to check for stalemate by repetition
+
+    def validate_move(self, move):
+        if move.piece.color == 'w':
+            opposite_color = 'b'
+            castle_row = '1'
+        else:
+            opposite_color = 'w'
+            castle_row = '8'
+
+        # is_in_check & discover_check will not work properly unless all effects of a move are applied to board.state
+
+        if move.piece.type_ == 'k':
+            # king's landing
+            is_in_check = self.is_in_check(move.destination, opposite_color)
+            if move.type_ == 'c':
+                # king's origin
+                is_in_check = is_in_check or self.is_in_check(move.origin, opposite_color)
+                if move.notation.count('O') == 2:
+                    jump_over = 'f' + castle_row
+                else:
+                    jump_over = 'd' + castle_row
+                # jump over
+                is_in_check = is_in_check or self.is_in_check(jump_over, opposite_color)
+
+            return not is_in_check # False == invalid move
+        else: # not moving the king
+            if self.white_checked or self.black_checked:
+                return not self.is_in_check(move.origin, opposite_color)
+            else:
+                return not self.discover_check(self.white_king.location, move.origin, opposite_color)
+
     def is_in_check(self, location, by_color):
         result = False
         for hitter in INVERSE_HIT_MAP[location]['knight']:
@@ -307,76 +372,9 @@ class Board():
 
         return False
 
-    def process_actions(self, actions):
-        # common routine of the exec_move and undo_move
-        for act in actions:
-            if act['act'] == 'relocate_piece':
-                self.relocate_piece(*act['args'])
-            elif act['act'] == 'remove_piece':
-                self.remove_piece(*act['args'])
-            elif act['act'] == 'add_piece':
-                self.add_piece(*act['args'])
-            elif act['act'] == 'data':
-                self.white_checked = act['args'][0]
-                self.black_checked = act['args'][1]
-
-    def execute_move(self, move):
-        # the function that applies actions to the piece set (and thus the board)
-        actions, undo = move.actions()
-        self.process_actions(actions)
-        if not self.validate_move(move):
-            self.process_actions(undo)
-            return None
-        # --- end of invalidation ---
-
-        # self.backtrack.append(self.hashit()) # this is used to check on stalemate by repetition
-        undo.append({'act':'data', 'args':[self.white_checked, self.black_checked]})
-        if move.piece.color == 'w':
-            self.black_checked = self.is_in_check(self.black_king.location, 'w')
-        else:
-            self.white_checked = self.is_in_check(self.white_king.location, 'b')
-
-        return undo
-
-    def validate_move(self, move):
-        if move.piece.color == 'w':
-            opposite_color = 'b'
-            castle_row = '1'
-        else:
-            opposite_color = 'w'
-            castle_row = '8'
-
-        # is_in_check & discover_check will not work properly unless all effects of a move are applied to board.state
-
-        if move.piece.type_ == 'k':
-            # king's landing
-            is_in_check = self.is_in_check(move.destination, opposite_color)
-            if move.type_ == 'c':
-                # king's origin
-                is_in_check = is_in_check or self.is_in_check(move.origin, opposite_color)
-                if move.notation.count('O') == 2:
-                    jump_over = 'f' + castle_row
-                else:
-                    jump_over = 'd' + castle_row
-                # jump over
-                is_in_check = is_in_check or self.is_in_check(jump_over, opposite_color)
-
-            return not is_in_check # False == invalid move
-        else: # not moving the king
-            if self.white_checked or self.black_checked:
-                return not self.is_in_check(move.origin, opposite_color)
-            else:
-                return not self.discover_check(self.white_king.location, move.origin, opposite_color)
-
     def discover_check(self, king_location, move_origin, by_color):
-        # checks specific file, rank or diagonal for a threath
-        # origin_x = ord(king_location[0])-96
-        # origin_y = int(king_location[1])
-        # destination_x = ord(move_origin[0])-96
-        # destination_y = int(move_origin[1])
-
-        origin_x, origin_y = S2P[king_location]
-        destination_x, destination_y = S2P[move_origin]
+        origin_x, origin_y = SQUARE2COORDS[king_location]
+        destination_x, destination_y = SQUARE2COORDS[move_origin]
         dx = origin_x - destination_x
         dy = origin_y - destination_y
         direction = ''

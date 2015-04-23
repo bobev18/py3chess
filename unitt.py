@@ -251,10 +251,34 @@ class BoardTest(unittest.TestCase):
         self.assertEqual('bn@c3', repr(test_board.state['c3']))
         self.assertEqual('wn@e4', repr(test_board.state['e4']))
 
+    def test_undo_move(self):
+        test_board = Board(TEST_POSITION1)
+        # |br|  |bb|bq|bk|bb|bn|  |
+        # |bp|bp|bp|bp|bp|  |bp|wp|
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |  |  |  |bp|wp|  |
+        # |  |  |  |  |wn|  |  |  |
+        # |  |  |bn|  |  |  |  |  |
+        # |wp|wp|wp|wp|wp|wp|  |  |
+        # |wr|wn|wb|wq|wk|wb|  |wr|
 
-
-
-
+        b1_moves = test_board.naive_moves(test_board.state['b1'])
+        capture_move = [ z for z in b1_moves if z.type_ == 't' ][0]
+        self.assertIsInstance(test_board.state['c3'], Piece)
+        self.assertEqual('bn@c3', repr(test_board.state['c3']))
+        self.assertEqual(16, len(test_board.white))
+        self.assertEqual(14, len(test_board.black))
+        undo = test_board.execute_move(capture_move)
+        self.assertIsNotNone(undo)
+        self.assertIsInstance(test_board.state['c3'], Piece)
+        self.assertEqual('wn@c3', repr(test_board.state['c3']))
+        self.assertEqual(16, len(test_board.white))
+        self.assertEqual(13, len(test_board.black))
+        test_board.undo_actions(undo)
+        self.assertIsInstance(test_board.state['c3'], Piece)
+        self.assertEqual('bn@c3', repr(test_board.state['c3']))
+        self.assertEqual(16, len(test_board.white))
+        self.assertEqual(14, len(test_board.black))
 
 
 

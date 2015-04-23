@@ -17,16 +17,32 @@ Move validation against check discovery and moving king into chekced field, requ
 naive moves for wr@e4 are [Rxe5, Rf4, Rg4, Rh4, Re3, Re2, Rd4, Rc4, Rb4, Ra4]
 the valid moves are [Rxe5, Re3, Re2]
 the way discover_check works, is:
- 1. take the king's position(e1) and the move origin (e4) and determine direction along which we need to seek check discovery
- 2. take from INVERSE_HIT_MAP locations of potential hitters for the king's square - INVERSE_HIT_MAP['e4'][direction]
- 3. iterate the returned locations (which are in order), and check via board state, if there is a piece
-  3.1. if the piece is relevant - opposite color, QR along lines, and QB along diagonals - it returns that move leads to check discovery
-  3.2. if the piece is irrelevant - it returns that there is NO check discovery
- 4. if iteration ends without any piece alon the direction - it returns that there is NO check discovery
+ 1. execute the move
+ 2. take the king's position(e1) and the move origin (e4) and determine direction along which we need to seek check discovery
+ 3. take from INVERSE_HIT_MAP locations of potential hitters for the king's square and the direction - INVERSE_HIT_MAP['e1'][direction]
+ 4. iterate the returned locations (which are ordered along the direction), and check via board state, if there is a piece
+  4.1. if the piece is relevant - opposite color, Q/R along lines, and Q/B along diagonals - it returns True i.e. that move leads to check discovery
+  4.2. if the piece is irrelevant - it returns False i.e. that there is NO check discovery
+ 5. if iteration ends without finding any piece along the direction - it returns False i.e. that there is NO check discovery
+This will only work properly if the moves Re3, Re2, have the rook's new location reflected onto the board state i.e. the move is executed
+There are couple of alterations that may be considered:
+  (1) change of lists of pieces - whites, blacks -- these are not used for check validations
+  (2) change Piece instance attributes to reflect the relocation
+    = discover_check does not use piece object at all
+    = is_in_check uses only piece.designation, so outdated attributes as location, x & y will not affect it's work
+Item (1) is carried out in add_piece and in remove_piece;
+Item (2) is carried out, as it's integrated into relocate_piece; relocate_piece is the only action that requires Piece attributes update
 
-This will only work properly if the the new location for Re3, Re2, is reflected onto the board state i.e. the move is executed
-There are couple of alterations that may be saved:
-  - change of lists of pieces - whites, blacks
-  - change relocation piece selfawareness -- is_in_check uses only piece.designation, so outdated attributes as location, x & y will not affect it's work.
+The current implementation has the check level validations integrated in the move execution method. The history dependent checks - castling and stalemate by repetition - should be in the Game class
+Disambiguation should also be in the Game class
 
+Migrated the checks:
+
+	if new_piece.type_ == 'k':
+        self.white_king = new_piece
+
+    if new_piece.type_ == 'k':
+        self.black_king = new_piece
+
+from add_piece to spawn_pieces, as this is the only situation where this may occur, while add_piece is called from few more places
 
