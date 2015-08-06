@@ -97,7 +97,7 @@ class Board():
     def __init__(self, construction_state={}):
         self.white = []
         self.black = []
-        self.move_stack = []
+        # self.move_stack = [] # not sure what this was to be
         self.state = EMPTYBOARD.copy()
         if construction_state == {}:
             self.white_king = None
@@ -119,6 +119,12 @@ class Board():
                 result += piece + '|'
             result+='\n'
         return result
+
+    def pieces_of_color(self, color):
+      if color == 'w':
+        return self.white
+      else:
+        return self.black
 
     def add_piece(self, color, type_=None, location=None):
         if isinstance(color, Piece):
@@ -306,6 +312,7 @@ class Board():
         # self.backtrack.pop() # backtrack is used to check for stalemate by repetition
 
     def validate_move(self, move):
+        # assumes the move in question is executed, and verifies for in_check & discover_check
         if move.piece.color == 'w':
             opposite_color = 'b'
             castle_row = '1'

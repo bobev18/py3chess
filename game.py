@@ -23,12 +23,19 @@ class Player():
         self.history = []
         self.is_in_check = False
         self.AI_depth = AI_depth
+        self.moves_to_simulate = []
+
+    def simulate(self, moves):
+        self.moves_to_simulate = moves
 
     def comm_output(self, message):
         print(message)
 
     def comm_input(self, message):
-        return input(message)
+        if self.moves_to_simulate:
+            return self.moves_to_simulate.pop()
+        else:
+            return input(message)
 
     def prompt_input(self):
         # output(self.show()
@@ -72,8 +79,11 @@ class Player():
 
 class Game():
 
-    def __init__(self, player1='human', player2='human', clock=60*60, logfile='d:/temp/chesslog.txt'):
-        self.board = Board(INITIAL_POSITION)
+    def __init__(self, player1='human', player2='human', clock=60*60, board_position={}, logfile='d:/temp/chesslog.txt'):
+        if board_position:
+            self.board = Board(board_position)
+        else:
+            self.board = Board(INITIAL_POSITION)
         self.player1 = Player(player1, 'w', clock)
         self.player2 = Player(player2, 'b', clock)
         self.turnning_player = self.player1
@@ -84,12 +94,91 @@ class Game():
         with open(logfile,'w') as f:
             self.logfile = logfile
 
+    def mate(self):
+        # draw - no one could possibly mate
+        if len(self.board.white) + len(self.board.black) <= 2:
+            return 'stalemate'
+
+        if len(self.board.white) + len(self.board.black) == 3:
+            if len(self.board.white) > len(self.board.black):
+                extra_piece = [ z.type_ for z in self.board.white if z.type_ != 'k'][0]
+            else:
+                extra_piece = [ z.type_ for z in self.board.black if z.type_ != 'k'][0]
+            if extra_piece in ['n', 'b']:
+                return 'stalemate'
+
+        # reduced ability to move
+        result=[]
+        # for piece in self.board.pieces_of_color(self.turnning_player.color):
+        #     ------------------->
+        #     temporary_result = self.verified(p,verbose)
+        #     rez.extend(temp_rez)
+        #     if verbose>0:
+        #         print 'p',p,'rez',temp_rez
+
+        # if verbose>1:
+        #     print 'mate rez (all avail moves for the pl in turn):', rez
+        # if verbose>0:
+        #     print 'len avail moves:', len(rez)
+
+        # if len(rez)==0:
+        #     if verbose>0:
+        #         print 'player on turn is ',self.turn['col'],' and check against him is :',self.turn['is_in_check']
+        #     if self.turn['is_in_check']:
+        #         return 'mate'
+        #     else:
+        #         return 'stalemate'
+        # else:
+        #     # repeated moves
+        #     if len(self.zboard.backtrack)>0 and self.zboard.backtrack.count(self.zboard.backtrack[-1])>=3:
+        #         if verbose>0:
+        #             print 'backtrack',self.zboard.backtrack
+        #         return 'stalemate'
+        #     return ''
+
+        return 'active'
+
     def start(self):
-        self.state = 'active'
+        # self.state = 'active'
+        # check if initial position is mate or stalemate i.e. active
+        self.state = self.mate()
         while self.state == 'active':
             valid_input = False
             while not valid_input:
                 input_ = self.turnning_player.prompt_input()
+            #     valid_input = __validate_against_z3levels__(input_)
+            #     # input could affect the cycle in three ways:
+            #     # 1. valid move to pass turn to the other player
+            #     # 2. valid command that keeps move (i.e. show info, export, undo, etc)
+            #     # 3. valid command affecting game state - offer draw, surrender, quit
+            #     if valid_input in ['info', 'export', 'undo']:
+            #         anction_input(valid_input)
+            #         valid_input = False
+
+            # if valid_input not in ['offer draw', 'surrender', 'quit']
+            #     execute_move(valid_input)
+            #     self.undo_stack.append(valid_input__or__derivate)
+            #     if self.turnning_player == self.player1:
+            #         self.turnning_player = self.player2
+            #     else:
+            #         self.turnning_player = self.player1
+            #     self.turn_count += 1
+            #     self.full_notation += self.notator(valid_input)
+            #     self.history.append(valid_input) #list?
+            # else:
+            #     self.state = valid_input
+
+            # self.state = self.mate()
+
+        if self.state == 'stalemate':
+            self.full_notation += '\n1/2-1/2'
+            result = 'stalemate'
+
+        return result
+
+
+
+
 
 
 

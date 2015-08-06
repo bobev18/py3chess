@@ -18,6 +18,7 @@ POSITION1_VIEW = """
 """
 TEST_POSITION2 = {'h8':'  ', 'h2':'  ', 'h3':'  ', 'h1':'wr', 'h6':'  ', 'h7':'  ', 'h4':'  ', 'h5':'  ', 'd8':'bq', 'a8':'br', 'd6':'  ', 'd7':'bb', 'd4':'  ', 'd5':'  ', 'd2':'  ', 'd3':'  ', 'd1':'wq', 'g7':'  ', 'g6':'  ', 'g5':'  ', 'g4':'  ', 'g3':'  ', 'g2':'  ', 'g1':'  ', 'g8':'bn', 'c8':'bb', 'c3':'bn', 'c2':'  ', 'c1':'wb', 'c7':'  ', 'c6':'  ', 'c5':'  ', 'c4':'  ', 'f1':'wb', 'f2':'  ', 'f3':'  ', 'f4':'  ', 'f5':'  ', 'f6':'  ', 'f7':'  ', 'f8':'bb', 'b4':'  ', 'b5':'wb', 'b6':'  ', 'b7':'wr', 'b1':'wn', 'b2':'  ', 'b3':'  ', 'b8':'  ', 'a1':'wr', 'a3':'  ', 'a2':'  ', 'a5':'  ', 'e8':'bk', 'a7':'  ', 'a6':'  ', 'e5':'bq', 'e4':'wn', 'e7':'  ', 'e6':'  ', 'e1':'wk', 'e3':'  ', 'e2':'  ', 'a4':'  '}
 TEST_POSITION3 = {'h5':'  ', 'g2':'  ', 'f8':'  ', 'g5':'  ', 'd8':'  ', 'd4':'  ', 'c6':'  ', 'e2':'  ', 'b6':'  ', 'd3':'  ', 'b3':'  ', 'f1':'  ', 'a8':'br', 'a7':'  ', 'b1':'  ', 'f3':'  ', 'a6':'  ', 'a2':'  ', 'b2':'  ', 'h6':'  ', 'e3':'  ', 'f6':'  ', 'b7':'wr', 'd5':'  ', 'e4':'wn', 'd6':'  ', 'g7':'  ', 'e6':'  ', 'f2':'  ', 'g6':'  ', 'h7':'  ', 'c1':'  ', 'f4':'  ', 'd2':'  ', 'g1':'  ', 'a1':'wr', 'e8':'bk', 'c8':'  ', 'e5':'bq', 'e7':'  ', 'a4':'  ', 'h4':'  ', 'b5':'wb', 'c3':'bn', 'b4':'  ', 'g3':'  ', 'f7':'  ', 'c7':'  ', 'h1':'wr', 'h8':'  ', 'g8':'  ', 'a3':'  ', 'a5':'  ', 'f5':'  ', 'c4':'  ', 'e1':'wk', 'd7':'bb', 'g4':'  ', 'b8':'  ', 'h2':'  ', 'd1':'  ', 'h3':'  ', 'c5':'  ', 'c2':'  '}
+TWO_KINGS_POSITION = {'h5':'  ', 'g2':'  ', 'f8':'  ', 'g5':'  ', 'd8':'  ', 'd4':'  ', 'c6':'  ', 'e2':'  ', 'b6':'  ', 'd3':'  ', 'b3':'  ', 'f1':'  ', 'a8':'  ', 'a7':'  ', 'b1':'  ', 'f3':'  ', 'a6':'  ', 'a2':'  ', 'b2':'  ', 'h6':'  ', 'e3':'  ', 'f6':'  ', 'b7':'  ', 'd5':'  ', 'e4':'  ', 'd6':'  ', 'g7':'  ', 'e6':'  ', 'f2':'  ', 'g6':'  ', 'h7':'  ', 'c1':'  ', 'f4':'  ', 'd2':'  ', 'g1':'  ', 'a1':'  ', 'e8':'  ', 'c8':'  ', 'e5':'wk', 'e7':'  ', 'a4':'  ', 'h4':'  ', 'b5':'  ', 'c3':'  ', 'b4':'  ', 'g3':'  ', 'f7':'  ', 'c7':'  ', 'h1':'  ', 'h8':'bk', 'g8':'  ', 'a3':'  ', 'a5':'  ', 'f5':'  ', 'c4':'  ', 'e1':'  ', 'd7':'  ', 'g4':'  ', 'b8':'  ', 'h2':'  ', 'd1':'  ', 'h3':'  ', 'c5':'  ', 'c2':'  '}
 
 class PieceTest(unittest.TestCase):
 
@@ -283,13 +284,12 @@ class BoardTest(unittest.TestCase):
 
     def test_initialize_game(self):
         test_game = Game()
-        self.assertIsInstance(test_game, Game)
         self.assertEqual('wk@e1', repr(test_game.board.state['e1']))
         self.assertEqual(16, len(test_game.board.black))
 
     def test_start_game(self):
-        test_game = Game()
-        self.assertEqual('1/2-1/2', test_game.start())
+        test_game = Game(board_position=TWO_KINGS_POSITION)
+        self.assertEqual('stalemate', test_game.start())
 
 
 
@@ -682,18 +682,18 @@ if __name__ == "__main__":
 #         zgame = chesslib.game()
 #         # Stalemate
 #         zgame.zboard.piecefy({'h8':'  ', 'h2':'  ', 'h3':'  ', 'h1':'wr', 'h6':'  ', 'h7':'  ', 'h4':'  ', 'h5':'  ', 'd8':'  ', 'a8':'br', 'd6':'  ', 'd7':'bb', 'd4':'  ', 'd5':'  ', 'd2':'  ', 'd3':'  ', 'd1':'  ', 'g7':'  ', 'g6':'  ', 'g5':'  ', 'g4':'  ', 'g3':'  ', 'g2':'  ', 'g1':'  ', 'g8':'  ', 'c8':'  ', 'c3':'bn', 'c2':'  ', 'c1':'  ', 'c7':'  ', 'c6':'  ', 'c5':'  ', 'c4':'  ', 'f1':'  ', 'f2':'  ', 'f3':'  ', 'f4':'  ', 'f5':'  ', 'f6':'  ', 'f7':'  ', 'f8':'  ', 'b4':'  ', 'b5':'wb', 'b6':'  ', 'b7':'wr', 'b1':'  ', 'b2':'  ', 'b3':'  ', 'b8':'  ', 'a1':'wr', 'a3':'  ', 'a2':'  ', 'a5':'  ', 'e8':'bk', 'a7':'  ', 'a6':'  ', 'e5':'bq', 'e4':'wn', 'e7':'  ', 'e6':'  ', 'e1':'wk', 'e3':'  ', 'e2':'  ', 'a4':'  '})
-#         self.assertEqual('1/2-1/2',zgame.cycle(['Bxd7', 'Kd8', 'Rh7', 'Ra2', 'Rxa2', 'Qa5', 'Rxa5', 'Ne2', 'Kxe2', 'exit'],0,verbose=0)) #stalemate
+#         self.assertEqual('stalemate',zgame.cycle(['Bxd7', 'Kd8', 'Rh7', 'Ra2', 'Rxa2', 'Qa5', 'Rxa5', 'Ne2', 'Kxe2', 'exit'],0,verbose=0)) #stalemate
 
 #         # Draws
 #         zgame = chesslib.game()
 #         zgame.zboard.piecefy({'h8':'  ', 'h2':'  ', 'h3':'  ', 'h1':'  ', 'h6':'  ', 'h7':'  ', 'h4':'  ', 'h5':'  ', 'd8':'  ', 'a8':'  ', 'd6':'  ', 'd7':'  ', 'd4':'  ', 'd5':'  ', 'd2':'  ', 'd3':'  ', 'd1':'  ', 'g7':'  ', 'g6':'  ', 'g5':'  ', 'g4':'  ', 'g3':'  ', 'g2':'  ', 'g1':'  ', 'g8':'  ', 'c8':'  ', 'c3':'  ', 'c2':'  ', 'c1':'  ', 'c7':'  ', 'c6':'  ', 'c5':'  ', 'c4':'  ', 'f1':'  ', 'f2':'  ', 'f3':'  ', 'f4':'  ', 'f5':'  ', 'f6':'  ', 'f7':'  ', 'f8':'  ', 'b4':'  ', 'b5':'  ', 'b6':'  ', 'b7':'  ', 'b1':'  ', 'b2':'  ', 'b3':'  ', 'b8':'  ', 'a1':'  ', 'a3':'  ', 'a2':'  ', 'a5':'  ', 'e8':'bk', 'a7':'  ', 'a6':'  ', 'e5':'bq', 'e4':'  ', 'e7':'  ', 'e6':'  ', 'e1':'wk', 'e3':'  ', 'e2':'wq', 'a4':'  '})
-#         self.assertEqual('1/2-1/2',zgame.cycle(['Kd1', 'Qxe2', 'Kxe2', 'Ke7'],0,verbose=0))# draw -- should trigger on Kxe2
+#         self.assertEqual('stalemate',zgame.cycle(['Kd1', 'Qxe2', 'Kxe2', 'Ke7'],0,verbose=0))# draw -- should trigger on Kxe2
 #         ### insert here test for King + light piece vs King draws ###
 
 #         # Repetition Draw
 #         zgame = chesslib.game()
 #         zgame.zboard.piecefy({'h8':'bk', 'h2':'  ', 'h3':'  ', 'h1':'  ', 'h6':'  ', 'h7':'  ', 'h4':'  ', 'h5':'  ', 'd8':'  ', 'a8':'  ', 'd6':'  ', 'd7':'  ', 'd4':'  ', 'd5':'  ', 'd2':'  ', 'd3':'  ', 'd1':'  ', 'g7':'  ', 'g6':'  ', 'g5':'  ', 'g4':'  ', 'g3':'  ', 'g2':'  ', 'g1':'  ', 'g8':'  ', 'c8':'  ', 'c3':'  ', 'c2':'  ', 'c1':'  ', 'c7':'  ', 'c6':'  ', 'c5':'  ', 'c4':'  ', 'f1':'  ', 'f2':'  ', 'f3':'  ', 'f4':'  ', 'f5':'  ', 'f6':'  ', 'f7':'  ', 'f8':'  ', 'b4':'  ', 'b5':'  ', 'b6':'  ', 'b7':'  ', 'b1':'  ', 'b2':'  ', 'b3':'  ', 'b8':'  ', 'a1':'  ', 'a3':'  ', 'a2':'  ', 'a5':'  ', 'e8':'  ', 'a7':'  ', 'a6':'  ', 'e5':'bq', 'e4':'  ', 'e7':'  ', 'e6':'  ', 'e1':'wk', 'e3':'  ', 'e2':'wq', 'a4':'  '})
-#         self.assertEqual('1/2-1/2',zgame.cycle(['Kd1', 'Qd5+', '2.Qd2', 'Qh1+', 'Qe1', 'Qd5', '4.Qd2', 'Qh1+', '5.Qe1', 'Qh5+', 'Qe2', 'Qh1', 'Qe1', 'Qd5', 'exit'],0,verbose=0))# draw by repetition
+#         self.assertEqual('stalemate',zgame.cycle(['Kd1', 'Qd5+', '2.Qd2', 'Qh1+', 'Qe1', 'Qd5', '4.Qd2', 'Qh1+', '5.Qe1', 'Qh5+', 'Qe2', 'Qh1', 'Qe1', 'Qd5', 'exit'],0,verbose=0))# draw by repetition
 
 #     def test_game_undo(self):
 #         zgame = chesslib.game()
