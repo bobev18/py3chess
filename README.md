@@ -49,5 +49,4 @@ from add_piece to spawn_pieces, as this is the only situation where this may occ
 
 Having all valid moves upfront a human move (instead of all naive moves + validation at execution) is needed, because input notation is compared to these moves. If we compare against naive moves, we may accept prompt, then fail validation during execution. That would entail returning to prompt, but that's not an option in terms of cycle structure.
 
-
-
+Validating moves takes executing them, one way or another. For AI we need to execute many moves anyway (for evaluation), so it's efficient to complete the validation as part of the evaluation. As AI evaluates & validates moves of the opponent, these results should be kept and reused. If such record is not available and validating human player moves is needed, it requires only depth of 1 of all naive moves, so it's good to have that as a single method.

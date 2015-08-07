@@ -312,13 +312,15 @@ class Board():
         # self.backtrack.pop() # backtrack is used to check for stalemate by repetition
 
     def validate_move(self, move):
-        # assumes the move in question is executed, and verifies for in_check & discover_check
+        # assumes the move in question is executed onto board state, but values of attributes like 'self.white_checked' reflect the state prior the move
         if move.piece.color == 'w':
             opposite_color = 'b'
             castle_row = '1'
+            turns_king_location = self.white_king.location
         else:
             opposite_color = 'w'
             castle_row = '8'
+            turns_king_location = self.black_king.location
 
         # is_in_check & discover_check will not work properly unless all effects of a move are applied to board.state
 
@@ -338,9 +340,9 @@ class Board():
             return not is_in_check # False == invalid move
         else: # not moving the king
             if self.white_checked or self.black_checked:
-                return not self.is_in_check(move.origin, opposite_color)
+                return not self.is_in_check(move.origin, opposite_color) #returns true if covering check that existed in state prior to the move
             else:
-                return not self.discover_check(self.white_king.location, move.origin, opposite_color)
+                return not self.discover_check(turns_king_location, move.origin, opposite_color) #returns true if does not discover check
 
     def is_in_check(self, location, by_color):
         result = False

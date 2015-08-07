@@ -107,6 +107,7 @@ class Game():
             if extra_piece in ['n', 'b']:
                 return 'stalemate'
 
+
         # reduced ability to move
         result=[]
         # for piece in self.board.pieces_of_color(self.turnning_player.color):
@@ -137,6 +138,35 @@ class Game():
         #     return ''
 
         return 'active'
+
+    def valid_moves_of_piece_at(self, location):
+        result = []
+        for move in self.board.naive_moves(self.board.state[location]):
+            # test_state = deepcopy(self.board)
+            # print(type(test_state), test_state)
+            # print('validating move', move)
+            # test_state.execute_move(move)
+            # if test_state.validate_move(move):
+            #     result.append(move)
+            # # the above fails because the Piece obj referenced in the Move obj is not the same as the one in the copy's white/black piece list
+
+            # undo = self.board.execute_move(move)
+            # print(undo)
+            # if self.board.validate_move(move):
+            #     result.append(move)
+            # self.board.undo_actions(undo)
+            ### aparently 'execute_move' incorporates the validate_move check
+
+            undo = self.board.execute_move(move)
+            if undo:
+                result.append(move)
+                self.board.undo_actions(undo)
+
+        return result
+
+
+
+
 
     def start(self):
         # self.state = 'active'

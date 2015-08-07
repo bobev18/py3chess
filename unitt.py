@@ -291,25 +291,23 @@ class BoardTest(unittest.TestCase):
         test_game = Game(board_position=TWO_KINGS_POSITION)
         self.assertEqual('stalemate', test_game.start())
 
+    def test_validions_against_checks(self):
+        test_game = Game(board_position=TEST_POSITION2)
+        # |br|  |bb|bq|bk|bb|bn|  |
+        # |  |wr|  |bb|  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |wb|  |  |bq|  |  |  |
+        # |  |  |  |  |wn|  |  |  |
+        # |  |  |bn|  |  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |wr|wn|wb|wq|wk|wb|  |wr|
 
-
-    # def test_validions_against_checks(self):
-    #     test_board = Board(TEST_POSITION2)
-    #     # |br|  |bb|bq|bk|bb|bn|  |
-    #     # |  |wr|  |bb|  |  |  |  |
-    #     # |  |  |  |  |  |  |  |  |
-    #     # |  |wb|  |  |bq|  |  |  |
-    #     # |  |  |  |  |wn|  |  |  |
-    #     # |  |  |bn|  |  |  |  |  |
-    #     # |  |  |  |  |  |  |  |  |
-    #     # |wr|wn|wb|wq|wk|wb|  |wr|
-
-    #     # the knight at e4, will have the expansion list reduced to []
-    #     self.assertEqual([], test_board.valid_moves(test_board.state['e4']))
-    #     #bishop at d7 previously had [('m', 'f5', 'Bf5'),('m', 'g4', 'Bg4'),('m', 'e6', 'Be6'),('t', 'b5', 'Bxb5'),('m', 'c6', 'Bc6'),('m', 'h3', 'Bh3')], but now
-    #     self.assertEqual(set([('Bxb5', 'Bc6')]), set([ z.notation for z in test_board.valid_moves(test_board.state['d7']) ]))
-    #     #king at e1 -- validated the move to e2 as it's hit by the knight at c3
-    #     self.assertNotIn('Ke2', [ z.notation for z in test_board.valid_moves(test_board.state['e1']) ])
+        # the knight at e4, will have the expansion list reduced to []
+        self.assertEqual([], test_game.valid_moves_of_piece_at('e4'))
+        #bishop at d7 previously had [('m', 'f5', 'Bf5'),('m', 'g4', 'Bg4'),('m', 'e6', 'Be6'),('t', 'b5', 'Bxb5'),('m', 'c6', 'Bc6'),('m', 'h3', 'Bh3')], but now
+        self.assertEqual(set(['Bxb5', 'Bc6']), set([ z.notation for z in test_game.valid_moves_of_piece_at('d7') ]))
+        #king at e1 -- validated the move to e2 as it's hit by the knight at c3
+        self.assertNotIn('Ke2', [ z.notation for z in test_game.valid_moves_of_piece_at('e1') ])
 
     #     test_board = Board(TEST_POSITION3)
     #     # |br|  |  |  |bk|  |  |  |
