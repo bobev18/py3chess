@@ -1,5 +1,6 @@
 from board import Board
-from move import Move
+from move import Move, MoveException
+from piece import Piece
 import re
 
 from board import CAPTURE_SIGN
@@ -75,7 +76,30 @@ class Player():
 
         # return input_ #returns move or command
 
-    def decode_move(self, raw_input_, piece_set, board_state):
+
+
+
+
+
+
+class Game():
+
+    def __init__(self, whites_player_type='human', blacks_player_type='human', clock=60*60, board_position={}, logfile='d:/temp/chesslog.txt'):
+        if board_position:
+            self.board = Board(board_position)
+        else:
+            self.board = Board(INITIAL_POSITION)
+        self.whites_player = Player(whites_player_type, 'w', clock)
+        self.blacks_player = Player(blacks_player_type, 'b', clock)
+        self.turnning_player = self.whites_player
+        self.turn_count = 1
+        self.undo_stack = []
+        self.full_notation = '' # quite as the values in hist, but with the count and # + ? !
+        self.state = 'init'
+        with open(logfile,'w') as f:
+            self.logfile = logfile
+
+    def decode_move(self, raw_input_, piece_set): #, board_state):
         # capture turn count if included in notation
 
         # ----- STAGE 1 ----- #
@@ -142,7 +166,7 @@ class Player():
             if destination not in INITIAL_POSITION.keys():
                 message = 'capture sign detected in move, but destination (' + destination + ') is not on the board'
                 raise MoveException(message)
-            if not board_state[destination]:
+            if not self.board.state[destination]:
                 if piece_type == 'p' and destination[1] in ['3','6']:
                     enpassan = True #possibility yet -- will get verified through matching expansion
                     move_type='e'
@@ -156,13 +180,13 @@ class Player():
             else:
                 destination = move_input
 
-        extra = board_state[destination]
+        extra = self.board.state[destination]
         if promotion != '':
             move_type = 'p'
             extra = Piece(piece_set[0].color, promotion.lower(), destination)
             if capturing:
                 move_type = '+'
-                extra = [extra, board_state[destination]]
+                extra = [extra, self.board.state[destination]]
         if move_type == '':
             move_type = 'm'
 
@@ -174,89 +198,81 @@ class Player():
         if len(filtered) == 1:
             return Move(filtered[0], move_type, destination, move_input, extra)
 
+        # print('stage 2', filtered)
+
         # ----- STAGE 3 ----- #
-        # #find if the move has disambiguation
-        # disambiguation = ''
-        # if capturing:
-        #     if zmove[zmove.find(capture_sign)-1]!=piece_type: #true for pawn capture moves
-        #         disambiguation = zmove[:zmove.find(capture_sign)-1] # the pawn file "cxd5"
-        #     else:
-        #         disambiguation = zmove[1:zmove.find(capture_sign)-1] # between first char (=piece type) and capture sign; i.e. Raxe4 -> 'a' or R8xe4 -> '8' or Re1xe4 -> 'e1' (has wr@e8, wr@a4 & wr@e1)
-        #     if len(disambiguation)>2:
-        #         raise MoveException('\n erroneous disambiguation '+disambiguation)
-        # else:
-        #     if len(destination)==3: # Rac1 = Rook from file "A" to "C1" ; N7g5 = Knight from rank "7" to "G5"
-        #         disambiguation = destination[0]
-        #         destination = destination[1:]
-        #     elif len(destination)==4: # Nf7g5 differ from both Nh7 and Nf3 - you can have 3 pieces of same type after promotions
-        #         disambiguation = destination[:2]
-        #         if disambiguation not in board_state.keys():
-        #             raise MoveException('disambiguation detected ('+disambiguation+'), but it is not on the board')
-        #         destination = destination[2:]
-        #         if destination not in board_state.keys():
-        #             raise MoveException('destination detected as ('+destination+'), but it is not on the board')
-        #     elif len(destination)>4:
-        #         raise MoveException('\n erroneous destination '+destination)
-        #     else:
-        #         pass
-
-        # if verbose >0:
-        #     self.logit('disambigument:',disambiguation)
-        #     self.logit('destination:',destination)
-
-        # #filter by disambiguation
-        # if len(disambiguation)>0:
-        #     if len(disambiguation)==1:
-        #         if disambiguation in [chr(x) for x in range(97,105)]:
-        #             filtered = [ x for x in filtered if disambiguation == x.sq[0]] #disambiguation by file
-        #         else:
-        #             filtered = [ x for x in filtered if disambiguation == x.sq[1]] #disambiguation by rank
-        #     else:
-        #         filtered = [ x for x in filtered if disambiguation == x.sq] #disambiguation by origination square
-
-        #     if len(filtered)==0:
-        #         raise MoveException('no piece matching the disambiguation ('+disambiguation+') is found in the piece set')
-        #     if len(filtered)==1:
-        #         return (filtered[0],filtered[0].sq,move_type,destination,move)
-
-        # #filter by destination
-        # new = []
-        # for x in filtered:
-        #     exp_ = [z[1] for z in x.expand(board_state)]
-        #     if verbose: self.logit(x,exp_)
-        #     if destination in exp_:
-        #         new.append(x)
-        # filtered = new
-
-        # if len(filtered)>1:
-        #     raise MoveException('move is ambiguous. Possible executors:'+str(filtered))
-        # if len(filtered)==0:
-        #     raise MoveException('no piece expanding to the destination ('+destination+') is found in the piece set')
-        # if verbose >0:  self.logit('result:',(filtered[0],(move_type,destination,move)))
-        # return (filtered[0],filtered[0].sq,move_type,destination,move)
-
-
-
-
-
-
-
-class Game():
-
-    def __init__(self, whites_player_type='human', blacks_player_type='human', clock=60*60, board_position={}, logfile='d:/temp/chesslog.txt'):
-        if board_position:
-            self.board = Board(board_position)
+        # find if the move has disambiguation
+        disambiguation = ''
+        if capturing:
+            if move_input[move_input.find(CAPTURE_SIGN)-1] != piece_type: #true for pawn capture moves
+                disambiguation = move_input[:move_input.find(CAPTURE_SIGN)-1] # the pawn file "cxd5"
+            else:
+                disambiguation = move_input[1:move_input.find(CAPTURE_SIGN)-1] # between first char (=piece type) and capture sign; i.e. Raxe4 -> 'a' or R8xe4 -> '8' or Re1xe4 -> 'e1' (has wr@e8, wr@a4 & wr@e1)
+            if len(disambiguation) > 2:
+                message = '\n erroneous disambiguation ' + disambiguation
+                raise MoveException(message)
         else:
-            self.board = Board(INITIAL_POSITION)
-        self.whites_player = Player(whites_player_type, 'w', clock)
-        self.blacks_player = Player(blacks_player_type, 'b', clock)
-        self.turnning_player = self.whites_player
-        self.turn_count = 1
-        self.undo_stack = []
-        self.full_notation = '' # quite as the values in hist, but with the count and # + ? !
-        self.state = 'init'
-        with open(logfile,'w') as f:
-            self.logfile = logfile
+            if len(destination) == 3: # Rac1 = Rook from file "A" to "C1" ; N7g5 = Knight from rank "7" to "G5"
+                disambiguation = destination[0]
+                destination = destination[1:]
+            elif len(destination) == 4: # Nf7g5 differ from both Nh7 and Nf3 - you can have 3 pieces of same type after promotions
+                disambiguation = destination[:2]
+                if disambiguation not in self.board.state.keys():
+                    message = 'disambiguation detected (' + disambiguation + '), but it is not on the board'
+                    raise MoveException(message)
+                destination = destination[2:]
+                if destination not in self.board.state.keys():
+                    message = 'destination detected as (' + destination + '), but it is not on the board'
+                    raise MoveException(message)
+            elif len(destination) > 4:
+                message = '\n erroneous destination ' + destination
+                raise MoveException(message)
+            else:
+                pass
+
+        #filter by disambiguation
+        if len(disambiguation) > 0:
+            if len(disambiguation) == 1:
+                if disambiguation in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']:
+                    filtered = [ z for z in filtered if disambiguation == z.location[0]] #disambiguation by file
+                else:
+                    filtered = [ z for z in filtered if disambiguation == x.location[1]] #disambiguation by rank
+            else:
+                filtered = [ z for z in filtered if disambiguation == x.location] #disambiguation by origination square
+
+            if len(filtered) == 0:
+                message = 'no piece matching the disambiguation (' + disambiguation + ') is found in the piece set'
+                raise MoveException(message)
+            if len(filtered) == 1:
+                return Move(filtered[0], move_type, destination, move_input, extra)
+
+        # print('stage 3', filtered)
+
+        # ----- STAGE 4 ----- #
+        # filter by matching generated moves (for the remaining candidates) to the input
+        destination_filtered = []
+        for candidate_piece in filtered:
+            expansions = [ z for z in self.board.naive_moves(candidate_piece) if z.destination == destination ]
+            destination_filtered.extend(expansions)
+        if len(destination_filtered) == 0:
+            message = 'no piece expanding to the decoded destination (' + destination + ') is found in the piece set'
+            raise MoveException(message)
+        elif len(destination_filtered) == 1:
+            return destination_filtered[0]
+        else:
+            extra_filtered = [ z for z in destination_filtered if z.promote_to == promotion ]
+
+            if len(extra_filtered) == 0:
+                message = 'no promotions (' + str([ z.promote_to for z in extra_filtered ]) + '), match the decoded promotion: ' + promotion
+                raise MoveException(message)
+            elif len(extra_filtered) == 1:
+                return extra_filtered[0]
+            else:
+                message = 'the move is ambiguous. Possible interpretations:' + str(extra_filtered)
+                raise MoveException(message)
+
+        # message = 'end of the "decode_move" method - this should be unreachable code '
+        # raise MoveException(message)
 
     def mate(self):
         # draw - no one could possibly mate
