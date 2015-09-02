@@ -1,4 +1,8 @@
 from board import Board
+from move import Move
+import re
+
+from board import CAPTURE_SIGN
 
 INITIAL_POSITION = {
     'a8':'br', 'b8':'bn', 'c8':'bb', 'd8':'bq', 'e8':'bk', 'f8':'bb', 'g8':'bn', 'h8':'br',
@@ -11,7 +15,7 @@ INITIAL_POSITION = {
     'a1':'wr', 'b1':'wn', 'c1':'wb', 'd1':'wq', 'e1':'wk', 'f1':'wb', 'g1':'wn', 'h1':'wr',
 }
 
-
+'a8', 'b8', 'c8', 'd8', 'e8', 'f8', 'g8', 'h8', 'a7', 'b7', 'c7', 'd7', 'e7', 'f7', 'g7', 'h7', 'a6', 'b6', 'c6', 'd6', 'e6', 'f6', 'g6', 'h6', 'a5', 'b5', 'c5', 'd5', 'e5', 'f5', 'g5', 'h5', 'a4', 'b4', 'c4', 'd4', 'e4', 'f4', 'g4', 'h4', 'a3', 'b3', 'c3', 'd3', 'e3', 'f3', 'g3', 'h3', 'a2', 'b2', 'c2', 'd2', 'e2', 'f2', 'g2', 'h2', 'a1', 'b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'h1'
 
 
 class Player():
@@ -71,6 +75,166 @@ class Player():
 
         # return input_ #returns move or command
 
+    def decode_move(self, raw_input_, piece_set, board_state):
+        # capture turn count if included in notation
+
+        # ----- STAGE 1 ----- #
+        # move_number = re.search(r'\d{1,3}\.{0,3}\s?', raw_input_)
+        move_number = re.match(r'\d{1,3}\.{0,3}\s?', raw_input_)
+        if move_number == None:
+            move_input = raw_input_
+        else:
+            # print(move_number, move_number.start(), move_number.end())
+            move_input = raw_input_[move_number.end():]
+
+        #clean punctuation, #clean/process end chars
+        if move_input.count('?')>0:
+            move_input = move_input[:move_input.find('?')]
+        if move_input.count('!')>0:
+            move_input = move_input[:move_input.find('!')]
+        if move_input.count('+')>0:
+            move_input = move_input[:move_input.find('+')] # check & double check
+        if move_input.count('#')>0:
+            move_input = move_input[:move_input.find('#')] # mate
+
+        move_input = move_input.strip()
+        history_notation = move_input # this is the format for the notation we track in the hist
+        promotion = '' #promoting a pawn i.e. e8Q
+        for possible_promotion in ['R','N','B','Q']:
+            if move_input[-1] == possible_promotion:
+                promotion = possible_promotion
+        if promotion != '':
+            move_input = move_input[:-1] #clean the promo character, to avoid mistake in piece dicovery
+
+        #casteling
+        if move_input.count('O') == 2 or move_input.count('0') == 2: #king side castle
+            king_piece = [ z for z in piece_set if z.type_ == 'k' ][0]
+            destination = 'g' + king_piece.location[1] #the rank of king - could be 1 or 8
+            rook = [ z for z in piece_set if z.type_ == 'r' and z.location == ('h' + king_piece.location[1]) ][0]
+            return Move(king_piece, 'c', destination, 'O-O', rook)
+
+        if move_input.count('O') == 3 or move_input.count('0') == 3: #queen side castle
+            king_piece = [ z for z in piece_set if z.type_ == 'k' ][0]
+            destination = 'c' + king_piece.location[1]
+            rook = [ z for z in piece_set if z.type_ == 'r' and z.location == ('a' + king_piece.location[1]) ][0]
+            return Move(king_piece, 'c', destination, 'O-O-O', rook)
+
+
+        # print('past stage1', move_input)
+
+        # ----- STAGE 2 ----- #
+        # determine piece type
+        piece_type = 'p'
+        for possible_piece_type in ['R','N','B','Q','K']:
+            if move_input.count(possible_piece_type)>0:
+                piece_type = possible_piece_type
+            if move_input.count(possible_piece_type)>1:
+                message = 'more than one reference to piece type ' + possible_piece_type + ' is found in the notation ' + move_notation
+                raise MoveException(message)
+
+        # determine move type
+        move_type = ''
+        enpassan = False
+        if move_input.count(CAPTURE_SIGN)>0:
+            capturing = True
+            move_type='t'
+            destination = move_input[move_input.find(CAPTURE_SIGN)+1:]
+            if destination not in INITIAL_POSITION.keys():
+                message = 'capture sign detected in move, but destination (' + destination + ') is not on the board'
+                raise MoveException(message)
+            if not board_state[destination]:
+                if piece_type == 'p' and destination[1] in ['3','6']:
+                    enpassan = True #possibility yet -- will get verified through matching expansion
+                    move_type='e'
+                else:
+                    message = 'taking empty spot ' + destination + ', by non pawn - ' + piece_type + '(no possible en passant)'
+                    raise MoveException(message)
+        else:
+            capturing = False
+            if move_input.count(piece_type)>0:
+                destination = move_input[move_input.find(piece_type)+1:]
+            else:
+                destination = move_input
+
+        extra = board_state[destination]
+        if promotion != '':
+            move_type = 'p'
+            extra = Piece(piece_set[0].color, promotion.lower(), destination)
+            if capturing:
+                move_type = '+'
+                extra = [extra, board_state[destination]]
+        if move_type == '':
+            move_type = 'm'
+
+        #list pieces matching the found type
+        filtered = [ z for z in piece_set if z.type_ == piece_type.lower() ]
+        if len(filtered)==0:
+            message = 'no piece of the needed type (' + piece_type.lower() + ') is found in the piece set'
+            raise MoveException(message)
+        if len(filtered) == 1:
+            return Move(filtered[0], move_type, destination, move_input, extra)
+
+        # ----- STAGE 3 ----- #
+        # #find if the move has disambiguation
+        # disambiguation = ''
+        # if capturing:
+        #     if zmove[zmove.find(capture_sign)-1]!=piece_type: #true for pawn capture moves
+        #         disambiguation = zmove[:zmove.find(capture_sign)-1] # the pawn file "cxd5"
+        #     else:
+        #         disambiguation = zmove[1:zmove.find(capture_sign)-1] # between first char (=piece type) and capture sign; i.e. Raxe4 -> 'a' or R8xe4 -> '8' or Re1xe4 -> 'e1' (has wr@e8, wr@a4 & wr@e1)
+        #     if len(disambiguation)>2:
+        #         raise MoveException('\n erroneous disambiguation '+disambiguation)
+        # else:
+        #     if len(destination)==3: # Rac1 = Rook from file "A" to "C1" ; N7g5 = Knight from rank "7" to "G5"
+        #         disambiguation = destination[0]
+        #         destination = destination[1:]
+        #     elif len(destination)==4: # Nf7g5 differ from both Nh7 and Nf3 - you can have 3 pieces of same type after promotions
+        #         disambiguation = destination[:2]
+        #         if disambiguation not in board_state.keys():
+        #             raise MoveException('disambiguation detected ('+disambiguation+'), but it is not on the board')
+        #         destination = destination[2:]
+        #         if destination not in board_state.keys():
+        #             raise MoveException('destination detected as ('+destination+'), but it is not on the board')
+        #     elif len(destination)>4:
+        #         raise MoveException('\n erroneous destination '+destination)
+        #     else:
+        #         pass
+
+        # if verbose >0:
+        #     self.logit('disambigument:',disambiguation)
+        #     self.logit('destination:',destination)
+
+        # #filter by disambiguation
+        # if len(disambiguation)>0:
+        #     if len(disambiguation)==1:
+        #         if disambiguation in [chr(x) for x in range(97,105)]:
+        #             filtered = [ x for x in filtered if disambiguation == x.sq[0]] #disambiguation by file
+        #         else:
+        #             filtered = [ x for x in filtered if disambiguation == x.sq[1]] #disambiguation by rank
+        #     else:
+        #         filtered = [ x for x in filtered if disambiguation == x.sq] #disambiguation by origination square
+
+        #     if len(filtered)==0:
+        #         raise MoveException('no piece matching the disambiguation ('+disambiguation+') is found in the piece set')
+        #     if len(filtered)==1:
+        #         return (filtered[0],filtered[0].sq,move_type,destination,move)
+
+        # #filter by destination
+        # new = []
+        # for x in filtered:
+        #     exp_ = [z[1] for z in x.expand(board_state)]
+        #     if verbose: self.logit(x,exp_)
+        #     if destination in exp_:
+        #         new.append(x)
+        # filtered = new
+
+        # if len(filtered)>1:
+        #     raise MoveException('move is ambiguous. Possible executors:'+str(filtered))
+        # if len(filtered)==0:
+        #     raise MoveException('no piece expanding to the destination ('+destination+') is found in the piece set')
+        # if verbose >0:  self.logit('result:',(filtered[0],(move_type,destination,move)))
+        # return (filtered[0],filtered[0].sq,move_type,destination,move)
+
 
 
 
@@ -79,14 +243,14 @@ class Player():
 
 class Game():
 
-    def __init__(self, player1='human', player2='human', clock=60*60, board_position={}, logfile='d:/temp/chesslog.txt'):
+    def __init__(self, whites_player_type='human', blacks_player_type='human', clock=60*60, board_position={}, logfile='d:/temp/chesslog.txt'):
         if board_position:
             self.board = Board(board_position)
         else:
             self.board = Board(INITIAL_POSITION)
-        self.player1 = Player(player1, 'w', clock)
-        self.player2 = Player(player2, 'b', clock)
-        self.turnning_player = self.player1
+        self.whites_player = Player(whites_player_type, 'w', clock)
+        self.blacks_player = Player(blacks_player_type, 'b', clock)
+        self.turnning_player = self.whites_player
         self.turn_count = 1
         self.undo_stack = []
         self.full_notation = '' # quite as the values in hist, but with the count and # + ? !

@@ -3,7 +3,8 @@ import unittest
 from piece import Piece
 from move import Move, MoveException
 from board import Board
-from game import Game
+from game import Game, Player
+
 
 TEST_POSITION1 = {'h8':'  ', 'h2':'  ', 'h3':'  ', 'h1':'wr', 'h6':'  ', 'h7':'wp', 'h4':'  ', 'h5':'  ', 'd8':'bq', 'a8':'br', 'd6':'  ', 'd7':'bp', 'd4':'  ', 'd5':'  ', 'd2':'wp', 'd3':'  ', 'd1':'wq', 'g7':'bp', 'g6':'  ', 'g5':'wp', 'g4':'  ', 'g3':'  ', 'g2':'  ', 'g1':'  ', 'g8':'bn', 'c8':'bb', 'c3':'bn', 'c2':'wp', 'c1':'wb', 'c7':'bp', 'c6':'  ', 'c5':'  ', 'c4':'  ', 'f1':'wb', 'f2':'wp', 'f3':'  ', 'f4':'  ', 'f5':'bp', 'f6':'  ', 'f7':'  ', 'f8':'bb', 'b4':'  ', 'b5':'  ', 'b6':'  ', 'b7':'bp', 'b1':'wn', 'b2':'wp', 'b3':'  ', 'b8':'  ', 'a1':'wr', 'a3':'  ', 'a2':'wp', 'a5':'  ', 'e8':'bk', 'a7':'bp', 'a6':'  ', 'e5':'  ', 'e4':'wn', 'e7':'bp', 'e6':'  ', 'e1':'wk', 'e3':'  ', 'e2':'wp', 'a4':'  '}
 POSITION1_VIEW = """
@@ -282,6 +283,80 @@ class BoardTest(unittest.TestCase):
         self.assertEqual(16, len(test_board.white))
         self.assertEqual(14, len(test_board.black))
 
+
+class PlayerTest(unittest.TestCase):
+
+    def test_decode_move(self):
+        test_game = Game(board_position=TEST_POSITION3)
+        # |br|  |  |  |bk|  |  |  |
+        # |  |wr|  |bb|  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |wb|  |  |bq|  |  |  |
+        # |  |  |  |  |wn|  |  |  |
+        # |  |  |bn|  |  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |wr|  |  |  |wk|  |  |wr|
+        king = test_game.board.state['e1']
+        a_rook = test_game.board.state['a1']
+        h_rook = test_game.board.state['h1']
+        king_side_castle = Move(king,'c', 'g1', 'O-O', h_rook)
+        decoded_move = test_game.whites_player.decode_move('O-O', test_game.board.white, test_game.board.state)
+        # print(king_side_castle, [ getattr(king_side_castle, z) for z in ['piece', 'origin', 'type_', 'destination', 'notation', 'promote_to', 'taken', 'catsling_rook',] ])
+        # print(decoded_move, [ getattr(decoded_move, z) for z in ['piece', 'origin', 'type_', 'destination', 'notation', 'promote_to', 'taken', 'catsling_rook',] ])
+
+        def attribute_lister(object_, attributes):
+            return [ getattr(object_, z) for z in attributes ]
+
+        move_attributes = ['piece', 'origin', 'type_', 'destination', 'notation', 'promote_to', 'taken', 'catsling_rook',]
+
+        self.assertEqual(attribute_lister(king_side_castle, move_attributes) , attribute_lister(decoded_move, move_attributes))
+        # O-O-O because it only decodes against the set, without validation
+        queen_side_castle = Move(king,'c', 'c1', 'O-O-O', a_rook)
+        decoded_move = test_game.whites_player.decode_move('O[O]O', test_game.board.white, test_game.board.state)
+        self.assertEqual(attribute_lister(queen_side_castle, move_attributes) , attribute_lister(decoded_move, move_attributes))
+        decoded_move = test_game.whites_player.decode_move('OOO', test_game.board.white, test_game.board.state)
+        self.assertEqual(attribute_lister(queen_side_castle, move_attributes) , attribute_lister(decoded_move, move_attributes))
+        decoded_move = test_game.whites_player.decode_move('O,>oOo-0*O', test_game.board.white, test_game.board.state)                            #TOFIX?
+        # print(attribute_lister(queen_side_castle, move_attributes))
+        # print(attribute_lister(decoded_move, move_attributes))
+        self.assertEqual(attribute_lister(queen_side_castle, move_attributes) , attribute_lister(decoded_move, move_attributes))
+        # The above is left as reminder to rethink the decoding at some point
+
+        #print(zgame.show())
+        expected_move = Move(king, 'm', 'f2', 'Kf2')
+        decoded_move = test_game.whites_player.decode_move('13. Kf2', test_game.board.white, test_game.board.state)                            #TOFIX?
+        self.assertEqual(attribute_lister(expected_move, move_attributes) , attribute_lister(decoded_move, move_attributes))
+        # self.assertEqual((zgame.zboard.piece_by_sq('e1'),'e1', 'm', 'f2', 'Kf2'), test_player.decode_move('13. Kf2', zgame.turnset()))
+        expected_move = Move(test_game.board.state['b5'], 't', 'd7', 'Bxd7', test_game.board.state['d7'])
+        decoded_move = test_game.whites_player.decode_move('Bxd7+', test_game.board.white, test_game.board.state)                            #TOFIX?
+        self.assertEqual(attribute_lister(expected_move, move_attributes) , attribute_lister(decoded_move, move_attributes))
+
+
+
+        # zgame.zboard.piecefy({'h8':'  ', 'h2':'  ', 'h3':'  ', 'h1':'wr', 'h6':'  ', 'h7':'wp', 'h4':'  ', 'h5':'  ', 'd8':'bq', 'a8':'br', 'd6':'  ', 'd7':'bp', 'd4':'  ', 'd5':'  ', 'd2':'wp', 'd3':'  ', 'd1':'wq', 'g7':'bp', 'g6':'  ', 'g5':'wp', 'g4':'  ', 'g3':'  ', 'g2':'  ', 'g1':'  ', 'g8':'bn', 'c8':'bb', 'c3':'bn', 'c2':'wp', 'c1':'wb', 'c7':'bp', 'c6':'  ', 'c5':'  ', 'c4':'  ', 'f1':'wb', 'f2':'wp', 'f3':'  ', 'f4':'  ', 'f5':'bp', 'f6':'  ', 'f7':'  ', 'f8':'bb', 'b4':'  ', 'b5':'  ', 'b6':'  ', 'b7':'bp', 'b1':'wn', 'b2':'wp', 'b3':'  ', 'b8':'  ', 'a1':'wr', 'a3':'  ', 'a2':'wp', 'a5':'  ', 'e8':'bk', 'a7':'bp', 'a6':'  ', 'e5':'  ', 'e4':'wn', 'e7':'bp', 'e6':'  ', 'e1':'wk', 'e3':'  ', 'e2':'wp', 'a4':'  '})
+        # """
+        # |br|  |bb|bq|bk|bb|bn|  |
+        # |bp|bp|bp|bp|bp|  |bp|wp|
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |  |  |  |bp|wp|  |
+        # |  |  |  |  |wn|  |  |  |
+        # |  |  |bn|  |  |  |  |  |
+        # |wp|wp|wp|wp|wp|wp|  |  |
+        # |wr|wn|wb|wq|wk|wb|  |wr|
+        # """
+        # #print(zgame.show())
+        # self.assertEqual((zgame.zboard.piece_by_sq('h7'),'h7', 'p', 'h8', 'h8Q'),zgame.decode_move('h8Q',zgame.turnset()))
+        # self.assertEqual((zgame.zboard.piece_by_sq('h7'),'h7', '+', 'g8', 'hxg8N'),zgame.decode_move('hxg8N',zgame.turnset()))
+        # #print(zgame.decode_move('Rxh7',zgame.turnset())) # cant promote to King
+        # self.assertRaises(chesslib.MoveException, zgame.decode_move, '999. b8',zgame.turnset())  # no pawn to reach b8
+        # self.assertRaises(chesslib.MoveException, zgame.decode_move, '2 fxgdfgdfgsdfg',zgame.turnset())  # ##cannot take own
+        # self.assertRaises(chesslib.MoveException, zgame.decode_move, 'Ra3',zgame.turnset())  # invalid
+
+        # #e.p.
+        # self.assertEqual((zgame.zboard.piece_by_sq('g5'),'g5', 'e', 'f6', 'gxf6'),zgame.decode_move('gxf6',zgame.turnset()))
+
+class GameTest(unittest.TestCase):
+
     def test_initialize_game(self):
         test_game = Game()
         self.assertEqual('wk@e1', repr(test_game.board.state['e1']))
@@ -309,20 +384,29 @@ class BoardTest(unittest.TestCase):
         #king at e1 -- validated the move to e2 as it's hit by the knight at c3
         self.assertNotIn('Ke2', [ z.notation for z in test_game.valid_moves_of_piece_at('e1') ])
 
-    #     test_board = Board(TEST_POSITION3)
-    #     # |br|  |  |  |bk|  |  |  |
-    #     # |  |wr|  |bb|  |  |  |  |
-    #     # |  |  |  |  |  |  |  |  |
-    #     # |  |wb|  |  |bq|  |  |  |
-    #     # |  |  |  |  |wn|  |  |  |
-    #     # |  |  |bn|  |  |  |  |  |
-    #     # |  |  |  |  |  |  |  |  |
-    #     # |wr|  |  |  |wk|  |  |wr|
+        test_game = Game(board_position=TEST_POSITION3)
+        # |br|  |  |  |bk|  |  |  |
+        # |  |wr|  |bb|  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |wb|  |  |bq|  |  |  |
+        # |  |  |  |  |wn|  |  |  |
+        # |  |  |bn|  |  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |wr|  |  |  |wk|  |  |wr|
 
-    #     #king at e1 should not expand queen side castle dure to N@c3 hitting d1
-    #     naive_moves = set([ z.notation for z in test_board.naive_moves(test_board.state['e1']) ])
-    #     valid_moves = set([ z.notation for z in test_board.valid_moves(test_board.state['e1']) ])
-    #     self.assertTrue(set(['O-O-O']), naive_moves - valid_moves)
+        #king at e1 should not expand queen side castle due to N@c3 hitting d1
+        naive_moves = set([ z.notation for z in test_game.board.naive_moves(test_game.board.state['e1']) ])
+        valid_moves = set([ z.notation for z in test_game.valid_moves_of_piece_at('e1') ])
+        self.assertTrue(set(['O-O-O']), naive_moves - valid_moves)
+
+    def test_valid_move_generation(self):
+        test_game = Game(board_position=TEST_POSITION3)
+        self.assertEqual(set(['Kd2', 'Kf2', 'Kf1', 'O-O']), set([ z.notation for z in test_game.valid_moves_of_piece_at('e1') ]))
+
+
+
+
+
 
 
 
@@ -628,7 +712,6 @@ if __name__ == "__main__":
 #         #king at e1 should not expand to e2 as it's hit by the N@c3
 #         self.assertEqual(set([('m', 'd2', 'Kd2'),('m', 'f2', 'Kf2'),('m', 'f1', 'Kf1'),('c', 'g1', 'O-O')]),set(self.zboard.valids(self.zboard.piece_by_sq('e1'))))
 
-
 #     def test_decode_move(self):
 #         zgame = chesslib.game()
 #         zgame.zboard.piecefy({'h8':'  ', 'h2':'  ', 'h3':'  ', 'h1':'wr', 'h6':'  ', 'h7':'  ', 'h4':'  ', 'h5':'  ', 'd8':'  ', 'a8':'br', 'd6':'  ', 'd7':'bb', 'd4':'  ', 'd5':'  ', 'd2':'  ', 'd3':'  ', 'd1':'  ', 'g7':'  ', 'g6':'  ', 'g5':'  ', 'g4':'  ', 'g3':'  ', 'g2':'  ', 'g1':'  ', 'g8':'  ', 'c8':'  ', 'c3':'bn', 'c2':'  ', 'c1':'  ', 'c7':'  ', 'c6':'  ', 'c5':'  ', 'c4':'  ', 'f1':'  ', 'f2':'  ', 'f3':'  ', 'f4':'  ', 'f5':'  ', 'f6':'  ', 'f7':'  ', 'f8':'  ', 'b4':'  ', 'b5':'wb', 'b6':'  ', 'b7':'wr', 'b1':'  ', 'b2':'  ', 'b3':'  ', 'b8':'  ', 'a1':'wr', 'a3':'  ', 'a2':'  ', 'a5':'  ', 'e8':'bk', 'a7':'  ', 'a6':'  ', 'e5':'bq', 'e4':'wn', 'e7':'  ', 'e6':'  ', 'e1':'wk', 'e3':'  ', 'e2':'  ', 'a4':'  '})
@@ -670,6 +753,52 @@ if __name__ == "__main__":
 
 #         #e.p.
 #         self.assertEqual((zgame.zboard.piece_by_sq('g5'),'g5', 'e', 'f6', 'gxf6'),zgame.decode_move('gxf6',zgame.turnset()))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #     def test_game_cycle_n_mate(self):
 #         zgame = chesslib.game()
