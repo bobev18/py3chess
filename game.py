@@ -16,12 +16,9 @@ INITIAL_POSITION = {
     'a1':'wr', 'b1':'wn', 'c1':'wb', 'd1':'wq', 'e1':'wk', 'f1':'wb', 'g1':'wn', 'h1':'wr',
 }
 
-'a8', 'b8', 'c8', 'd8', 'e8', 'f8', 'g8', 'h8', 'a7', 'b7', 'c7', 'd7', 'e7', 'f7', 'g7', 'h7', 'a6', 'b6', 'c6', 'd6', 'e6', 'f6', 'g6', 'h6', 'a5', 'b5', 'c5', 'd5', 'e5', 'f5', 'g5', 'h5', 'a4', 'b4', 'c4', 'd4', 'e4', 'f4', 'g4', 'h4', 'a3', 'b3', 'c3', 'd3', 'e3', 'f3', 'g3', 'h3', 'a2', 'b2', 'c2', 'd2', 'e2', 'f2', 'g2', 'h2', 'a1', 'b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'h1'
-
-
 class Player():
 
-    def __init__(self, type_, color, initial_clock_time, AI_depth = 0):
+    def __init__(self, game, type_, color, initial_clock_time, AI_depth = 0):
         self.type_ = type_
         self.color = color
         self.clock = initial_clock_time
@@ -29,6 +26,7 @@ class Player():
         self.is_in_check = False
         self.AI_depth = AI_depth
         self.moves_to_simulate = []
+        self.game = game
 
     def simulate(self, moves):
         self.moves_to_simulate = moves
@@ -46,12 +44,13 @@ class Player():
         # output(self.show()
         input_ = None
         while not input_:
+            print(self.moves_to_simulate)
             raw = self.comm_input('enter your move: ')
             try:
-                input_ = self.decode_move(raw, )
+                input_ = self.game.decode_move(raw, self.game.board.pieces_of_color(self.color))
             except MoveException as err:
-                comm_output('erroneous move' + str(err.args))
-                comm_output('enter "?" to view help')
+                self.comm_output('erroneous move' + str(err.args))
+                self.comm_output('enter "?" to view help')
 
         #     if len(inp)>0 and inp[0] != '?':
         #         try:
@@ -80,8 +79,6 @@ class Player():
 
 
 
-
-
 class Game():
 
     def __init__(self, whites_player_type='human', blacks_player_type='human', clock=60*60, board_position={}, logfile='d:/temp/chesslog.txt'):
@@ -89,8 +86,8 @@ class Game():
             self.board = Board(board_position)
         else:
             self.board = Board(INITIAL_POSITION)
-        self.whites_player = Player(whites_player_type, 'w', clock)
-        self.blacks_player = Player(blacks_player_type, 'b', clock)
+        self.whites_player = Player(self, whites_player_type, 'w', clock)
+        self.blacks_player = Player(self, blacks_player_type, 'b', clock)
         self.turnning_player = self.whites_player
         self.turn_count = 1
         self.undo_stack = []
@@ -192,7 +189,7 @@ class Game():
 
         #list pieces matching the found type
         filtered = [ z for z in piece_set if z.type_ == piece_type.lower() ]
-        if len(filtered)==0:
+        if len(filtered) == 0:
             message = 'no piece of the needed type (' + piece_type.lower() + ') is found in the piece set'
             raise MoveException(message)
         if len(filtered) == 1:
@@ -356,6 +353,7 @@ class Game():
             valid_input = False
             while not valid_input:
                 input_ = self.turnning_player.prompt_input()
+                print(input_)
             #     valid_input = __validate_against_z3levels__(input_)
             #     # input could affect the cycle in three ways:
             #     # 1. valid move to pass turn to the other player
@@ -383,6 +381,9 @@ class Game():
         if self.state == 'stalemate':
             self.full_notation += '\n1/2-1/2'
             result = 'stalemate'
+
+        print()
+        print(self.board)
 
         return result
 
