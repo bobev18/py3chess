@@ -121,13 +121,20 @@ class Board():
             result+='\n'
         return result
 
-    def hashit(self):
+    def export(self):
+        return self.flatten_state()
+
+    def flatten_state(self):
         def encoder(x):
             if x:
                 return str(x)
             else:
-                return ' '
-        return ''.join([ encoder(self.state[z]) for z in sorted(self.state.keys()) ])
+                return '  '
+
+        return { k: encoder(v) for (k,v) in self.state.items() }
+
+    def hashit(self):
+        return ''.join([ self.flatten_state()[z] for z in sorted(self.state.keys()) ])
 
     def pieces_of_color(self, color):
       if color == 'w':

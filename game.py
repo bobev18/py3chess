@@ -16,6 +16,15 @@ INITIAL_POSITION = {
     'a1':'wr', 'b1':'wn', 'c1':'wb', 'd1':'wq', 'e1':'wk', 'f1':'wb', 'g1':'wn', 'h1':'wr',
 }
 
+COMMANDS = ['', '?', 'help', 'history', 'notation', 'export', 'undo', 'quit', 'exit', 'draw', 'forefit']
+
+
+# delete these
+MOVE_ATTRIBUTES = ['piece', 'origin', 'type_', 'destination', 'notation', 'promote_to', 'taken', 'catsling_rook',]
+def attribute_lister(object_, attributes):
+    return [ getattr(object_, z) for z in attributes ]
+
+
 class Player():
 
     def __init__(self, game, type_, color, initial_clock_time, AI_depth = 0):
@@ -45,13 +54,38 @@ class Player():
         input_ = None
         while not input_:
             raw = self.comm_input('enter your move: ')
-            input_ = self.game.decode_move(raw, self.game.board.pieces_of_color(self.color))
+            # input_ = self.game.decode_move(raw, self.game.board.pieces_of_color(self.color))
+            if raw in COMMANDS:
+                if raw in ['?', 'help']:
+                    self.comm_output('commands:')
+                    self.comm_output('notation - show game notation')
+                    self.comm_output('export - print position as dictionary')
+                    # print('verbose - tongle verbose on and off')
+                    self.comm_output('undo - revert full turn')
+                    self.comm_output('draw - offer draw, also accept draw if offered')
+                    self.comm_output('forefit - give up')
+                    self.comm_output('exit - exit the game')
+                    # print('advanced: ?eval(...) ; ?preval(...) - the second executes in the game cycle(for better scope)')
+                elif raw in ['history', 'notation']:
+                    self.comm_output(self.game.full_notation)
+                elif raw in ['exit', 'quit', 'draw', 'forefit']:
+                    input_ = raw
+                elif raw == 'export':
+                    self.comm_output(self.game.board.export())
+                    self.comm_output(self.game.history)
+                elif raw == 'undo':
+                    self.game.undo_last()
+                else:
+                    self.comm_output('enter "?" to view help')
 
-            # try:
-            #     input_ = self.game.decode_move(raw, self.game.board.pieces_of_color(self.color))
-            # except MoveException as err:
-            #     self.comm_output('erroneous move' + str(err.args))
-            #     self.comm_output('enter "?" to view help')
+            else:
+                try:
+                    input_ = self.game.decode_move(raw, self.game.board.pieces_of_color(self.color))
+                except MoveException as err:
+                    self.comm_output('erroneous move' + str(err.args))
+                    self.comm_output('enter "?" to view help')
+
+
 
         #     if len(inp)>0 and inp[0] != '?':
         #         try:
@@ -61,8 +95,6 @@ class Player():
         #             print 'enter "?" to view commands'
         #     elif inp[0] == '?':
         #         if inp == '?' or inp == '?help':
-        #             print 'commands:\n?hist - show game notation\n?export - print position as dict\n?verbose - tongle verbose on and off\n?undo - revert full turn\n?exit - exit the game'
-        #             print 'advanced: ?eval(...) ; ?preval(...) - the second executes in the game cycle(for better scope)'
         #             inp = None
         #         elif inp.count('?eval')>0:
         #             print eval(inp[6:-1])
@@ -337,8 +369,19 @@ class Game():
             return True
         return False
 
+    def undo_last(self):
+        # undo opponent move
+        undo = self.undo_stack.pop()
+        self.board.undo_actions(undo)
+        temp = self.history.pop()
+        # undo last own move
+        undo = self.undo_stack.pop()
+        self.board.undo_actions(undo)
+        temp = self.history.pop()
+        self.full_notation = '\n'.join([ z for z in self.full_notation.split('\n')[:-1] ])
+
     def notator(self, move):
-        if self.turnning_player == self.whites_player:
+        if self.turnning_player.color == 'w':
             return str(self.turn_count) + '. ' + move.notation
         else:
             return '  ' + move.notation + '\n'
@@ -347,11 +390,21 @@ class Game():
         # self.state = 'active'
         # check if initial position is mate or stalemate i.e. active
         self.state = self.mate()
+        if verbose:
+            print(self.board)
+            print('state:', self.state)
+            print('-'*50)
         while self.state == 'active':
             valid_input = False
             while not valid_input:
                 input_ = self.turnning_player.prompt_input()
-                if self.valid_move(input_):
+                if input_ not in ['draw', 'forefit', 'quit', 'exit']:
+                    print('decoded move, prior to validation:', input_)
+                    if self.valid_move(input_):
+                        print('validation passed of move', input_, type(input_))
+                        valid_input = input_
+
+                else:
                     valid_input = input_
 
             #     # input could affect the cycle in three ways:
@@ -362,40 +415,62 @@ class Game():
             #         anction_input(valid_input)
             #         valid_input = False
 
-            if valid_input not in ['offer draw', 'surrender', 'quit']:
+            if valid_input not in ['draw', 'forefit', 'quit', 'exit']:
+                print(attribute_lister(valid_input, MOVE_ATTRIBUTES))
                 undo = self.board.execute_move(valid_input)
                 self.undo_stack.append(undo)
                 self.whites_player.is_in_check = self.board.white_checked
                 self.blacks_player.is_in_check = self.board.black_checked
+                self.full_notation += self.notator(valid_input)
+                self.history.append(valid_input) #list?
                 if self.turnning_player == self.whites_player:
                     self.turnning_player = self.blacks_player
                 else:
                     self.turnning_player = self.whites_player
-                self.turn_count += 1
-                self.full_notation += self.notator(valid_input)
-                self.history.append(valid_input) #list?
+                    self.turn_count += 1
             else:
-                self.state = 'valid_input'
+                self.state = valid_input
 
-            self.state = self.mate()
+            if self.state == 'active':
+                self.state = self.mate()
+            # else:
+            #     if self.state == 'forefit':
+            #         pass
+
+
             if verbose:
                 print(self.board)
                 print('state:', self.state)
                 print('-'*50)
 
+        if self.state in ['exit', 'quit']:
+            result = 'player ' + self.turnning_player.color + ' left the game'
+
         if self.state == 'stalemate':
             self.full_notation += '\n1/2-1/2'
             result = 'stalemate'
 
-        if self.state == 'mate':
+        # if self.state == 'mate':
+        if self.state in ['mate', 'forefit']:
             result = 'mate'
             if self.turnning_player == self.whites_player:
-                self.full_notation += '\n1-0'
-            else:
                 self.full_notation += '\n0-1'
+            else:
+                self.full_notation += '\n1-0'
+
+        # if self.state == 'forefit':
+        #     result = 'forefit'
+        #     if self.turnning_player == self.whites_player:
+        #         self.full_notation += '\n1-0'
+        #     else:
+        #         self.full_notation += '\n0-1'
 
         if verbose:
             print('result:', result)
+            print('notation:')
+            print(self.full_notation)
+            print('\nend position:')
+            print(self.board.export())
 
         return result
 
