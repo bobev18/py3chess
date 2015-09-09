@@ -98,6 +98,7 @@ class Board():
         self.white = []
         self.black = []
         # self.move_stack = [] # not sure what this was to be
+        self.backtrack = []
         self.state = EMPTYBOARD.copy()
         if construction_state == {}:
             self.white_king = None
@@ -119,6 +120,14 @@ class Board():
                 result += piece + '|'
             result+='\n'
         return result
+
+    def hashit(self):
+        def encoder(x):
+            if x:
+                return str(x)
+            else:
+                return ' '
+        return ''.join([ encoder(self.state[z]) for z in sorted(self.state.keys()) ])
 
     def pieces_of_color(self, color):
       if color == 'w':
@@ -298,7 +307,7 @@ class Board():
             return None
         # --- end of invalidation ---
 
-        # self.backtrack.append(self.hashit()) # this is used to check on stalemate by repetition
+        self.backtrack.append(self.hashit()) # this is used to check on stalemate by repetition
         undo.append({'act':'data', 'args':[self.white_checked, self.black_checked]})
         if move.piece.color == 'w':
             self.black_checked = self.is_in_check(self.black_king.location, 'w')
@@ -309,7 +318,7 @@ class Board():
 
     def undo_actions(self, actions):
         self.process_actions(actions)
-        # self.backtrack.pop() # backtrack is used to check for stalemate by repetition
+        self.backtrack.pop() # backtrack is used to check for stalemate by repetition
 
     def validate_move(self, move):
         # assumes the move in question is executed onto board state, but values of attributes like 'self.white_checked' reflect the state prior the move
@@ -340,7 +349,7 @@ class Board():
             return not is_in_check # False == invalid move
         else: # not moving the king
             if self.white_checked or self.black_checked:
-                return not self.is_in_check(move.origin, opposite_color) #returns true if covering check that existed in state prior to the move
+                return not self.is_in_check(move.origin, opposite_color) #returns true if covering check that existed in state prior to the move sDFSFSDFSDFSFSFSDFS <<<<<<<<<<<<<<<<<<<<<< should be move.destination
             else:
                 return not self.discover_check(turns_king_location, move.origin, opposite_color) #returns true if does not discover check
 

@@ -35,8 +35,9 @@ class Player():
         print(message)
 
     def comm_input(self, message):
+        print('}',self.moves_to_simulate)
         if self.moves_to_simulate:
-            return self.moves_to_simulate.pop()
+            return self.moves_to_simulate.pop(0)
         else:
             return input(message)
 
@@ -44,13 +45,16 @@ class Player():
         # output(self.show()
         input_ = None
         while not input_:
-            print(self.moves_to_simulate)
             raw = self.comm_input('enter your move: ')
-            try:
-                input_ = self.game.decode_move(raw, self.game.board.pieces_of_color(self.color))
-            except MoveException as err:
-                self.comm_output('erroneous move' + str(err.args))
-                self.comm_output('enter "?" to view help')
+            print('received input:', raw)
+            input_ = self.game.decode_move(raw, self.game.board.pieces_of_color(self.color))
+            print('processed input:', input_)
+
+            # try:
+            #     input_ = self.game.decode_move(raw, self.game.board.pieces_of_color(self.color))
+            # except MoveException as err:
+            #     self.comm_output('erroneous move' + str(err.args))
+            #     self.comm_output('enter "?" to view help')
 
         #     if len(inp)>0 and inp[0] != '?':
         #         try:
@@ -73,7 +77,7 @@ class Player():
         #     else:
         #         pass
 
-        # return input_ #returns move or command
+        return input_ #returns move or command
 
 
 
@@ -92,6 +96,7 @@ class Game():
         self.turn_count = 1
         self.undo_stack = []
         self.full_notation = '' # quite as the values in hist, but with the count and # + ? !
+        self.history = []       # to be used for checks of past Moves
         self.state = 'init'
         with open(logfile,'w') as f:
             self.logfile = logfile
@@ -268,8 +273,8 @@ class Game():
                 message = 'the move is ambiguous. Possible interpretations:' + str(extra_filtered)
                 raise MoveException(message)
 
-        # message = 'end of the "decode_move" method - this should be unreachable code '
-        # raise MoveException(message)
+        message = 'end of the "decode_move" method - this should be unreachable code '
+        raise MoveException(message)
 
     def mate(self):
         # draw - no one could possibly mate
@@ -286,33 +291,22 @@ class Game():
 
 
         # reduced ability to move
-        result=[]
-        # for piece in self.board.pieces_of_color(self.turnning_player.color):
-        #     ------------------->
-        #     temporary_result = self.verified(p,verbose)
-        #     rez.extend(temp_rez)
-        #     if verbose>0:
-        #         print 'p',p,'rez',temp_rez
+        result = []
+        for piece in self.board.pieces_of_color(self.turnning_player.color):
+            temporary_result = self.valid_moves_of_piece_at(piece.location)
+            result.extend(temporary_result)
 
-        # if verbose>1:
-        #     print 'mate rez (all avail moves for the pl in turn):', rez
-        # if verbose>0:
-        #     print 'len avail moves:', len(rez)
+        print('moves:', result)
 
-        # if len(rez)==0:
-        #     if verbose>0:
-        #         print 'player on turn is ',self.turn['col'],' and check against him is :',self.turn['is_in_check']
-        #     if self.turn['is_in_check']:
-        #         return 'mate'
-        #     else:
-        #         return 'stalemate'
-        # else:
-        #     # repeated moves
-        #     if len(self.zboard.backtrack)>0 and self.zboard.backtrack.count(self.zboard.backtrack[-1])>=3:
-        #         if verbose>0:
-        #             print 'backtrack',self.zboard.backtrack
-        #         return 'stalemate'
-        #     return ''
+        if len(result) == 0:
+            if self.turnning_player.is_in_check:
+                return 'mate'
+            else:
+                return 'stalemate'
+        else:
+            # repeated moves
+            if len(self.history) > 0 and self.board.backtrack.count(self.board.backtrack[-1]) >= 3:
+                return 'stalemate'
 
         return 'active'
 
@@ -341,9 +335,18 @@ class Game():
 
         return result
 
+    def valid_move(self, move):
+        undo = self.board.execute_move(move)
+        if undo:
+            self.board.undo_actions(undo)
+            return True
+        return False
 
-
-
+    def notator(self, move):
+        if self.turnning_player == self.whites_player:
+            return str(self.turn_count) + '. ' + move.notation
+        else:
+            return '  ' + move.notation + '\n'
 
     def start(self):
         # self.state = 'active'
@@ -354,7 +357,9 @@ class Game():
             while not valid_input:
                 input_ = self.turnning_player.prompt_input()
                 print(input_)
-            #     valid_input = __validate_against_z3levels__(input_)
+                if self.valid_move(input_):
+                    valid_input = input_
+
             #     # input could affect the cycle in three ways:
             #     # 1. valid move to pass turn to the other player
             #     # 2. valid command that keeps move (i.e. show info, export, undo, etc)
@@ -363,24 +368,36 @@ class Game():
             #         anction_input(valid_input)
             #         valid_input = False
 
-            # if valid_input not in ['offer draw', 'surrender', 'quit']
-            #     execute_move(valid_input)
-            #     self.undo_stack.append(valid_input__or__derivate)
-            #     if self.turnning_player == self.player1:
-            #         self.turnning_player = self.player2
-            #     else:
-            #         self.turnning_player = self.player1
-            #     self.turn_count += 1
-            #     self.full_notation += self.notator(valid_input)
-            #     self.history.append(valid_input) #list?
-            # else:
-            #     self.state = valid_input
+            if valid_input not in ['offer draw', 'surrender', 'quit']:
+                undo = self.board.execute_move(valid_input)
+                self.undo_stack.append(undo)
+                self.whites_player.is_in_check = self.board.white_checked
+                self.blacks_player.is_in_check = self.board.black_checked
+                if self.turnning_player == self.whites_player:
+                    self.turnning_player = self.blacks_player
+                else:
+                    self.turnning_player = self.whites_player
+                self.turn_count += 1
+                self.full_notation += self.notator(valid_input)
+                self.history.append(valid_input) #list?
+            else:
+                self.state = 'valid_input'
 
-            # self.state = self.mate()
+            print(self.board)
+            self.state = self.mate()
+            print('state:', self.state)
 
         if self.state == 'stalemate':
             self.full_notation += '\n1/2-1/2'
             result = 'stalemate'
+
+        if self.state == 'mate':
+            result = 'mate'
+            if self.turnning_player == self.whites_player:
+                self.full_notation += '\n1-0'
+            else:
+                self.full_notation += '\n0-1'
+
 
         print()
         print(self.board)

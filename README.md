@@ -50,3 +50,7 @@ from add_piece to spawn_pieces, as this is the only situation where this may occ
 Having all valid moves upfront a human move (instead of all naive moves + validation at execution) is needed, because input notation is compared to these moves. If we compare against naive moves, we may accept prompt, then fail validation during execution. That would entail returning to prompt, but that's not an option in terms of cycle structure.
 
 Validating moves takes executing them, one way or another. For AI we need to execute many moves anyway (for evaluation), so it's efficient to complete the validation as part of the evaluation. As AI evaluates & validates moves of the opponent, these results should be kept and reused. If such record is not available and validating human player moves is needed, it requires only depth of 1 of all naive moves, so it's good to have that as a single method.
+
+
+I feel that cross knowledge between classes is not a good practice, but I think I'll need to do it this time:
+class Game has objects of Player class, and I need the instance of Player object to know of a instance of Game; I can pass the Game's self as parameter to the Player constructor. It feels it may be better to implement sort of communication (using methods to pass data) between these classes instead of direct referencing, but I cant pinpoint why.
