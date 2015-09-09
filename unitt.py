@@ -295,9 +295,6 @@ class BoardTest(unittest.TestCase):
         self.assertEqual(14, len(test_board.black))
 
 
-
-
-
 class GameTest(unittest.TestCase):
 
     def test_initialize_game(self):
@@ -305,9 +302,9 @@ class GameTest(unittest.TestCase):
         self.assertEqual('wk@e1', repr(test_game.board.state['e1']))
         self.assertEqual(16, len(test_game.board.black))
 
-    def test_start_game(self):
+    def test_start_n_end_game(self):
         test_game = Game(board_position=TWO_KINGS_POSITION)
-        self.assertEqual('stalemate', test_game.start())
+        self.assertEqual('stalemate', test_game.start(verbose=False))
 
     def test_validions_against_checks(self):
         test_game = Game(board_position=TEST_POSITION2)
@@ -362,7 +359,6 @@ class GameTest(unittest.TestCase):
         for piece in test_game.board.pieces_of_color('w'):
             temporary_result = test_game.valid_moves_of_piece_at(piece.location)
             whites_possible_moves.extend(temporary_result)
-        print('moves:', whites_possible_moves)
 
         self.assertEqual(set(['Kd2', 'Kf2', 'Kf1', 'Be2']), set([ z.notation for z in whites_possible_moves ]))
 
@@ -440,22 +436,57 @@ class GameTest(unittest.TestCase):
         decoded_move = test_game.decode_move('gxf6', test_game.board.white)
         self.assertEqual(attribute_lister(expected_move, move_attributes) , attribute_lister(decoded_move, move_attributes))
 
-# class GameTest(unittest.TestCase):
-#     def test_game_cycle_n_mate(self):
-#         test_game = Game()
-#         test_game.whites_player.simulate( ['1. e4', '2. Bc4', '3. Qf3', 'Qxf7#'])
-#         test_game.blacks_player.simulate( [ 'e5',  'a6',  'b5', ])
-#         self.assertEqual('mate', test_game.start())
-#         #print(zgame.full_notation)
 
+    def test_game_cycle_n_mate(self):
+        test_game = Game()
+        test_game.whites_player.simulate( ['1. e4', '2. Bc4', '3. Qf3', 'Qxf7#'])
+        test_game.blacks_player.simulate( [ 'e5',  'a6',  'b5', ])
+        self.assertEqual('mate', test_game.start(verbose=False))
 
+    def test_game_cycle_stalemate(self):
+        position = {'h8':'  ', 'h2':'  ', 'h3':'  ', 'h1':'wr', 'h6':'  ', 'h7':'  ', 'h4':'  ', 'h5':'  ', 'd8':'  ', 'a8':'br', 'd6':'  ', 'd7':'bb', 'd4':'  ', 'd5':'  ', 'd2':'  ', 'd3':'  ', 'd1':'  ', 'g7':'  ', 'g6':'  ', 'g5':'  ', 'g4':'  ', 'g3':'  ', 'g2':'  ', 'g1':'  ', 'g8':'  ', 'c8':'  ', 'c3':'bn', 'c2':'  ', 'c1':'  ', 'c7':'  ', 'c6':'  ', 'c5':'  ', 'c4':'  ', 'f1':'  ', 'f2':'  ', 'f3':'  ', 'f4':'  ', 'f5':'  ', 'f6':'  ', 'f7':'  ', 'f8':'  ', 'b4':'  ', 'b5':'wb', 'b6':'  ', 'b7':'wr', 'b1':'  ', 'b2':'  ', 'b3':'  ', 'b8':'  ', 'a1':'wr', 'a3':'  ', 'a2':'  ', 'a5':'  ', 'e8':'bk', 'a7':'  ', 'a6':'  ', 'e5':'bq', 'e4':'wn', 'e7':'  ', 'e6':'  ', 'e1':'wk', 'e3':'  ', 'e2':'  ', 'a4':'  '}
+        test_game = Game(board_position=position)
+        # |br|  |  |  |bk|  |  |  |
+        # |  |wr|  |bb|  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |wb|  |  |bq|  |  |  |
+        # |  |  |  |  |wn|  |  |  |
+        # |  |  |bn|  |  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |wr|  |  |  |wk|  |  |wr|
+        test_game.whites_player.simulate(['Bxd7', 'Rh7', 'Rxa2', 'Rxa5', 'Kxe2', 'exit'])
+        test_game.blacks_player.simulate(['Kd8', 'Ra2', 'Qa5', 'Ne2', ])
+        self.assertEqual('stalemate', test_game.start(verbose=False))
 
+    def test_game_cycle_draw(self):
+        position = {'h8':'  ', 'h2':'  ', 'h3':'  ', 'h1':'  ', 'h6':'  ', 'h7':'  ', 'h4':'  ', 'h5':'  ', 'd8':'  ', 'a8':'  ', 'd6':'  ', 'd7':'  ', 'd4':'  ', 'd5':'  ', 'd2':'  ', 'd3':'  ', 'd1':'  ', 'g7':'  ', 'g6':'  ', 'g5':'  ', 'g4':'  ', 'g3':'  ', 'g2':'  ', 'g1':'  ', 'g8':'  ', 'c8':'  ', 'c3':'  ', 'c2':'  ', 'c1':'  ', 'c7':'  ', 'c6':'  ', 'c5':'  ', 'c4':'  ', 'f1':'  ', 'f2':'  ', 'f3':'  ', 'f4':'  ', 'f5':'  ', 'f6':'  ', 'f7':'  ', 'f8':'  ', 'b4':'  ', 'b5':'  ', 'b6':'  ', 'b7':'  ', 'b1':'  ', 'b2':'  ', 'b3':'  ', 'b8':'  ', 'a1':'  ', 'a3':'  ', 'a2':'  ', 'a5':'  ', 'e8':'bk', 'a7':'  ', 'a6':'  ', 'e5':'bq', 'e4':'  ', 'e7':'  ', 'e6':'  ', 'e1':'wk', 'e3':'  ', 'e2':'wq', 'a4':'  '}
+        test_game = Game(board_position=position)
+        # |  |  |  |  |bk|  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |  |  |bq|  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |  |  |wq|  |  |  |
+        # |  |  |  |  |wk|  |  |  |
+        test_game.whites_player.simulate(['Kd1', 'Kxe2'])
+        test_game.blacks_player.simulate(['Qxe2', 'Ke7'])
+        self.assertEqual('stalemate', test_game.start(verbose=False))
 
-
-
-
-
-
+    def test_game_cycle_repetition_draw(self):
+        position = {'h8':'bk', 'h2':'  ', 'h3':'  ', 'h1':'  ', 'h6':'  ', 'h7':'  ', 'h4':'  ', 'h5':'  ', 'd8':'  ', 'a8':'  ', 'd6':'  ', 'd7':'  ', 'd4':'  ', 'd5':'  ', 'd2':'  ', 'd3':'  ', 'd1':'  ', 'g7':'  ', 'g6':'  ', 'g5':'  ', 'g4':'  ', 'g3':'  ', 'g2':'  ', 'g1':'  ', 'g8':'  ', 'c8':'  ', 'c3':'  ', 'c2':'  ', 'c1':'  ', 'c7':'  ', 'c6':'  ', 'c5':'  ', 'c4':'  ', 'f1':'  ', 'f2':'  ', 'f3':'  ', 'f4':'  ', 'f5':'  ', 'f6':'  ', 'f7':'  ', 'f8':'  ', 'b4':'  ', 'b5':'  ', 'b6':'  ', 'b7':'  ', 'b1':'  ', 'b2':'  ', 'b3':'  ', 'b8':'  ', 'a1':'  ', 'a3':'  ', 'a2':'  ', 'a5':'  ', 'e8':'  ', 'a7':'  ', 'a6':'  ', 'e5':'bq', 'e4':'  ', 'e7':'  ', 'e6':'  ', 'e1':'wk', 'e3':'  ', 'e2':'wq', 'a4':'  '}
+        test_game = Game(board_position=position)
+        # |  |  |  |  |  |  |  |bk|
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |  |  |bq|  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |  |  |wq|  |  |  |
+        # |  |  |  |  |wk|  |  |  |
+        test_game.whites_player.simulate(['Kd1', '2.Qd2', 'Qe1', '4.Qd2', '5.Qe1', 'Qe2', 'Qe1', 'exit'])
+        test_game.blacks_player.simulate(['Qd5+', 'Qh1+', 'Qd5', 'Qh1+', 'Qh5+', 'Qh1', 'Qd5', 'exit'])
+        self.assertEqual('stalemate', test_game.start(verbose=False))
 
 
 if __name__ == "__main__":
@@ -799,55 +830,30 @@ if __name__ == "__main__":
 #         #e.p.
 #         self.assertEqual((zgame.zboard.piece_by_sq('g5'),'g5', 'e', 'f6', 'gxf6'),zgame.decode_move('gxf6',zgame.turnset()))
 
+
+#     def test_game_undo(self):
+#         zgame = chesslib.game()
+#         zgame.zboard.piecefy({'h8':'  ', 'h2':'  ', 'h3':'  ', 'h1':'wr', 'h6':'  ', 'h7':'  ', 'h4':'  ', 'h5':'  ', 'd8':'  ', 'a8':'br', 'd6':'  ', 'd7':'bb', 'd4':'  ', 'd5':'  ', 'd2':'  ', 'd3':'  ', 'd1':'  ', 'g7':'  ', 'g6':'  ', 'g5':'  ', 'g4':'  ', 'g3':'  ', 'g2':'  ', 'g1':'  ', 'g8':'  ', 'c8':'  ', 'c3':'bn', 'c2':'  ', 'c1':'  ', 'c7':'  ', 'c6':'  ', 'c5':'  ', 'c4':'  ', 'f1':'  ', 'f2':'  ', 'f3':'  ', 'f4':'  ', 'f5':'  ', 'f6':'  ', 'f7':'  ', 'f8':'  ', 'b4':'  ', 'b5':'wb', 'b6':'  ', 'b7':'wr', 'b1':'  ', 'b2':'  ', 'b3':'  ', 'b8':'  ', 'a1':'wr', 'a3':'  ', 'a2':'  ', 'a5':'  ', 'e8':'bk', 'a7':'  ', 'a6':'  ', 'e5':'bq', 'e4':'wn', 'e7':'  ', 'e6':'  ', 'e1':'wk', 'e3':'  ', 'e2':'  ', 'a4':'  '})
+#         #print(zgame.show())
+#         zgame.cycle(['Bxd7', 'Kd8', 'Rh7', 'Ra2', 'Rxa2', 'Qa5', 'undo', 'exit'],0,verbose=0)
+#         #zgame.turnundo()
+#         #print(zgame.show())
+#         self.assertEqual("""|  |  |  |bk|  |  |  |  |
+# |  |wr|  |wb|  |  |  |wr|
+# |  |  |  |  |  |  |  |  |
+# |  |  |  |  |bq|  |  |  |
+# |  |  |  |  |wn|  |  |  |
+# |  |  |bn|  |  |  |  |  |
+# |br|  |  |  |  |  |  |  |
+# |wr|  |  |  |wk|  |  |  |
+# """,zgame.zboard.show()) #before 'Rxa2' #by black
+
+
+
 #     def test_game_cycle_n_mate(self):
 #         zgame = chesslib.game()
 #         self.assertEqual('1-0',zgame.cycle(['1. e4', 'e5', '2. Bc4', 'a6', '3. Qf3', 'b5', 'Qxf7#'],0,verbose=0))
 #         #print(zgame.full_notation)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #     def test_game_cycle_stalemate(self):
@@ -867,22 +873,48 @@ if __name__ == "__main__":
 #         zgame.zboard.piecefy({'h8':'bk', 'h2':'  ', 'h3':'  ', 'h1':'  ', 'h6':'  ', 'h7':'  ', 'h4':'  ', 'h5':'  ', 'd8':'  ', 'a8':'  ', 'd6':'  ', 'd7':'  ', 'd4':'  ', 'd5':'  ', 'd2':'  ', 'd3':'  ', 'd1':'  ', 'g7':'  ', 'g6':'  ', 'g5':'  ', 'g4':'  ', 'g3':'  ', 'g2':'  ', 'g1':'  ', 'g8':'  ', 'c8':'  ', 'c3':'  ', 'c2':'  ', 'c1':'  ', 'c7':'  ', 'c6':'  ', 'c5':'  ', 'c4':'  ', 'f1':'  ', 'f2':'  ', 'f3':'  ', 'f4':'  ', 'f5':'  ', 'f6':'  ', 'f7':'  ', 'f8':'  ', 'b4':'  ', 'b5':'  ', 'b6':'  ', 'b7':'  ', 'b1':'  ', 'b2':'  ', 'b3':'  ', 'b8':'  ', 'a1':'  ', 'a3':'  ', 'a2':'  ', 'a5':'  ', 'e8':'  ', 'a7':'  ', 'a6':'  ', 'e5':'bq', 'e4':'  ', 'e7':'  ', 'e6':'  ', 'e1':'wk', 'e3':'  ', 'e2':'wq', 'a4':'  '})
 #         self.assertEqual('stalemate',zgame.cycle(['Kd1', 'Qd5+', '2.Qd2', 'Qh1+', 'Qe1', 'Qd5', '4.Qd2', 'Qh1+', '5.Qe1', 'Qh5+', 'Qe2', 'Qh1', 'Qe1', 'Qd5', 'exit'],0,verbose=0))# draw by repetition
 
-#     def test_game_undo(self):
-#         zgame = chesslib.game()
-#         zgame.zboard.piecefy({'h8':'  ', 'h2':'  ', 'h3':'  ', 'h1':'wr', 'h6':'  ', 'h7':'  ', 'h4':'  ', 'h5':'  ', 'd8':'  ', 'a8':'br', 'd6':'  ', 'd7':'bb', 'd4':'  ', 'd5':'  ', 'd2':'  ', 'd3':'  ', 'd1':'  ', 'g7':'  ', 'g6':'  ', 'g5':'  ', 'g4':'  ', 'g3':'  ', 'g2':'  ', 'g1':'  ', 'g8':'  ', 'c8':'  ', 'c3':'bn', 'c2':'  ', 'c1':'  ', 'c7':'  ', 'c6':'  ', 'c5':'  ', 'c4':'  ', 'f1':'  ', 'f2':'  ', 'f3':'  ', 'f4':'  ', 'f5':'  ', 'f6':'  ', 'f7':'  ', 'f8':'  ', 'b4':'  ', 'b5':'wb', 'b6':'  ', 'b7':'wr', 'b1':'  ', 'b2':'  ', 'b3':'  ', 'b8':'  ', 'a1':'wr', 'a3':'  ', 'a2':'  ', 'a5':'  ', 'e8':'bk', 'a7':'  ', 'a6':'  ', 'e5':'bq', 'e4':'wn', 'e7':'  ', 'e6':'  ', 'e1':'wk', 'e3':'  ', 'e2':'  ', 'a4':'  '})
-#         #print(zgame.show())
-#         zgame.cycle(['Bxd7', 'Kd8', 'Rh7', 'Ra2', 'Rxa2', 'Qa5', 'undo', 'exit'],0,verbose=0)
-#         #zgame.turnundo()
-#         #print(zgame.show())
-#         self.assertEqual("""|  |  |  |bk|  |  |  |  |
-# |  |wr|  |wb|  |  |  |wr|
-# |  |  |  |  |  |  |  |  |
-# |  |  |  |  |bq|  |  |  |
-# |  |  |  |  |wn|  |  |  |
-# |  |  |bn|  |  |  |  |  |
-# |br|  |  |  |  |  |  |  |
-# |wr|  |  |  |wk|  |  |  |
-# """,zgame.zboard.show()) #before 'Rxa2' #by black
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #     def test_game_cycle_ai(self):
 #         zgame = chesslib.game(bplayer='ai',logfile='d:\\temp\\aigametest.txt') # using log different from the defailt, so that it doesn't get overwrittent by subsequent test

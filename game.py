@@ -35,7 +35,6 @@ class Player():
         print(message)
 
     def comm_input(self, message):
-        print('}',self.moves_to_simulate)
         if self.moves_to_simulate:
             return self.moves_to_simulate.pop(0)
         else:
@@ -46,9 +45,7 @@ class Player():
         input_ = None
         while not input_:
             raw = self.comm_input('enter your move: ')
-            print('received input:', raw)
             input_ = self.game.decode_move(raw, self.game.board.pieces_of_color(self.color))
-            print('processed input:', input_)
 
             # try:
             #     input_ = self.game.decode_move(raw, self.game.board.pieces_of_color(self.color))
@@ -296,8 +293,6 @@ class Game():
             temporary_result = self.valid_moves_of_piece_at(piece.location)
             result.extend(temporary_result)
 
-        print('moves:', result)
-
         if len(result) == 0:
             if self.turnning_player.is_in_check:
                 return 'mate'
@@ -348,7 +343,7 @@ class Game():
         else:
             return '  ' + move.notation + '\n'
 
-    def start(self):
+    def start(self, verbose = True):
         # self.state = 'active'
         # check if initial position is mate or stalemate i.e. active
         self.state = self.mate()
@@ -356,7 +351,6 @@ class Game():
             valid_input = False
             while not valid_input:
                 input_ = self.turnning_player.prompt_input()
-                print(input_)
                 if self.valid_move(input_):
                     valid_input = input_
 
@@ -383,9 +377,11 @@ class Game():
             else:
                 self.state = 'valid_input'
 
-            print(self.board)
             self.state = self.mate()
-            print('state:', self.state)
+            if verbose:
+                print(self.board)
+                print('state:', self.state)
+                print('-'*50)
 
         if self.state == 'stalemate':
             self.full_notation += '\n1/2-1/2'
@@ -398,9 +394,8 @@ class Game():
             else:
                 self.full_notation += '\n0-1'
 
-
-        print()
-        print(self.board)
+        if verbose:
+            print('result:', result)
 
         return result
 

@@ -349,7 +349,7 @@ class Board():
             return not is_in_check # False == invalid move
         else: # not moving the king
             if self.white_checked or self.black_checked:
-                return not self.is_in_check(move.origin, opposite_color) #returns true if covering check that existed in state prior to the move sDFSFSDFSDFSFSFSDFS <<<<<<<<<<<<<<<<<<<<<< should be move.destination
+                return not self.is_in_check(turns_king_location, opposite_color)  # returns true if covering check that existed in state prior to the move
             else:
                 return not self.discover_check(turns_king_location, move.origin, opposite_color) #returns true if does not discover check
 
