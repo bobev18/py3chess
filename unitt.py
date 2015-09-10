@@ -3,7 +3,7 @@ import unittest
 from piece import Piece
 from move import Move, MoveException
 from board import Board
-from game import Game, Player, GameException
+from game import Game, Player, MoveExhaustException, SimulationException
 
 
 TEST_POSITION1 = {'h8':'  ', 'h2':'  ', 'h3':'  ', 'h1':'wr', 'h6':'  ', 'h7':'wp', 'h4':'  ', 'h5':'  ', 'd8':'bq', 'a8':'br', 'd6':'  ', 'd7':'bp', 'd4':'  ', 'd5':'  ', 'd2':'wp', 'd3':'  ', 'd1':'wq', 'g7':'bp', 'g6':'  ', 'g5':'wp', 'g4':'  ', 'g3':'  ', 'g2':'  ', 'g1':'  ', 'g8':'bn', 'c8':'bb', 'c3':'bn', 'c2':'wp', 'c1':'wb', 'c7':'bp', 'c6':'  ', 'c5':'  ', 'c4':'  ', 'f1':'wb', 'f2':'wp', 'f3':'  ', 'f4':'  ', 'f5':'bp', 'f6':'  ', 'f7':'  ', 'f8':'bb', 'b4':'  ', 'b5':'  ', 'b6':'  ', 'b7':'bp', 'b1':'wn', 'b2':'wp', 'b3':'  ', 'b8':'  ', 'a1':'wr', 'a3':'  ', 'a2':'wp', 'a5':'  ', 'e8':'bk', 'a7':'bp', 'a6':'  ', 'e5':'  ', 'e4':'wn', 'e7':'bp', 'e6':'  ', 'e1':'wk', 'e3':'  ', 'e2':'wp', 'a4':'  '}
@@ -516,22 +516,28 @@ class GameTest(unittest.TestCase):
         test_game.blacks_player.simulate(['Qd5+', 'Qh1+', 'Qd5', 'Qh1+', 'Qh5+', 'Qh1', 'Qd5', 'exit'])
         self.assertEqual('stalemate', test_game.start(verbose=False))
 
-
     def test_validations_of_enpassant_move_against_history(self):
         test_game = Game()
         test_game.whites_player.simulate(['e4', 'Nf3', 'Bc4', 'b4', 'Kf1', 'Ke1', 'O-O'])
         test_game.blacks_player.simulate(['a5', 'a4', 'Nc6', 'h6', 'axb3', 'h5', 'bxa2', ])
-        self.assertRaises(GameException, test_game.start, False)
+        self.assertRaises(SimulationException, test_game.start, False)
 
     def test_validations_of_castling_move_against_history(self):
         test_game = Game()
         test_game.whites_player.simulate(['e4', 'Nf3', 'Bc4', 'b4', 'Kf1', 'Ke1', 'O-O', 'Nc3'])
         test_game.blacks_player.simulate(['a5', 'a4', 'Nc6', 'axb3', 'h6', 'bxa2', 'h5'])
-        self.assertRaises(GameException, test_game.start, False)
+        self.assertRaises(SimulationException, test_game.start, False)
 
 
 class TemporaryGameTest(unittest.TestCase):
-    pass
+
+    def test_disambiguation_move(self):
+        position = {'e2':'  ','c8':'  ','e1':'  ','b6':'  ','e8':'bk','e7':'  ','g5':'  ','b1':'  ','a2':'  ','g6':'  ','e6':'  ','f6':'  ','h4':'  ','h7':'bp','g1':'wk','a5':'wp','b2':'  ','d3':'wp','c1':'  ','e3':'  ','c4':'  ','a6':'bp','a4':'  ','d8':'  ','f3':'wp','a8':'br','d2':'  ','c6':'  ','c7':'bp','g8':'  ','d1':'wq','f2':'wp','f1':'wr','g3':'  ','g2':'  ','b8':'  ','c2':'wp','f8':'  ','b4':'bq','b7':'bp','f5':'  ','f4':'  ','d4':'bp','h3':'wp','a3':'  ','c3':'  ','b3':'  ','d7':'  ','b5':'  ','e4':'wn','h6':'  ','d5':'  ','h2':'  ','h8':'br','a1':'wr','h1':'  ','g4':'  ','g7':'bp','h5':'  ','c5':'  ','a7':'bb','f7':'bp','e5':'  ','d6':'  '}
+        test_game = Game(board_position=position)
+        test_game.whites_player.simulate(['Qe1', 'Rfxe1'])
+        test_game.blacks_player.simulate(['Qxe1', 'OO'])
+        self.assertRaises(MoveExhaustException, test_game.start, False)
+
 
 #     def test_game_cycle_ai(self):
 #         zgame = chesslib.game(bplayer='ai',logfile='d:\\temp\\aigametest.txt') # using log different from the defailt, so that it doesn't get overwrittent by subsequent test

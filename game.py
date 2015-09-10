@@ -19,7 +19,12 @@ INITIAL_POSITION = {
 COMMANDS = ['', '?', 'help', 'history', 'notation', 'export', 'undo', 'quit', 'exit', 'draw', 'forefit']
 
 
-class GameException(Exception):
+class MoveExhaustException(Exception):
+    def __init__(self, *args):
+        # *args is used to get a list of the parameters passed
+        self.args = [a for a in args]
+
+class SimulationException(Exception):
     def __init__(self, *args):
         # *args is used to get a list of the parameters passed
         self.args = [a for a in args]
@@ -41,8 +46,8 @@ class Player():
         self.moves_to_simulate = moves
         self.simulation_flag = True
 
-    def comm_output(self, message):
-        print(message)
+    def comm_output(self, *args):
+        print(*args)
 
     def comm_input(self, message):
         if len(self.moves_to_simulate):
@@ -60,7 +65,7 @@ class Player():
             raw = self.comm_input('enter your move: ')
             if not raw:
                 message = 'player ' + self.color + ' exhausted simulated moves'
-                raise GameException(message)
+                raise MoveExhaustException(message)
             # input_ = self.game.decode_move(raw, self.game.board.pieces_of_color(self.color))
             if raw in COMMANDS:
                 if raw in ['?', 'help']:
@@ -82,6 +87,7 @@ class Player():
                     self.comm_output(self.game.history)
                 elif raw == 'undo':
                     self.game.undo_last()
+                    self.comm_output(self.game.board)
                 else:
                     self.comm_output('enter "?" to view help')
 
@@ -141,6 +147,9 @@ class Game():
     def decode_move(self, raw_input_, piece_set): #, board_state):
         # capture turn count if included in notation
 
+        debug_verbosing = False
+        # debug_verbosing = True
+
         # ----- STAGE 1 ----- #
         # move_number = re.search(r'\d{1,3}\.{0,3}\s?', raw_input_)
         move_number = re.match(r'\d{1,3}\.{0,3}\s?', raw_input_)
@@ -161,6 +170,7 @@ class Game():
             move_input = move_input[:move_input.find('#')] # mate
 
         move_input = move_input.strip()
+        clean_input = move_input
         history_notation = move_input # this is the format for the notation we track in the hist
         promotion = '' #promoting a pawn i.e. e8Q
         for possible_promotion in ['R','N','B','Q']:
@@ -183,7 +193,7 @@ class Game():
             return Move(king_piece, 'c', destination, 'O-O-O', rook)
 
 
-        # print('past stage1', move_input)
+        if debug_verbosing: print('past stage1', move_input)
 
         # ----- STAGE 2 ----- #
         # determine piece type
@@ -219,7 +229,15 @@ class Game():
             else:
                 destination = move_input
 
-        extra = self.board.state[destination]
+        if enpassan:
+            if destination[1] == '3':
+                taken_location = destination[0] + '4'
+            else:
+                taken_location = destination[0] + '5'
+            extra = self.board.state[taken_location]
+        else:
+            extra = self.board.state[destination]
+
         if promotion != '':
             move_type = 'p'
             extra = Piece(piece_set[0].color, promotion.lower(), destination)
@@ -235,18 +253,19 @@ class Game():
             message = 'no piece of the needed type (' + piece_type.lower() + ') is found in the piece set'
             raise MoveException(message)
         if len(filtered) == 1:
-            return Move(filtered[0], move_type, destination, move_input, extra)
+            return Move(filtered[0], move_type, destination, clean_input, extra)
 
-        # print('stage 2', filtered)
+        if debug_verbosing: print('stage 2', filtered, 'extra', extra, 'type', move_type, 'piece_type', piece_type)
 
         # ----- STAGE 3 ----- #
         # find if the move has disambiguation
         disambiguation = ''
         if capturing:
-            if move_input[move_input.find(CAPTURE_SIGN)-1] != piece_type: #true for pawn capture moves
-                disambiguation = move_input[:move_input.find(CAPTURE_SIGN)-1] # the pawn file "cxd5"
+            characters_prior_capture_sign = move_input[:move_input.find(CAPTURE_SIGN)]
+            if piece_type != 'p':
+                disambiguation = characters_prior_capture_sign[1:]  #omit piece type indication
             else:
-                disambiguation = move_input[1:move_input.find(CAPTURE_SIGN)-1] # between first char (=piece type) and capture sign; i.e. Raxe4 -> 'a' or R8xe4 -> '8' or Re1xe4 -> 'e1' (has wr@e8, wr@a4 & wr@e1)
+                disambiguation = characters_prior_capture_sign
             if len(disambiguation) > 2:
                 message = '\n erroneous disambiguation ' + disambiguation
                 raise MoveException(message)
@@ -275,17 +294,17 @@ class Game():
                 if disambiguation in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']:
                     filtered = [ z for z in filtered if disambiguation == z.location[0]] #disambiguation by file
                 else:
-                    filtered = [ z for z in filtered if disambiguation == x.location[1]] #disambiguation by rank
+                    filtered = [ z for z in filtered if disambiguation == z.location[1]] #disambiguation by rank
             else:
-                filtered = [ z for z in filtered if disambiguation == x.location] #disambiguation by origination square
+                filtered = [ z for z in filtered if disambiguation == z.location] #disambiguation by origination square
 
             if len(filtered) == 0:
                 message = 'no piece matching the disambiguation (' + disambiguation + ') is found in the piece set'
                 raise MoveException(message)
             if len(filtered) == 1:
-                return Move(filtered[0], move_type, destination, move_input, extra)
+                return Move(filtered[0], move_type, destination, clean_input, extra)
 
-        # print('stage 3', filtered)
+        if debug_verbosing: print('stage 3', filtered, 'extra', extra)
 
         # ----- STAGE 4 ----- #
         # filter by matching generated moves (for the remaining candidates) to the input
@@ -398,7 +417,7 @@ class Game():
         undo = self.undo_stack.pop()
         self.board.undo_actions(undo)
         temp = self.history.pop()
-        self.full_notation = '\n'.join([ z for z in self.full_notation.split('\n')[:-1] ])
+        self.full_notation = '\n'.join([ z for z in self.full_notation.split('\n')[:-2] ])
 
     def notator(self, move):
         if self.turnning_player.color == 'w':
@@ -411,9 +430,9 @@ class Game():
         # check if initial position is mate or stalemate i.e. active
         self.state = self.mate()
         if verbose:
-            print(self.board)
-            print('state:', self.state)
-            print('-'*50)
+            self.turnning_player.comm_output(self.board)
+            self.turnning_player.comm_output('state:', self.state)
+            self.turnning_player.comm_output('-'*50)
         while self.state == 'active':
             valid_input = False
             while not valid_input:
@@ -424,7 +443,7 @@ class Game():
                     else:
                         if self.turnning_player.simulation_flag:
                             message = 'simulated move - ' + str(input_) + ' - for player ' + self.turnning_player.color + ' is invalid'
-                            raise GameException(message)
+                            raise SimulationException(message)
 
                 else:
                     valid_input = input_
@@ -461,9 +480,9 @@ class Game():
 
 
             if verbose:
-                print(self.board)
-                print('state:', self.state)
-                print('-'*50)
+                self.turnning_player.comm_output(self.board)
+                self.turnning_player.comm_output('state:', self.state)
+                self.turnning_player.comm_output('-'*50)
 
         if self.state in ['exit', 'quit']:
             result = 'player ' + self.turnning_player.color + ' left the game'
@@ -488,11 +507,11 @@ class Game():
         #         self.full_notation += '\n0-1'
 
         if verbose:
-            print('result:', result)
-            print('notation:')
-            print(self.full_notation)
-            print('\nend position:')
-            print(self.board.export())
+            self.turnning_player.comm_output('result:', result)
+            self.turnning_player.comm_output('notation:')
+            self.turnning_player.comm_output(self.full_notation)
+            self.turnning_player.comm_output('\nend position:')
+            self.turnning_player.comm_output(self.board.export())
 
         return result
 
