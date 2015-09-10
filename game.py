@@ -19,11 +19,10 @@ INITIAL_POSITION = {
 COMMANDS = ['', '?', 'help', 'history', 'notation', 'export', 'undo', 'quit', 'exit', 'draw', 'forefit']
 
 
-# delete these
-MOVE_ATTRIBUTES = ['piece', 'origin', 'type_', 'destination', 'notation', 'promote_to', 'taken', 'catsling_rook',]
-def attribute_lister(object_, attributes):
-    return [ getattr(object_, z) for z in attributes ]
-
+class GameException(Exception):
+    def __init__(self, *args):
+        # *args is used to get a list of the parameters passed
+        self.args = [a for a in args]
 
 class Player():
 
@@ -35,32 +34,40 @@ class Player():
         self.is_in_check = False
         self.AI_depth = AI_depth
         self.moves_to_simulate = []
+        self.simulation_flag = False
         self.game = game
 
     def simulate(self, moves):
         self.moves_to_simulate = moves
+        self.simulation_flag = True
 
     def comm_output(self, message):
         print(message)
 
     def comm_input(self, message):
-        if self.moves_to_simulate:
+        if len(self.moves_to_simulate):
             return self.moves_to_simulate.pop(0)
         else:
-            return input(message)
+            try:
+                return input(message)
+            except EOFError as error:
+                return None
 
     def prompt_input(self):
         # output(self.show()
         input_ = None
         while not input_:
             raw = self.comm_input('enter your move: ')
+            if not raw:
+                message = 'player ' + self.color + ' exhausted simulated moves'
+                raise GameException(message)
             # input_ = self.game.decode_move(raw, self.game.board.pieces_of_color(self.color))
             if raw in COMMANDS:
                 if raw in ['?', 'help']:
                     self.comm_output('commands:')
                     self.comm_output('notation - show game notation')
                     self.comm_output('export - print position as dictionary')
-                    # print('verbose - tongle verbose on and off')
+                    # print('verbose - toggle verbose on and off')
                     self.comm_output('undo - revert full turn')
                     self.comm_output('draw - offer draw, also accept draw if offered')
                     self.comm_output('forefit - give up')
@@ -81,11 +88,12 @@ class Player():
             else:
                 try:
                     input_ = self.game.decode_move(raw, self.game.board.pieces_of_color(self.color))
-                except MoveException as err:
-                    self.comm_output('erroneous move' + str(err.args))
-                    self.comm_output('enter "?" to view help')
-
-
+                except MoveException as error:
+                    if self.simulation_flag:
+                        raise
+                    else:
+                        self.comm_output('erroneous move' + str(error.args))
+                        self.comm_output('enter "?" to view help')
 
         #     if len(inp)>0 and inp[0] != '?':
         #         try:
@@ -337,6 +345,16 @@ class Game():
 
         return 'active'
 
+    def validate_against_history(self, move):
+        if move.type_ == 'c':
+            color_relevant_history_moves = [ z for z in self.history if z.piece.color == move.piece.color ]
+            nullifying_moves = [ z for z in color_relevant_history_moves if z.origin in ['a1', 'e1', 'h1', 'a8', 'e8', 'h8'] ]
+            return len(nullifying_moves) == 0
+        if move.type_ == 'e':
+            return len(self.history) == 0 or (self.history[-1].type_ == 'm2' and self.history[-1].destination[0] == move.destination[0])
+
+        return True
+
     def valid_moves_of_piece_at(self, location):
         result = []
         for move in self.board.naive_moves(self.board.state[location]):
@@ -355,18 +373,20 @@ class Game():
             # self.board.undo_actions(undo)
             ### aparently 'execute_move' incorporates the validate_move check
 
-            undo = self.board.execute_move(move)
-            if undo:
-                result.append(move)
-                self.board.undo_actions(undo)
+            if self.validate_against_history(move):
+                undo = self.board.execute_move(move)
+                if undo:
+                    result.append(move)
+                    self.board.undo_actions(undo)
 
         return result
 
     def valid_move(self, move):
-        undo = self.board.execute_move(move)
-        if undo:
-            self.board.undo_actions(undo)
-            return True
+        if self.validate_against_history(move):
+            undo = self.board.execute_move(move)
+            if undo:
+                self.board.undo_actions(undo)
+                return True
         return False
 
     def undo_last(self):
@@ -399,10 +419,12 @@ class Game():
             while not valid_input:
                 input_ = self.turnning_player.prompt_input()
                 if input_ not in ['draw', 'forefit', 'quit', 'exit']:
-                    print('decoded move, prior to validation:', input_)
                     if self.valid_move(input_):
-                        print('validation passed of move', input_, type(input_))
                         valid_input = input_
+                    else:
+                        if self.turnning_player.simulation_flag:
+                            message = 'simulated move - ' + str(input_) + ' - for player ' + self.turnning_player.color + ' is invalid'
+                            raise GameException(message)
 
                 else:
                     valid_input = input_
@@ -416,7 +438,6 @@ class Game():
             #         valid_input = False
 
             if valid_input not in ['draw', 'forefit', 'quit', 'exit']:
-                print(attribute_lister(valid_input, MOVE_ATTRIBUTES))
                 undo = self.board.execute_move(valid_input)
                 self.undo_stack.append(undo)
                 self.whites_player.is_in_check = self.board.white_checked
@@ -431,6 +452,7 @@ class Game():
             else:
                 self.state = valid_input
 
+            # print('preliminary state:', self.state)
             if self.state == 'active':
                 self.state = self.mate()
             # else:
