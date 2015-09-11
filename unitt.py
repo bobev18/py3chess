@@ -531,12 +531,29 @@ class GameTest(unittest.TestCase):
 
 class TemporaryGameTest(unittest.TestCase):
 
-    def test_disambiguation_move(self):
+    # def test_disambiguation_move(self):
+    #     position = {'e2':'  ','c8':'  ','e1':'  ','b6':'  ','e8':'bk','e7':'  ','g5':'  ','b1':'  ','a2':'  ','g6':'  ','e6':'  ','f6':'  ','h4':'  ','h7':'bp','g1':'wk','a5':'wp','b2':'  ','d3':'wp','c1':'  ','e3':'  ','c4':'  ','a6':'bp','a4':'  ','d8':'  ','f3':'wp','a8':'br','d2':'  ','c6':'  ','c7':'bp','g8':'  ','d1':'wq','f2':'wp','f1':'wr','g3':'  ','g2':'  ','b8':'  ','c2':'wp','f8':'  ','b4':'bq','b7':'bp','f5':'  ','f4':'  ','d4':'bp','h3':'wp','a3':'  ','c3':'  ','b3':'  ','d7':'  ','b5':'  ','e4':'wn','h6':'  ','d5':'  ','h2':'  ','h8':'br','a1':'wr','h1':'  ','g4':'  ','g7':'bp','h5':'  ','c5':'  ','a7':'bb','f7':'bp','e5':'  ','d6':'  '}
+    #     test_game = Game(board_position=position)
+    #     test_game.whites_player.simulate(['Qe1', 'Rfxe1','f4', 'f5'])
+    #     test_game.blacks_player.simulate(['Qxe1', 'OO', 'Rfe8', 'Re5'])
+    #     self.assertRaises(MoveExhaustException, test_game.start, False)
+
+    def test_stepping_preventing_enpassant(self):
         position = {'e2':'  ','c8':'  ','e1':'  ','b6':'  ','e8':'bk','e7':'  ','g5':'  ','b1':'  ','a2':'  ','g6':'  ','e6':'  ','f6':'  ','h4':'  ','h7':'bp','g1':'wk','a5':'wp','b2':'  ','d3':'wp','c1':'  ','e3':'  ','c4':'  ','a6':'bp','a4':'  ','d8':'  ','f3':'wp','a8':'br','d2':'  ','c6':'  ','c7':'bp','g8':'  ','d1':'wq','f2':'wp','f1':'wr','g3':'  ','g2':'  ','b8':'  ','c2':'wp','f8':'  ','b4':'bq','b7':'bp','f5':'  ','f4':'  ','d4':'bp','h3':'wp','a3':'  ','c3':'  ','b3':'  ','d7':'  ','b5':'  ','e4':'wn','h6':'  ','d5':'  ','h2':'  ','h8':'br','a1':'wr','h1':'  ','g4':'  ','g7':'bp','h5':'  ','c5':'  ','a7':'bb','f7':'bp','e5':'  ','d6':'  '}
         test_game = Game(board_position=position)
-        test_game.whites_player.simulate(['Qe1', 'Rfxe1'])
-        test_game.blacks_player.simulate(['Qxe1', 'OO'])
-        self.assertRaises(MoveExhaustException, test_game.start, False)
+        test_game.whites_player.simulate(['Qe1', 'Rfxe1','f4', 'Ng3', 'Re7', 'Rb1', 'Ra1', 'axb6', 'bxa7'])
+        test_game.blacks_player.simulate(['Qxe1', 'OO', 'f5', 'g6', 'Rfc8', 'b6', 'b5', 'Kg8'])
+        self.assertRaises(SimulationException, test_game.start, False)
+
+    def test_pawn_side_moving(self):
+        position = {'e2':'  ','c8':'  ','e1':'  ','b6':'  ','e8':'bk','e7':'  ','g5':'  ','b1':'  ','a2':'  ','g6':'  ','e6':'  ','f6':'  ','h4':'  ','h7':'bp','g1':'wk','a5':'wp','b2':'  ','d3':'wp','c1':'  ','e3':'  ','c4':'  ','a6':'bp','a4':'  ','d8':'  ','f3':'wp','a8':'br','d2':'  ','c6':'  ','c7':'bp','g8':'  ','d1':'wq','f2':'wp','f1':'wr','g3':'  ','g2':'  ','b8':'  ','c2':'wp','f8':'  ','b4':'bq','b7':'bp','f5':'  ','f4':'  ','d4':'bp','h3':'wp','a3':'  ','c3':'  ','b3':'  ','d7':'  ','b5':'  ','e4':'wn','h6':'  ','d5':'  ','h2':'  ','h8':'br','a1':'wr','h1':'  ','g4':'  ','g7':'bp','h5':'  ','c5':'  ','a7':'bb','f7':'bp','e5':'  ','d6':'  '}
+        test_game = Game(board_position=position)
+        test_game.whites_player.simulate(['Qe1', 'Rfxe1','f4', 'Ng3', 'Re7', 'Rb1', 'Ra1', 'axb5'])
+        test_game.blacks_player.simulate(['Qxe1', 'OO', 'f5', 'g6', 'Rfc8', 'b6', 'b5', 'axb5'])
+
+        # self.assertEqual('stalemate', test_game.start(verbose=False))
+        self.assertRaises(SimulationException, test_game.start, False)
+
 
 
 #     def test_game_cycle_ai(self):

@@ -18,6 +18,13 @@ INITIAL_POSITION = {
 
 COMMANDS = ['', '?', 'help', 'history', 'notation', 'export', 'undo', 'quit', 'exit', 'draw', 'forefit']
 
+# DEBUG helper  ---------------------
+def attribute_lister(object_, attributes):
+    return [ getattr(object_, z) for z in attributes ]
+
+MOVE_ATTRIBUTES = ['piece', 'origin', 'type_', 'destination', 'notation', 'promote_to', 'taken', 'catsling_rook',]
+#  end of DEBUG helper -------------
+
 
 class MoveExhaustException(Exception):
     def __init__(self, *args):
@@ -149,6 +156,7 @@ class Game():
 
         debug_verbosing = False
         # debug_verbosing = True
+        # print('rawest raw:', raw_input_)
 
         # ----- STAGE 1 ----- #
         # move_number = re.search(r'\d{1,3}\.{0,3}\s?', raw_input_)
@@ -192,7 +200,6 @@ class Game():
             rook = [ z for z in piece_set if z.type_ == 'r' and z.location == ('a' + king_piece.location[1]) ][0]
             return Move(king_piece, 'c', destination, 'O-O-O', rook)
 
-
         if debug_verbosing: print('past stage1', move_input)
 
         # ----- STAGE 2 ----- #
@@ -224,10 +231,17 @@ class Game():
                     raise MoveException(message)
         else:
             capturing = False
-            if move_input.count(piece_type)>0:
-                destination = move_input[move_input.find(piece_type)+1:]
-            else:
-                destination = move_input
+            destination = move_input[-2:]
+            # if move_input.count(piece_type)>0:
+            #     destination = move_input[move_input.find(piece_type)+1:]
+            # else:
+            #     destination = move_input
+
+            # if len(destination) < 1 or len(destination) > 4:
+            #     message = 'not capturing; destination (' + destination + ') is not on the board'
+            #     raise MoveException(message)
+            # elif len(destination) == 3 or len(destination) == 4:
+            #     # means disab
 
         if enpassan:
             if destination[1] == '3':
@@ -236,6 +250,7 @@ class Game():
                 taken_location = destination[0] + '5'
             extra = self.board.state[taken_location]
         else:
+            # if capturing -- the problem is not with the capturing as we dont mind having the <extra> even if moving (in such case the value will be "None")
             extra = self.board.state[destination]
 
         if promotion != '':
@@ -270,20 +285,25 @@ class Game():
                 message = '\n erroneous disambiguation ' + disambiguation
                 raise MoveException(message)
         else:
-            if len(destination) == 3: # Rac1 = Rook from file "A" to "C1" ; N7g5 = Knight from rank "7" to "G5"
-                disambiguation = destination[0]
-                destination = destination[1:]
-            elif len(destination) == 4: # Nf7g5 differ from both Nh7 and Nf3 - you can have 3 pieces of same type after promotions
-                disambiguation = destination[:2]
+            if move_input.count(piece_type)>0:
+                naive_destination = move_input[move_input.find(piece_type)+1:]
+            else:
+                naive_destination = move_input
+
+            if len(naive_destination) == 3: # Rac1 = Rook from file "A" to "C1" ; N7g5 = Knight from rank "7" to "G5"
+                disambiguation = naive_destination[0]
+                # naive_destination = naive_destination[1:]
+            elif len(naive_destination) == 4: # Nf7g5 differ from both Nh7 and Nf3 - you can have 3 pieces of same type after promotions
+                disambiguation = naive_destination[:2]
                 if disambiguation not in self.board.state.keys():
                     message = 'disambiguation detected (' + disambiguation + '), but it is not on the board'
                     raise MoveException(message)
-                destination = destination[2:]
-                if destination not in self.board.state.keys():
-                    message = 'destination detected as (' + destination + '), but it is not on the board'
-                    raise MoveException(message)
-            elif len(destination) > 4:
-                message = '\n erroneous destination ' + destination
+                # naive_destination = naive_destination[2:]
+                # if naive_destination not in self.board.state.keys():
+                #     message = 'naive_destination detected as (' + naive_destination + '), but it is not on the board'
+                #     raise MoveException(message)
+            elif len(naive_destination) > 4:
+                message = '\n erroneous destination ' + naive_destination
                 raise MoveException(message)
             else:
                 pass
@@ -401,7 +421,13 @@ class Game():
         return result
 
     def valid_move(self, move):
-        if self.validate_against_history(move):
+        # naives = self.board.naive_moves(move.piece)
+        # print(move , naives, move in naives, str(move) in [ str(z) for z in naives ])
+        # print(attribute_lister(move, MOVE_ATTRIBUTES))
+        # print([ attribute_lister(z, MOVE_ATTRIBUTES) for z in naives ])
+
+
+        if self.validate_against_history(move) and move in self.board.naive_moves(move.piece):
             undo = self.board.execute_move(move)
             if undo:
                 self.board.undo_actions(undo)

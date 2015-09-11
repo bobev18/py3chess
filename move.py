@@ -64,3 +64,17 @@ class Move():
                 undo.append({'act':'relocate_piece', 'args':[self.catsling_rook, 'a'+self.piece.location[1]]})
 
         return actions, undo
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__) \
+        and self.piece == other.piece \
+        and self.origin == other.origin \
+        and self.type_[0] == other.type_[0] \
+        and self.destination == other.destination \
+        and str(self.promote_to) == str(other.promote_to) \
+        and str(self.taken) == str(other.taken) \
+        and str(self.catsling_rook) == str(other.catsling_rook):
+            return True
+        else:
+            return False
+        # and self.notation == other.notation \  ----   this can be added after 'generating disambiguated notation' is implemented onto the generic naive move results
