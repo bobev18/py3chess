@@ -531,13 +531,6 @@ class GameTest(unittest.TestCase):
 
 class TemporaryGameTest(unittest.TestCase):
 
-    # def test_disambiguation_move(self):
-    #     position = {'e2':'  ','c8':'  ','e1':'  ','b6':'  ','e8':'bk','e7':'  ','g5':'  ','b1':'  ','a2':'  ','g6':'  ','e6':'  ','f6':'  ','h4':'  ','h7':'bp','g1':'wk','a5':'wp','b2':'  ','d3':'wp','c1':'  ','e3':'  ','c4':'  ','a6':'bp','a4':'  ','d8':'  ','f3':'wp','a8':'br','d2':'  ','c6':'  ','c7':'bp','g8':'  ','d1':'wq','f2':'wp','f1':'wr','g3':'  ','g2':'  ','b8':'  ','c2':'wp','f8':'  ','b4':'bq','b7':'bp','f5':'  ','f4':'  ','d4':'bp','h3':'wp','a3':'  ','c3':'  ','b3':'  ','d7':'  ','b5':'  ','e4':'wn','h6':'  ','d5':'  ','h2':'  ','h8':'br','a1':'wr','h1':'  ','g4':'  ','g7':'bp','h5':'  ','c5':'  ','a7':'bb','f7':'bp','e5':'  ','d6':'  '}
-    #     test_game = Game(board_position=position)
-    #     test_game.whites_player.simulate(['Qe1', 'Rfxe1','f4', 'f5'])
-    #     test_game.blacks_player.simulate(['Qxe1', 'OO', 'Rfe8', 'Re5'])
-    #     self.assertRaises(MoveExhaustException, test_game.start, False)
-
     def test_stepping_preventing_enpassant(self):
         position = {'e2':'  ','c8':'  ','e1':'  ','b6':'  ','e8':'bk','e7':'  ','g5':'  ','b1':'  ','a2':'  ','g6':'  ','e6':'  ','f6':'  ','h4':'  ','h7':'bp','g1':'wk','a5':'wp','b2':'  ','d3':'wp','c1':'  ','e3':'  ','c4':'  ','a6':'bp','a4':'  ','d8':'  ','f3':'wp','a8':'br','d2':'  ','c6':'  ','c7':'bp','g8':'  ','d1':'wq','f2':'wp','f1':'wr','g3':'  ','g2':'  ','b8':'  ','c2':'wp','f8':'  ','b4':'bq','b7':'bp','f5':'  ','f4':'  ','d4':'bp','h3':'wp','a3':'  ','c3':'  ','b3':'  ','d7':'  ','b5':'  ','e4':'wn','h6':'  ','d5':'  ','h2':'  ','h8':'br','a1':'wr','h1':'  ','g4':'  ','g7':'bp','h5':'  ','c5':'  ','a7':'bb','f7':'bp','e5':'  ','d6':'  '}
         test_game = Game(board_position=position)
@@ -553,6 +546,26 @@ class TemporaryGameTest(unittest.TestCase):
 
         # self.assertEqual('stalemate', test_game.start(verbose=False))
         self.assertRaises(SimulationException, test_game.start, False)
+
+    def test_black_capture_promotion(self):
+        position = {'d4':'wp','f4':'bb','b6':'  ','c4':'  ','d7':'  ','a5':'wp','d2':'  ','h5':'  ','d3':'  ','h2':'  ','g6':'bp','a3':'  ','f2':'wp','c1':'  ','f3':'  ','e8':'  ','b8':'  ','h1':'  ','a1':'  ','c7':'  ','h6':'  ','d1':'  ','c2':'bp','h7':'bp','c5':'  ','e7':'  ','d8':'  ','a7':'  ','b7':'  ','e3':'  ','d5':'  ','d6':'  ','e2':'wk','f1':'  ','a8':'  ','g1':'  ','g2':'  ','c6':'br','c8':'  ','g3':'  ','b3':'  ','b1':'wr','h8':'  ','f5':'bp','e1':'  ','f7':'bk','e5':'  ','f6':'  ','g7 ':'  ','a4':'  ','h3':'wp','g5':'  ','b5':'  ','g4':'  ','b4':'wn','e6':'  ','c3':'  ','f8':'  ','g8':'  ','e4':'  ','h4':'  ','a2':'  ','b2':'  ','a6':'bp'}
+        test_game = Game(board_position=position)
+        test_game.whites_player.simulate(['Nxc6'])
+        test_game.blacks_player.simulate(['cxb1Q'])
+
+        # self.assertEqual('stalemate', test_game.start(verbose=True))
+        self.assertRaises(MoveExhaustException, test_game.start, False)
+
+    def test_black_invalid_notation_for_promotion(self):
+        # blacks turn 'b1Q' is decoded as 'cxb1Q'; this is due to "stage 4" of the decode_move method
+        position = {'d4':'wp','f4':'bb','b6':'  ','c4':'  ','d7':'  ','a5':'wp','d2':'  ','h5':'  ','d3':'  ','h2':'  ','g6':'bp','a3':'  ','f2':'wp','c1':'  ','f3':'  ','e8':'  ','b8':'  ','h1':'  ','a1':'  ','c7':'  ','h6':'  ','d1':'  ','c2':'bp','h7':'bp','c5':'  ','e7':'  ','d8':'  ','a7':'  ','b7':'  ','e3':'  ','d5':'  ','d6':'  ','e2':'wk','f1':'  ','a8':'  ','g1':'  ','g2':'  ','c6':'br','c8':'  ','g3':'  ','b3':'  ','b1':'wr','h8':'  ','f5':'bp','e1':'  ','f7':'bk','e5':'  ','f6':'  ','g7 ':'  ','a4':'  ','h3':'wp','g5':'  ','b5':'  ','g4':'  ','b4':'wn','e6':'  ','c3':'  ','f8':'  ','g8':'  ','e4':'  ','h4':'  ','a2':'  ','b2':'  ','a6':'bp'}
+        test_game = Game(board_position=position)
+        test_game.whites_player.simulate(['Nxc6'])
+        test_game.blacks_player.simulate(['b1Q'])
+
+        # self.assertEqual('stalemate', test_game.start(verbose=True))
+        self.assertRaises(MoveExhaustException, test_game.start, False)
+        self.assertEqual('cxb1Q', test_game.history[-1].notation)
 
 
 

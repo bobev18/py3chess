@@ -42,7 +42,7 @@ class Player():
         self.type_ = type_
         self.color = color
         self.clock = initial_clock_time
-        self.history = []
+        # self.history = []
         self.is_in_check = False
         self.AI_depth = AI_depth
         self.moves_to_simulate = []
@@ -86,7 +86,7 @@ class Player():
                     self.comm_output('exit - exit the game')
                     # print('advanced: ?eval(...) ; ?preval(...) - the second executes in the game cycle(for better scope)')
                 elif raw in ['history', 'notation']:
-                    self.comm_output(self.game.full_notation)
+                    self.comm_output(self.game.full_notation())
                 elif raw in ['exit', 'quit', 'draw', 'forefit']:
                     input_ = raw
                 elif raw == 'export':
@@ -145,11 +145,25 @@ class Game():
         self.turnning_player = self.whites_player
         self.turn_count = 1
         self.undo_stack = []
-        self.full_notation = '' # quite as the values in hist, but with the count and # + ? !
+        # self.full_notation = '' # quite as the values in hist, but with the count and # + ? !
         self.history = []       # to be used for checks of past Moves
         self.state = 'init'
         with open(logfile,'w') as f:
             self.logfile = logfile
+
+    def full_notation(self):
+        result = ''
+        count = 1
+        history = self.history.copy()
+        while len(history):
+            white_move = history.pop(0)
+            result += str(count).rjust(3) + '. ' + white_move.notation + '  '
+            if len(history):
+                black_move = history.pop(0)
+                result += black_move.notation + '\n'
+            count += 1
+
+        return result
 
     def decode_move(self, raw_input_, piece_set): #, board_state):
         # capture turn count if included in notation
@@ -255,7 +269,8 @@ class Game():
 
         if promotion != '':
             move_type = 'p'
-            extra = Piece(piece_set[0].color, promotion.lower(), destination)
+            # extra = Piece(piece_set[0].color, promotion.lower(), destination)
+            extra = promotion.upper()
             if capturing:
                 move_type = '+'
                 extra = [extra, self.board.state[destination]]
@@ -422,6 +437,7 @@ class Game():
 
     def valid_move(self, move):
         # naives = self.board.naive_moves(move.piece)
+        # print('naives', naives)
         # print(move , naives, move in naives, str(move) in [ str(z) for z in naives ])
         # print(attribute_lister(move, MOVE_ATTRIBUTES))
         # print([ attribute_lister(z, MOVE_ATTRIBUTES) for z in naives ])
@@ -443,13 +459,6 @@ class Game():
         undo = self.undo_stack.pop()
         self.board.undo_actions(undo)
         temp = self.history.pop()
-        self.full_notation = '\n'.join([ z for z in self.full_notation.split('\n')[:-2] ])
-
-    def notator(self, move):
-        if self.turnning_player.color == 'w':
-            return str(self.turn_count) + '. ' + move.notation
-        else:
-            return '  ' + move.notation + '\n'
 
     def start(self, verbose = True):
         # self.state = 'active'
@@ -463,13 +472,16 @@ class Game():
             valid_input = False
             while not valid_input:
                 input_ = self.turnning_player.prompt_input()
-                if input_ not in ['draw', 'forefit', 'quit', 'exit']:
+                if not isinstance(input_, str): #  and input_ not in ['draw', 'forefit', 'quit', 'exit']:
                     if self.valid_move(input_):
                         valid_input = input_
                     else:
                         if self.turnning_player.simulation_flag:
                             message = 'simulated move - ' + str(input_) + ' - for player ' + self.turnning_player.color + ' is invalid'
                             raise SimulationException(message)
+                        else:
+                            self.turnning_player.comm_output('invalid move', input_)
+
 
                 else:
                     valid_input = input_
@@ -482,12 +494,12 @@ class Game():
             #         anction_input(valid_input)
             #         valid_input = False
 
-            if valid_input not in ['draw', 'forefit', 'quit', 'exit']:
+            if not isinstance(input_, str): # valid_input not in ['draw', 'forefit', 'quit', 'exit']:
                 undo = self.board.execute_move(valid_input)
                 self.undo_stack.append(undo)
                 self.whites_player.is_in_check = self.board.white_checked
                 self.blacks_player.is_in_check = self.board.black_checked
-                self.full_notation += self.notator(valid_input)
+                # self.full_notation += self.notator(valid_input)
                 self.history.append(valid_input) #list?
                 if self.turnning_player == self.whites_player:
                     self.turnning_player = self.blacks_player
@@ -513,17 +525,18 @@ class Game():
         if self.state in ['exit', 'quit']:
             result = 'player ' + self.turnning_player.color + ' left the game'
 
+        final_notation = self.full_notation()
         if self.state == 'stalemate':
-            self.full_notation += '\n1/2-1/2'
+            final_notation += '\n1/2-1/2'
             result = 'stalemate'
 
         # if self.state == 'mate':
         if self.state in ['mate', 'forefit']:
             result = 'mate'
             if self.turnning_player == self.whites_player:
-                self.full_notation += '\n0-1'
+                final_notation += '\n0-1'
             else:
-                self.full_notation += '\n1-0'
+                final_notation += '\n1-0'
 
         # if self.state == 'forefit':
         #     result = 'forefit'
@@ -535,7 +548,7 @@ class Game():
         if verbose:
             self.turnning_player.comm_output('result:', result)
             self.turnning_player.comm_output('notation:')
-            self.turnning_player.comm_output(self.full_notation)
+            self.turnning_player.comm_output(final_notation)
             self.turnning_player.comm_output('\nend position:')
             self.turnning_player.comm_output(self.board.export())
 
