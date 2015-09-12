@@ -54,15 +54,3 @@ Validating moves takes executing them, one way or another. For AI we need to exe
 
 I feel that cross knowledge between classes is not a good practice, but I think I'll need to do it this time:
 class Game has objects of Player class, and I need the instance of Player object to know of a instance of Game; I can pass the Game's self as parameter to the Player constructor. It feels it may be better to implement sort of communication (using methods to pass data) between these classes instead of direct referencing, but I cant pinpoint why.
-
-```
-|  |  |  |  |  |  |  |  |
-|  |  |  |  |  |bk|  |bp|
-|bp|  |wn|  |  |  |bp|  |
-|wp|  |  |  |  |bp|  |  |
-|  |  |  |wp|  |bb|  |  |
-|  |  |  |  |  |  |  |wp|
-|  |  |bp|  |wk|wp|  |  |
-|  |wr|  |  |  |  |  |  |
-```
-with black to turn - accepts input 'b1Q' as 'cxb1Q' - notation reflects that; If I'm to disable it, I should remove stage 4 of the decode_move method

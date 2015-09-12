@@ -1,9 +1,10 @@
 import unittest
 
 from piece import Piece
-from move import Move, MoveException
-from board import Board
-from game import Game, Player, MoveExhaustException, SimulationException
+from move import Move
+from board import Board, MoveException
+from game import Game, SimulationException
+from player import Player, MoveExhaustException, DecodeException
 
 
 TEST_POSITION1 = {'h8':'  ', 'h2':'  ', 'h3':'  ', 'h1':'wr', 'h6':'  ', 'h7':'wp', 'h4':'  ', 'h5':'  ', 'd8':'bq', 'a8':'br', 'd6':'  ', 'd7':'bp', 'd4':'  ', 'd5':'  ', 'd2':'wp', 'd3':'  ', 'd1':'wq', 'g7':'bp', 'g6':'  ', 'g5':'wp', 'g4':'  ', 'g3':'  ', 'g2':'  ', 'g1':'  ', 'g8':'bn', 'c8':'bb', 'c3':'bn', 'c2':'wp', 'c1':'wb', 'c7':'bp', 'c6':'  ', 'c5':'  ', 'c4':'  ', 'f1':'wb', 'f2':'wp', 'f3':'  ', 'f4':'  ', 'f5':'bp', 'f6':'  ', 'f7':'  ', 'f8':'bb', 'b4':'  ', 'b5':'  ', 'b6':'  ', 'b7':'bp', 'b1':'wn', 'b2':'wp', 'b3':'  ', 'b8':'  ', 'a1':'wr', 'a3':'  ', 'a2':'wp', 'a5':'  ', 'e8':'bk', 'a7':'bp', 'a6':'  ', 'e5':'  ', 'e4':'wn', 'e7':'bp', 'e6':'  ', 'e1':'wk', 'e3':'  ', 'e2':'wp', 'a4':'  '}
@@ -401,7 +402,7 @@ class GameTest(unittest.TestCase):
         a_rook = test_game.board.state['a1']
         h_rook = test_game.board.state['h1']
         king_side_castle = Move(king,'c', 'g1', 'O-O', h_rook)
-        decoded_move = test_game.decode_move('O-O', test_game.board.white)
+        decoded_move = test_game.whites_player.decode_move('O-O')
         # print(king_side_castle, [ getattr(king_side_castle, z) for z in ['piece', 'origin', 'type_', 'destination', 'notation', 'promote_to', 'taken', 'catsling_rook',] ])
         # print(decoded_move, [ getattr(decoded_move, z) for z in ['piece', 'origin', 'type_', 'destination', 'notation', 'promote_to', 'taken', 'catsling_rook',] ])
 
@@ -413,11 +414,11 @@ class GameTest(unittest.TestCase):
         self.assertEqual(attribute_lister(king_side_castle, move_attributes) , attribute_lister(decoded_move, move_attributes))
         # O-O-O because it only decodes against the set, without validation
         queen_side_castle = Move(king,'c', 'c1', 'O-O-O', a_rook)
-        decoded_move = test_game.decode_move('O[O]O', test_game.board.white)
+        decoded_move = test_game.whites_player.decode_move('O[O]O')
         self.assertEqual(attribute_lister(queen_side_castle, move_attributes) , attribute_lister(decoded_move, move_attributes))
-        decoded_move = test_game.decode_move('OOO', test_game.board.white)
+        decoded_move = test_game.whites_player.decode_move('OOO')
         self.assertEqual(attribute_lister(queen_side_castle, move_attributes) , attribute_lister(decoded_move, move_attributes))
-        decoded_move = test_game.decode_move('O,>oOo-0*O', test_game.board.white)                                                                     #TOFIX?
+        decoded_move = test_game.whites_player.decode_move('O,>oOo-0*O')                                                                     #TOFIX?
         # print(attribute_lister(queen_side_castle, move_attributes))
         # print(attribute_lister(decoded_move, move_attributes))
         self.assertEqual(attribute_lister(queen_side_castle, move_attributes) , attribute_lister(decoded_move, move_attributes))
@@ -425,11 +426,11 @@ class GameTest(unittest.TestCase):
 
         #print(zgame.show())
         expected_move = Move(king, 'm', 'f2', 'Kf2')
-        decoded_move = test_game.decode_move('13. Kf2', test_game.board.white)
+        decoded_move = test_game.whites_player.decode_move('13. Kf2')
         self.assertEqual(attribute_lister(expected_move, move_attributes) , attribute_lister(decoded_move, move_attributes))
         # self.assertEqual((zgame.zboard.piece_by_sq('e1'),'e1', 'm', 'f2', 'Kf2'), test_player.decode_move('13. Kf2', zgame.turnset()))
         expected_move = Move(test_game.board.state['b5'], 't', 'd7', 'Bxd7', test_game.board.state['d7'])
-        decoded_move = test_game.decode_move('Bxd7+', test_game.board.white)
+        decoded_move = test_game.whites_player.decode_move('Bxd7+')
         self.assertEqual(attribute_lister(expected_move, move_attributes) , attribute_lister(decoded_move, move_attributes))
 
         test_game = Game(board_position=TEST_POSITION1)
@@ -445,20 +446,20 @@ class GameTest(unittest.TestCase):
         no_promo_move_attributes = ['piece', 'origin', 'type_', 'destination', 'notation', 'taken', 'catsling_rook',]
         new_black_queen = Piece('b', 'q', 'h8')
         expected_move = Move(test_game.board.state['h7'], 'p', 'h8', 'h8Q', new_black_queen)
-        decoded_move = test_game.decode_move('h8Q', test_game.board.white)
+        decoded_move = test_game.whites_player.decode_move('h8Q')
         self.assertEqual(attribute_lister(expected_move, no_promo_move_attributes) , attribute_lister(decoded_move, no_promo_move_attributes))
 
         new_black_knight = Piece('b', 'n', 'g8')
         expected_move = Move(test_game.board.state['h7'], '+', 'g8', 'hxg8N', [new_black_knight, test_game.board.state['g8']])
-        decoded_move = test_game.decode_move('hxg8N', test_game.board.white)
+        decoded_move = test_game.whites_player.decode_move('hxg8N')
         self.assertEqual(attribute_lister(expected_move, no_promo_move_attributes) , attribute_lister(decoded_move, no_promo_move_attributes))
         # assertRaises(exc, fun, *args, **kwds)
-        self.assertRaises(MoveException, test_game.decode_move, '999. b8', test_game.board.white)  # no pawn to reach b8
-        self.assertRaises(MoveException, test_game.decode_move, '2 fxgdfgdfgsdfg', test_game.board.white)  ### destination not on board
-        self.assertRaises(MoveException, test_game.decode_move, 'Ra3', test_game.board.white)  # invalid
+        self.assertRaises(DecodeException, test_game.whites_player.decode_move, '999. b8')  # no pawn to reach b8
+        self.assertRaises(DecodeException, test_game.whites_player.decode_move, '2 fxgdfgdfgsdfg')  ### destination not on board
+        self.assertRaises(DecodeException, test_game.whites_player.decode_move, 'Ra3')  # invalid
         # #e.p.
         expected_move = Move(test_game.board.state['g5'], 'e', 'f6', 'gxf6', test_game.board.state['f5'])
-        decoded_move = test_game.decode_move('gxf6', test_game.board.white)
+        decoded_move = test_game.whites_player.decode_move('gxf6')
         self.assertEqual(attribute_lister(expected_move, move_attributes) , attribute_lister(decoded_move, move_attributes))
 
     def test_start_n_end_game(self):
@@ -564,8 +565,7 @@ class TemporaryGameTest(unittest.TestCase):
         test_game.blacks_player.simulate(['b1Q'])
 
         # self.assertEqual('stalemate', test_game.start(verbose=True))
-        self.assertRaises(MoveExhaustException, test_game.start, False)
-        self.assertEqual('cxb1Q', test_game.history[-1].notation)
+        self.assertRaises(DecodeException, test_game.start, False)
 
 
 

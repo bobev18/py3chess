@@ -1,8 +1,3 @@
-class MoveException(Exception):
-    def __init__(self, *args):
-        # *args is used to get a list of the parameters passed
-        self.args = [a for a in args]
-
 class Move():
 
     def __init__(self, piece, type_, destination, notation, extra = None):
