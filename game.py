@@ -14,14 +14,11 @@ INITIAL_POSITION = {
     'a1':'wr', 'b1':'wn', 'c1':'wb', 'd1':'wq', 'e1':'wk', 'f1':'wb', 'g1':'wn', 'h1':'wr',
 }
 
-
-
 # DEBUG helper  ---------------------
 def attribute_lister(object_, attributes):
     return [ getattr(object_, z) for z in attributes ]
 MOVE_ATTRIBUTES = ['piece', 'origin', 'type_', 'destination', 'notation', 'promote_to', 'taken', 'catsling_rook',]
 #  end of DEBUG helper -------------
-
 
 class SimulationException(Exception):
     # to handle erroneous moves provided in simulation
@@ -42,6 +39,7 @@ class Game():
         self.undo_stack = []
         # self.full_notation = '' # quite as the values in hist, but with the count and # + ? !
         self.history = []       # to be used for checks of past Moves
+        self.backtrack = []
         self.state = 'init'
         with open(logfile,'w') as f:
             self.logfile = logfile
@@ -87,7 +85,7 @@ class Game():
                 return 'stalemate'
         else:
             # repeated moves
-            if len(self.history) > 0 and self.board.backtrack.count(self.board.backtrack[-1]) >= 3:
+            if len(self.history) > 0 and self.backtrack.count(self.backtrack[-1]) >= 3:
                 return 'stalemate'
 
         return 'active'
@@ -105,37 +103,14 @@ class Game():
     def valid_moves_of_piece_at(self, location):
         result = []
         for move in self.board.naive_moves(self.board.state[location]):
-            # test_state = deepcopy(self.board)
-            # print(type(test_state), test_state)
-            # print('validating move', move)
-            # test_state.execute_move(move)
-            # if test_state.validate_move(move):
-            #     result.append(move)
-            # # the above fails because the Piece obj referenced in the Move obj is not the same as the one in the copy's white/black piece list
-
-            # undo = self.board.execute_move(move)
-            # print(undo)
-            # if self.board.validate_move(move):
-            #     result.append(move)
-            # self.board.undo_actions(undo)
-            ### aparently 'execute_move' incorporates the validate_move check
-
             if self.validate_against_history(move):
                 undo = self.board.execute_move(move)
                 if undo:
                     result.append(move)
                     self.board.undo_actions(undo)
-
         return result
 
     def valid_move(self, move):
-        # naives = self.board.naive_moves(move.piece)
-        # print('naives', naives)
-        # print(move , naives, move in naives, str(move) in [ str(z) for z in naives ])
-        # print(attribute_lister(move, MOVE_ATTRIBUTES))
-        # print([ attribute_lister(z, MOVE_ATTRIBUTES) for z in naives ])
-
-
         if self.validate_against_history(move) and move in self.board.naive_moves(move.piece):
             undo = self.board.execute_move(move)
             if undo:
@@ -148,15 +123,15 @@ class Game():
         undo = self.undo_stack.pop()
         self.board.undo_actions(undo)
         temp = self.history.pop()
+        self.backtrack.pop()
         # undo last own move
         undo = self.undo_stack.pop()
         self.board.undo_actions(undo)
         temp = self.history.pop()
+        self.backtrack.pop()
 
     def start(self, verbose = True):
-        # self.state = 'active'
-        # check if initial position is mate or stalemate i.e. active
-        self.state = self.mate()
+        self.state = self.mate()   # check if initial position is mate or stalemate i.e. active
         if verbose:
             self.turnning_player.comm_output(self.board)
             self.turnning_player.comm_output('state:', self.state)
@@ -164,51 +139,37 @@ class Game():
         while self.state == 'active':
             valid_input = False
             while not valid_input:
-                input_ = self.turnning_player.prompt_input()
-                if not isinstance(input_, str): #  and input_ not in ['draw', 'forefit', 'quit', 'exit']:
-                    if self.valid_move(input_):
-                        valid_input = input_
+                decoded_move = self.turnning_player.prompt_input()
+                # could use positive isinstance, but that will require to import Move class
+                if not isinstance(decoded_move, str): #i.e command ['draw', 'forefit', 'quit', 'exit']:
+                    if self.valid_move(decoded_move):
+                        valid_input = decoded_move
                     else:
                         if self.turnning_player.simulation_flag:
-                            message = 'simulated move - ' + str(input_) + ' - for player ' + self.turnning_player.color + ' is invalid'
+                            message = 'simulated move - ' + str(decoded_move) + ' - for player ' + self.turnning_player.color + ' is invalid'
                             raise SimulationException(message)
                         else:
-                            self.turnning_player.comm_output('invalid move', input_)
-
-
+                            self.turnning_player.comm_output('invalid move', decoded_move)
                 else:
-                    valid_input = input_
+                    valid_input = decoded_move
 
-            #     # input could affect the cycle in three ways:
-            #     # 1. valid move to pass turn to the other player
-            #     # 2. valid command that keeps move (i.e. show info, export, undo, etc)
-            #     # 3. valid command affecting game state - offer draw, surrender, quit
-            #     if valid_input in ['info', 'export', 'undo']:
-            #         anction_input(valid_input)
-            #         valid_input = False
-
-            if not isinstance(input_, str): # valid_input not in ['draw', 'forefit', 'quit', 'exit']:
+            if isinstance(decoded_move, str): # ['draw', 'forefit', 'quit', 'exit']:
+                self.state = valid_input
+            else:
                 undo = self.board.execute_move(valid_input)
+                self.backtrack.append(self.board.hashit())
                 self.undo_stack.append(undo)
                 self.whites_player.is_in_check = self.board.white_checked
                 self.blacks_player.is_in_check = self.board.black_checked
-                # self.full_notation += self.notator(valid_input)
-                self.history.append(valid_input) #list?
+                self.history.append(valid_input)
                 if self.turnning_player == self.whites_player:
                     self.turnning_player = self.blacks_player
                 else:
                     self.turnning_player = self.whites_player
                     self.turn_count += 1
-            else:
-                self.state = valid_input
 
-            # print('preliminary state:', self.state)
             if self.state == 'active':
                 self.state = self.mate()
-            # else:
-            #     if self.state == 'forefit':
-            #         pass
-
 
             if verbose:
                 self.turnning_player.comm_output(self.board)
@@ -223,20 +184,12 @@ class Game():
             final_notation += '\n1/2-1/2'
             result = 'stalemate'
 
-        # if self.state == 'mate':
         if self.state in ['mate', 'forefit']:
             result = 'mate'
             if self.turnning_player == self.whites_player:
                 final_notation += '\n0-1'
             else:
                 final_notation += '\n1-0'
-
-        # if self.state == 'forefit':
-        #     result = 'forefit'
-        #     if self.turnning_player == self.whites_player:
-        #         self.full_notation += '\n1-0'
-        #     else:
-        #         self.full_notation += '\n0-1'
 
         if verbose:
             self.turnning_player.comm_output('result:', result)
@@ -246,12 +199,3 @@ class Game():
             self.turnning_player.comm_output(self.board.export())
 
         return result
-
-
-
-
-
-
-
-
-

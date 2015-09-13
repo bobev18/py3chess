@@ -102,8 +102,6 @@ class Board():
     def __init__(self, construction_state={}):
         self.white = []
         self.black = []
-        # self.move_stack = [] # not sure what this was to be
-        self.backtrack = []
         self.state = EMPTYBOARD.copy()
         if construction_state == {}:
             self.white_king = None
@@ -319,7 +317,6 @@ class Board():
             return None
         # --- end of invalidation ---
 
-        self.backtrack.append(self.hashit()) # this is used to check on stalemate by repetition
         undo.append({'act':'data', 'args':[self.white_checked, self.black_checked]})
         if move.piece.color == 'w':
             self.black_checked = self.is_in_check(self.black_king.location, 'w')
@@ -330,7 +327,6 @@ class Board():
 
     def undo_actions(self, actions):
         self.process_actions(actions)
-        self.backtrack.pop() # backtrack is used to check for stalemate by repetition
 
     def validate_move(self, move):
         # assumes the move in question is executed onto board state, but values of attributes like 'self.white_checked' reflect the state prior the move
@@ -445,12 +441,3 @@ class Board():
                 break # the direction is blocked if an enemy piece doesnt operate in that direction or own piece
 
         return False
-
-
-
-
-
-
-
-
-

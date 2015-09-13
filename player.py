@@ -2,6 +2,9 @@ import re
 from move import Move
 from board import CAPTURE_SIGN
 
+CORE_NOTATION_PATTERN = re.compile(r'(?P<piece_type>[NBRQK]?)(?P<disambiguation>[a-h]?\d?)(?P<capture_sign>' + \
+            CAPTURE_SIGN + '?)(?P<destination>[a-h]\d)(?P<promotion>[NBRQ]?)')
+
 COMMANDS = ['', '?', 'help', 'history', 'notation', 'export', 'undo', 'quit', 'exit', 'draw', 'forefit']
 
 class DecodeException(Exception):
@@ -13,8 +16,6 @@ class MoveExhaustException(Exception):
     # to handle exhaust of simulated moves
     def __init__(self, *args):
         self.args = [a for a in args]
-
-
 
 class Player():
 
@@ -40,10 +41,11 @@ class Player():
         if len(self.moves_to_simulate):
             return self.moves_to_simulate.pop(0)
         else:
-            try:
-                return input(message)
-            except EOFError as error:
-                return None
+            if not self.simulation_flag:
+                try:
+                    return input(message)
+                except EOFError as error:
+                    return None
 
     def prompt_input(self):
         # output(self.show()
@@ -57,13 +59,13 @@ class Player():
                 if raw in ['?', 'help']:
                     self.comm_output('commands:')
                     self.comm_output('notation - show game notation')
-                    self.comm_output('export - print position as dictionary')
-                    # print('verbose - toggle verbose on and off')
+                    self.comm_output('export - show position as dictionary, and move history as list')
+                    # self.comm_output('verbose - toggle verbose on and off')
                     self.comm_output('undo - revert full turn')
                     self.comm_output('draw - offer draw, also accept draw if offered')
                     self.comm_output('forefit - give up')
                     self.comm_output('exit - exit the game')
-                    # print('advanced: ?eval(...) ; ?preval(...) - the second executes in the game cycle(for better scope)')
+                    # self.comm_output('advanced: ?eval(...) ; ?preval(...) - the second executes in the game cycle(for better scope)')
                 elif raw in ['history', 'notation']:
                     self.comm_output(self.game.full_notation())
                 elif raw in ['exit', 'quit', 'draw', 'forefit']:
@@ -73,7 +75,8 @@ class Player():
                     self.comm_output(self.game.history)
                 elif raw == 'undo':
                     self.game.undo_last()
-                    self.comm_output(self.game.board)
+                    if not self.simulation_flag:
+                        self.comm_output(self.game.board)
                 else:
                     self.comm_output('enter "?" to view help')
 
@@ -122,9 +125,7 @@ class Player():
 
         # ----- STAGE 2 ----- #
         # filter by piece type
-        pattern = re.compile(r'(?P<piece_type>[NBRQK]?)(?P<disambiguation>[a-h]?\d?)(?P<capture_sign>' + \
-            CAPTURE_SIGN + '?)(?P<destination>[a-h]\d)(?P<promotion>[NBRQ]?)')
-        move_matches = pattern.match(move_input)
+        move_matches = CORE_NOTATION_PATTERN.match(move_input)
         if not move_matches:
             message = 'failed to parse move notation from core_notation - ' + move_input + '(raw: ' + _input_ + ')'
             raise DecodeException(message)
@@ -198,7 +199,7 @@ class Player():
             expansions = [ z for z in self.game.board.naive_moves(candidate_piece) if z.notation == move_input ]
             notation_filtered.extend(expansions)
         if len(notation_filtered) == 0:
-            message = 'input ' + move_input + ' does not match any of the notations generated for the relevant pieces (' + str([ z.notation for z in self.game.board.naive_moves(candidate_piece) ]) + ')'
+            message = 'input ' + move_input + ' does not match any of the notations generated for the relevant pieces (' + str([ z.notation for z in notation_filtered ]) + ')'
         elif len(notation_filtered) == 1:
             return notation_filtered[0]
         else:

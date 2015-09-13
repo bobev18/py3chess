@@ -567,6 +567,61 @@ class TemporaryGameTest(unittest.TestCase):
         # self.assertEqual('stalemate', test_game.start(verbose=True))
         self.assertRaises(DecodeException, test_game.start, False)
 
+    def test_ambiguous_black_capture_promotion(self):
+        rook4position = {'h5':'  ', 'g2':'  ', 'f8':'  ', 'g5':'  ', 'd8':'  ', 'd4':'  ', 'c6':'  ', 'e2':'br', 'b6':'  ', 'd3':'  ', 'b3':'  ', 'f1':'  ', 'a8':'  ', 'a7':'  ', 'b1':'  ', 'f3':'  ', 'a6':'  ', 'a2':'  ', 'b2':'  ', 'h6':'  ', 'e3':'  ', 'f6':'  ', 'b7':'  ', 'd5':'  ', 'e4':'  ', 'd6':'  ', 'g7':'  ', 'e6':'  ', 'f2':'  ', 'g6':'  ', 'h7':'  ', 'c1':'  ', 'f4':'  ', 'd2':'  ', 'g1':'  ', 'a1':'wk', 'e8':'  ', 'c8':'  ', 'e5':'  ', 'e7':'br', 'a4':'  ', 'h4':'br', 'b5':'  ', 'c3':'wn', 'b4':'br', 'g3':'  ', 'f7':'  ', 'c7':'  ', 'h1':'  ', 'h8':'bk', 'g8':'  ', 'a3':'  ', 'a5':'  ', 'f5':'  ', 'c4':'  ', 'e1':'  ', 'd7':'  ', 'g4':'  ', 'b8':'  ', 'h2':'  ', 'd1':'  ', 'h3':'  ', 'c5':'  ', 'c2':'  '}
+        position = {'d4':'wp','f4':'bb','b6':'  ','c4':'  ','d7':'  ','a5':'wp','d2':'  ','h5':'  ','d3':'  ','h2':'  ','g6':'bp','a3':'  ','f2':'wp','c1':'  ','f3':'  ','e8':'  ','b8':'  ','h1':'  ','a1':'  ','c7':'  ','h6':'  ','d1':'  ','c2':'bp','h7':'bp','c5':'  ','e7':'  ','d8':'  ','a7':'  ','b7':'  ','e3':'  ','d5':'  ','d6':'  ','e2':'wk','f1':'  ','a8':'  ','g1':'  ','g2':'  ','c6':'br','c8':'  ','g3':'  ','b3':'  ','b1':'wr','h8':'  ','f5':'bp','e1':'  ','f7':'bk','e5':'  ','f6':'  ','g7 ':'  ','a4':'  ','h3':'wp','g5':'  ','b5':'  ','g4':'  ','b4':'wn','e6':'  ','c3':'  ','f8':'  ','g8':'  ','e4':'  ','h4':'  ','a2':'bp','b2':'  ','a6':'bp'}
+        test_game = Game(board_position=position)
+        test_game.whites_player.simulate(['Nxc6'])
+        test_game.blacks_player.simulate(['axb1Q'])
+
+        # self.assertEqual('stalemate', test_game.start(verbose=True))
+        self.assertRaises(MoveExhaustException, test_game.start, False)
+
+    @unittest.expectedFailure
+    def test_for_disambiguation_in_generated_move_notation(self):
+        position = {'h5':'  ', 'g2':'  ', 'f8':'  ', 'g5':'  ', 'd8':'  ', 'd4':'  ', 'c6':'  ', 'e2':'br', 'b6':'  ', 'd3':'  ', 'b3':'  ', 'f1':'  ', 'a8':'  ', 'a7':'  ', 'b1':'  ', 'f3':'  ', 'a6':'  ', 'a2':'  ', 'b2':'  ', 'h6':'  ', 'e3':'  ', 'f6':'  ', 'b7':'  ', 'd5':'  ', 'e4':'wn', 'd6':'  ', 'g7':'  ', 'e6':'  ', 'f2':'  ', 'g6':'  ', 'h7':'  ', 'c1':'  ', 'f4':'  ', 'd2':'  ', 'g1':'  ', 'a1':'wk', 'e8':'  ', 'c8':'  ', 'e5':'  ', 'e7':'br', 'a4':'  ', 'h4':'br', 'b5':'  ', 'c3':'  ', 'b4':'br', 'g3':'  ', 'f7':'  ', 'c7':'  ', 'h1':'  ', 'h8':'bk', 'g8':'  ', 'a3':'  ', 'a5':'  ', 'f5':'  ', 'c4':'  ', 'e1':'  ', 'd7':'  ', 'g4':'  ', 'b8':'  ', 'h2':'  ', 'd1':'  ', 'h3':'  ', 'c5':'  ', 'c2':'  '}
+        test_game = Game(board_position=position)
+        
+        moves_for_black = []
+        for candidate_piece in test_game.board.black:
+            expansions = [ z.notation for z in test_game.board.naive_moves(candidate_piece) ]
+            moves_for_black.extend(expansions)
+        
+        self.assertEqual(len(set(moves_for_black)), len(moves_for_black)) # true if all generated notations are unique
+        # this will not lead to issues in decode_move because:
+        #   the notation attribute of the generated moves is used only in stage 4 of the decode_move method
+        #   stage 4 can be entered only in the following cases:
+        #     1. the move is promotion
+        #     2. lack of disambiguation in the input move (more than 1 candidate pieces at the end of stage 3)
+        # 
+        #   case (1) - promotion notations include the pawn file, which stage 3 handles as disambiguation, reducing the candidate pieces to one.
+        #       The promo character is properly handled in the generated move notation, thus move is correctly identified;
+        #   case (2) will correctly demand disambiguation, although for the wrong reason (surplus of matches instead of none)
+        #       EXAMPLE:
+        #       enter your move: Rxe4
+        #       erroneous move('the move is ambiguous. Possible interpretations:[Rxe4, Rxe4, Rxe4, Rxe4]',)
+        #       // if notation was proper, the list should have been [Rbxe4, R7xe4, Rhxe4, R2xe4]
+
+        # The disambiguation for generated move notations cannot be in "naive_moves" method because it cannot have visibility of other moves. 
+        # Apart from decode_move method, the notation attribute of the generated moves could potentially be used in the return of AI methods.
+        # Disambiguation could be added to the move notation within such methods when needed. Alternatively that can be done
+        # in prompt_input method under the Player calss.
+
+    def test_game_cycle_repetition_broken_by_undo(self):
+        position = {'h8':'bk', 'h2':'  ', 'h3':'  ', 'h1':'  ', 'h6':'  ', 'h7':'  ', 'h4':'  ', 'h5':'  ', 'd8':'  ', 'a8':'  ', 'd6':'  ', 'd7':'  ', 'd4':'  ', 'd5':'  ', 'd2':'  ', 'd3':'  ', 'd1':'  ', 'g7':'  ', 'g6':'  ', 'g5':'  ', 'g4':'  ', 'g3':'  ', 'g2':'  ', 'g1':'  ', 'g8':'  ', 'c8':'  ', 'c3':'  ', 'c2':'  ', 'c1':'  ', 'c7':'  ', 'c6':'  ', 'c5':'  ', 'c4':'  ', 'f1':'  ', 'f2':'  ', 'f3':'  ', 'f4':'  ', 'f5':'  ', 'f6':'  ', 'f7':'  ', 'f8':'  ', 'b4':'  ', 'b5':'  ', 'b6':'  ', 'b7':'  ', 'b1':'  ', 'b2':'  ', 'b3':'  ', 'b8':'  ', 'a1':'  ', 'a3':'  ', 'a2':'  ', 'a5':'  ', 'e8':'  ', 'a7':'  ', 'a6':'  ', 'e5':'bq', 'e4':'  ', 'e7':'  ', 'e6':'  ', 'e1':'wk', 'e3':'  ', 'e2':'wq', 'a4':'  '}
+        test_game = Game(board_position=position)
+        # |  |  |  |  |  |  |  |bk|
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |  |  |bq|  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |  |  |wq|  |  |  |
+        # |  |  |  |  |wk|  |  |  |
+        test_game.whites_player.simulate(['Kd1', '2.Qd2', 'Qe1',         'Qc2', 'Qc1', 'Qd2', 'Qe1', 'Qe2', 'Qe1', 'exit'])
+        test_game.blacks_player.simulate(['Qd5', 'Qh1+', 'undo', 'Qb3+', 'Qb7', 'Qd5', 'Qh1', 'Qh5', 'Qh1', 'Qd5', 'exit'])
+        self.assertEqual('player w left the game', test_game.start(verbose=False))
+
 
 
 #     def test_game_cycle_ai(self):
