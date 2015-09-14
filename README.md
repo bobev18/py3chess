@@ -65,3 +65,4 @@ b) The exploration of the chesstree is depth first - there will not be a need to
 On the other hand, option (2) could be easier to refactor into a multithreaded solution
 
 Ultimately only a direct comparison of execution times will tell for sure which option is better. 
+Actually the copy needs to be of the Game instance, otherwise we cannot validate history dependant moves. Or implement compatible method in the AI class.
