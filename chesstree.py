@@ -64,7 +64,7 @@ class Node:
             return score
         else:
             self.predecessor.remove_invalid_move_node(self)
-            print('move ', self.move, ' is invalid')
+            print('move ', self.move, ' is invalid; ', self.move_chain)
             return None
 
     # # def optimum(self, scores):
@@ -82,6 +82,13 @@ class Node:
 #         self.root = Node(*root_node_data)
 
 
+class Score:
+
+    def __init__(self, value, notation, optimal_cutoff_node):
+        self.value = value
+        self.inbouond_notation = notation
+        self.optimal_cutoff_node = optimal_cutoff_node
+
 
 class AI:
 
@@ -94,60 +101,48 @@ class AI:
         return 3*len(board.white) - 3*len(board.black) + int(board.black_checked) - int(board.black_checked)
 
     def evaluate(self, node, cutoff_depth, upper_level_optimum=None):  ## cutoff_depth absolute count of (semi-)turns
-        try:
+        try: # read from chess-tree cache
             return node.scores[cutoff_depth]       # this could be possible if oponent makes "undo"
         except KeyError:
             pass
 
         if node.depth_level == cutoff_depth:
-            # needs only to selfevaluate:
-            #   execute the move && validate
-            #   read cache or generate position score based on ai heuristic
-            #   add score to cache if needed
-            #   add level:selfscore in node.scores
-            return node.selfevaluate(self.game, self.evaluator)
-            # valid_move = node.selfevaluate(game, evaluator)
-            # if valid_move:
-            #     result = valid_move
-
-
-
-            #     return node
+            return Score(node.selfevaluate(self.game, self.evaluator), node.move.notation, node)
         else:
             if node.move:
                 undo = self.game.board.execute_move(node.move)
                 self.game.history.append(node.move)
-                # print(self.game.board)
+
             if not len(node.subnodes):
                 node.expand(self.game.board)
 
-            # /\ problem is above - new subnode generation is based of a gameboard that does not have move executions
-
-            expansion_evaluations = {}
+            expansion_evaluations = []
             naive_subnodes = node.subnodes.copy()
             local_optimum = None
-            for sub_node in node.subnodes:
+            while len(naive_subnodes):
+                sub_node = naive_subnodes.pop()
                 # print('considering subnode at level', sub_node.depth_level, sub_node.move)
                 sub_node_evaluation = self.evaluate(sub_node, cutoff_depth, local_optimum)
-                print(sub_node.move, 'sneval', sub_node_evaluation, 'chain', sub_node.move_chain, '                 local_optimum', local_optimum)
-                # if sub_node in node.subnodes:    # because evaluation process may invalidate thus delete the node from predecessor
-                if sub_node_evaluation != None:    # because evaluation process may invalidate thus delete the node from predecessor
-                    expansion_evaluations[sub_node.move.notation] = sub_node_evaluation
-                    local_optimum = node.optimum(expansion_evaluations.values())
+                # print(sub_node.move, 'sneval', sub_node_evaluation, 'chain', sub_node.move_chain, '                 local_optimum', local_optimum)
+
+                if sub_node_evaluation.value != None:    # because value can be 0, and 0 evaluates to False
+                    expansion_evaluations.append(sub_node_evaluation)
+                    local_optimum = node.optimum(expansion_evaluations, key=lambda x: x.value)
 
                 # prune
                 # prune depends on knowledge of the optimal score for the upper level!
                 # condition is: obtain local optimum that is more optimal than the upper_level_optimum
                 if upper_level_optimum and \
                                 local_optimum != None and \
-                                upper_level_optimum != local_optimum and \
-                                node.optimum([upper_level_optimum, local_optimum]) == local_optimum:
-                    print('prunning')
+                                upper_level_optimum.value != local_optimum.value and \
+                                node.optimum(upper_level_optimum.value, local_optimum.value) == local_optimum.value:
+                    print(sub_node.move, 'prunning', [ z.move.notation for z in naive_subnodes])
                     break
 
+            # push to chess-tree cache
             node.scores[cutoff_depth] = local_optimum
-            # if node.depth_level == 2:
-            print(' .'*node.depth_level, str(node.move).ljust(6), ':', local_optimum, '      ', self.game.history)
+
+            # print(' .'*node.depth_level, str(node.move).ljust(6), ':', local_optimum, '      ', self.game.history)
             if node.move:
                 try:
                     self.game.board.undo_actions(undo)
@@ -170,9 +165,6 @@ class AI:
 from game import Game
 # from move import Move
 
-Game.validate_n_score_move = validate_n_score_move
-test_game = Game()
-test_ai = AI(5, test_game)
 class NodeMockup:
 
     def __init__(self, not_starting_color='b'):
@@ -184,18 +176,26 @@ class NodeMockup:
 
     def remove_invalid_move_node(self, item):
         pass
-# init_node = Node(NodeMockup(), None, 0, 'b') # predecessor, move, depth_level, color, *other_arguments):
-# test = test_ai.evaluate(init_node, 3)
-# print('score for a move that results in the initial game position', test)
-# e4_node = Node(NodeMockup, Move(test_game.board.state['e2'], 'm2', 'e4', 'e4'), 1, 'w') #piece, type_, destination, notation, extra = None):
 
+Game.validate_n_score_move = validate_n_score_move
+
+# setup
+test_game = Game()
+test_ai = AI(5, test_game) # this cutoff value is not used, but the one passed in the evaluate method
+
+# prep move
 e2moves = test_game.valid_moves_of_piece_at('e2')
 e4move = [z for z in e2moves if z.notation == 'e4'][0]
-e4_node = Node(NodeMockup('w'), e4move, 1, 'b') #piece, type_, destination, notation, extra = None):
-test = test_ai.evaluate(e4_node, 4)
-print('score for opening e4', test)
 
+# # evaluate specific move
+# e4_node = Node(NodeMockup('w'), e4move, 1, 'b') #piece, type_, destination, notation, extra = None):
+# test = test_ai.evaluate(e4_node, 4)
+# print('score for opening e4', test.value)
 
+# evaluate position
+mockup_node = Node(NodeMockup(), None, 0, 'w') # predecessor, move, depth_level, color, *other_arguments):
+test = test_ai.evaluate(mockup_node, 3)
+print('optimal move', test.optimal_cutoff_node.move_chain[0], 'with score', test.value, 'and move path:', test.optimal_cutoff_node.move_chain)
 
 
 

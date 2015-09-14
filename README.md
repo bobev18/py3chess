@@ -61,8 +61,11 @@ The question for the AI is as follows:
   2. multiple boardsets - new board is spawned by copy from the old one, and one forward move is applied.
 Option (2) is more demanding on memory, and, generally, reducing execution time comes at the cost of more memory. However it may turn out that making a copy of the board takes more time than processing undo - here's why:
 a) Board class has an attribute that is a dict of instances of Piece objects. Simple board.copy() will create new variables for the attributes, but the new dict, will still refer to the same instances of the Piece objects. So a custom copy process needs to be implemented that creates copies of the Piece objects along with the other Board attributes. That will take execution time.
-b) The exploration of the chesstree is depth first - there will not be a need to switch between nodes that are not linked by single move (either execute_move to go a level deeper, or undo to go a level up).
-On the other hand, option (2) could be easier to refactor into a multithreaded solution
+b) The exploration of the chess-tree is depth first - there will not be a need to switch between nodes that are not linked by single move (either execute_move to go a level deeper, or undo to go a level up).
+On the other hand, option (2) could be easier for refactoring into a multi-threaded solution
 
-Ultimately only a direct comparison of execution times will tell for sure which option is better. 
-Actually the copy needs to be of the Game instance, otherwise we cannot validate history dependant moves. Or implement compatible method in the AI class.
+Ultimately only a direct comparison of execution times will tell for sure which option is better.
+Actually the copy needs to be of the Game instance, otherwise we cannot validate history dependent moves. Or implement compatible method in the AI class.
+
+
+Evaluation recursion in the AI class should return not only the optimal score, but the chain of moves that results in that optimum score. To do that I need to return cutoff_node.move_chain backwards in the recursion
