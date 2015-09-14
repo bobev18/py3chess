@@ -105,8 +105,15 @@ class Piece():
             key_type = 'a' + self.type_
 
         try:
-            possible_moves = ACT_MAP[self.location][key_type].copy()
+            return ACT_MAP[self.location][key_type]
         except KeyError:
-            possible_moves = {}
+            return {}
 
-        return possible_moves
+        # try:
+        #     possible_moves = ACT_MAP[self.location][key_type].copy()
+        # except KeyError:
+        #     possible_moves = {}
+
+        # return possible_moves
+
+
