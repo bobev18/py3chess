@@ -4,7 +4,7 @@ def validate_n_score_move(self, move, evaluator):
         undo = self.board.execute_move(move)
         if undo:
             # print(self.board)
-            hash_ = self.board.hashit()
+            hash_ = ''.join(self.board.hashstate)
             try:
                 score = self.score_cache[hash_]
             except KeyError:
@@ -59,7 +59,7 @@ class Node:
         # print('game.validate_n_score_move results: ', len(hash_), score, undo)
         if undo:
             self.scores[self.depth_level] = score
-            ###### self.hash = game.board.hashit()
+            self.hash = hash_
             # print('cutoff score:', score)
             return score
         else:

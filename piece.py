@@ -69,7 +69,11 @@ class Piece():
     def __init__(self, color, type_, location):
         self.color = color
         self.type_ = type_
-        self.color_n_type = color + type_
+        if color == 'w':
+            self.hashtype = type_.upper()
+        else:
+            self.hashtype = type_.lower()
+        self.designation = color + type_
         self.location = location
         self.x = ord(self.location[0])-96
         self.y = int(self.location[1])
@@ -78,10 +82,10 @@ class Piece():
     def __repr__(self):
         # return self.color + self.type_ + '@' + self.location
         # return self.color_n_type + '@' + self.location
-        return self.color_n_type + self.location
+        return self.designation + '@' + self.location
 
-    def designation(self):
-        return self.color + self.type_
+    # def designation(self):
+    #     return self.color + self.type_
 
     def notation(self):
         if self.type_ == 'p':

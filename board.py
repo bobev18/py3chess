@@ -3,7 +3,7 @@ from move import Move
 
 CAPTURE_SIGN = 'x'
 
-ORDERED_BOARD_KEYS = ['a1','a2','a3','a4','a5','a6','a7','a8','b2','b3','b4','b5','b6','b7','b8','c2','c3','c4','c5','c6','c7','c8','d2','d3','d4','d5','d6','d7','d8','e2','e3','e4','e5','e6','e7','e8','f2','f3','f4','f5','f6','f7','f8','g2','g3','g4','g5','g6','g7','g8','h2','h3','h4','h5','h6','h7','h8']
+ORDERED_BOARD_KEYS = ['a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8', 'b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'd1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'e1', 'e2', 'e3', 'e4', 'e5', 'e6', 'e7', 'e8', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'g7', 'g8', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'h8']
 
 SQUARE2COORDS =   {
         'a1':(1,1),'a2':(1,2),'a3':(1,3),'a4':(1,4),'a5':(1,5),'a6':(1,6),'a7':(1,7),'a8':(1,8),
@@ -105,6 +105,7 @@ class Board():
         self.white = []
         self.black = []
         self.state = EMPTYBOARD.copy()
+        self.hashstate = list(' '*64)
         if construction_state == {}:
             self.white_king = None
             self.black_king = None
@@ -119,7 +120,7 @@ class Board():
             result += '|'
             for j in range(97,105):
                 try:
-                    piece = self.state[chr(j)+str(i)].designation()
+                    piece = self.state[chr(j)+str(i)].designation
                 except AttributeError:
                     piece = '  '
                 result += piece + '|'
@@ -171,6 +172,7 @@ class Board():
             self.black.append(new_piece)
 
         self.state[location] = new_piece
+        self.hashstate[ORDERED_BOARD_KEYS.index(location)] = new_piece.hashtype
 
     def spawn_pieces(self, init_state):
         # 'state' here should be the input of the constructor, which should be dict of string values!
@@ -198,6 +200,7 @@ class Board():
             raise MoveException(message)
 
         self.state[location] = None
+        self.hashstate[ORDERED_BOARD_KEYS.index(location)] = ' '
         if piece.color == 'w':
             self.white.remove(piece)
         else:
@@ -224,7 +227,9 @@ class Board():
         piece.y = int(piece.location[1])
 
         self.state[to] = piece
+        self.hashstate[ORDERED_BOARD_KEYS.index(to)] = piece.hashtype
         self.state[origin] = None
+        self.hashstate[ORDERED_BOARD_KEYS.index(origin)] = ' '
 
     def naive_moves(self, piece):
         results = []
@@ -275,14 +280,14 @@ class Board():
         for destination in preliminary['c']:
             if not self.state[destination]:
                 if piece.color == 'w':
-                    if destination[0] == 'g' and self.state['h1'] and self.state['h1'].designation() == 'wr' and not self.state['f1']:
+                    if destination[0] == 'g' and self.state['h1'] and self.state['h1'].designation == 'wr' and not self.state['f1']:
                         results.append(Move(piece, 'c', destination, 'O-O', self.state['h1']))
-                    if destination[0] == 'c' and self.state['a1'] and self.state['a1'].designation() == 'wr' and not self.state['d1'] and not self.state['b1']:
+                    if destination[0] == 'c' and self.state['a1'] and self.state['a1'].designation == 'wr' and not self.state['d1'] and not self.state['b1']:
                         results.append(Move(piece, 'c', destination, 'O-O-O', self.state['a1']))
                 else:
-                    if destination[0] == 'g' and self.state['h8'] and self.state['h8'].designation() == 'br' and not self.state['f8']:
+                    if destination[0] == 'g' and self.state['h8'] and self.state['h8'].designation == 'br' and not self.state['f8']:
                         results.append(Move(piece, 'c', destination, 'O-O', self.state['h8']))
-                    if destination[0] == 'c' and self.state['a8'] and self.state['a8'].designation() == 'br' and not self.state['d8'] and not self.state['b8']:
+                    if destination[0] == 'c' and self.state['a8'] and self.state['a8'].designation == 'br' and not self.state['d8'] and not self.state['b8']:
                         results.append(Move(piece, 'c', destination, 'O-O-O', self.state['a8']))
 
         # directional
@@ -366,27 +371,27 @@ class Board():
     def is_in_check(self, location, by_color):
         result = False
         for hitter in INVERSE_HIT_MAP[location]['knight']:
-            if self.state[hitter] and self.state[hitter].designation() == by_color+'n':
+            if self.state[hitter] and self.state[hitter].designation == by_color+'n':
                 return True
 
         if by_color == 'w':
             for hitter in INVERSE_HIT_MAP[location]['wpawn']:
-                if self.state[hitter] and self.state[hitter].designation() == 'wp':
+                if self.state[hitter] and self.state[hitter].designation == 'wp':
                     return True
         else: #by_color == 'b':
             for hitter in INVERSE_HIT_MAP[location]['bpawn']:
-                if self.state[hitter] and self.state[hitter].designation() == 'bp':
+                if self.state[hitter] and self.state[hitter].designation == 'bp':
                     return True
 
         for hitter in INVERSE_HIT_MAP[location]['king']:
-            if self.state[hitter] and self.state[hitter].designation() == by_color+'k':
+            if self.state[hitter] and self.state[hitter].designation == by_color+'k':
                 return True
 
         for d in ['N','E','S','W']:
             for i in range(len(INVERSE_HIT_MAP[location][d])):
                 hitter = INVERSE_HIT_MAP[location][d][i]
                 if self.state[hitter]:
-                    if self.state[hitter].designation() == by_color+'q' or self.state[hitter].designation() == by_color+'r':
+                    if self.state[hitter].designation == by_color+'q' or self.state[hitter].designation == by_color+'r':
                         return True
                     break # the direction is blocked if an enemy piece doesnt operate in that direction or own piece
 
@@ -394,7 +399,7 @@ class Board():
             for i in range(len(INVERSE_HIT_MAP[location][d])):
                 hitter = INVERSE_HIT_MAP[location][d][i]
                 if self.state[hitter]:
-                    if self.state[hitter].designation() == by_color+'q' or self.state[hitter].designation() == by_color+'b':
+                    if self.state[hitter].designation == by_color+'q' or self.state[hitter].designation == by_color+'b':
                         return True
                     break # the direction is blocked if an enemy piece doesnt operate in that direction or own piece
 
