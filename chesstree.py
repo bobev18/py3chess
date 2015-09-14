@@ -59,12 +59,12 @@ class Node:
         # print('game.validate_n_score_move results: ', len(hash_), score, undo)
         if undo:
             self.scores[self.depth_level] = score
-            self.hash = game.board.hashit()
+            ###### self.hash = game.board.hashit()
             # print('cutoff score:', score)
             return score
         else:
             self.predecessor.remove_invalid_move_node(self)
-            print('move ', self.move, ' is invalid; ', self.move_chain)
+            # print('move ', self.move, ' is invalid; ', self.move_chain)
             return None
 
     # # def optimum(self, scores):
@@ -136,7 +136,7 @@ class AI:
                                 local_optimum != None and \
                                 upper_level_optimum.value != local_optimum.value and \
                                 node.optimum(upper_level_optimum.value, local_optimum.value) == local_optimum.value:
-                    print(sub_node.move, 'prunning', [ z.move.notation for z in naive_subnodes])
+                    # print(sub_node.move, 'prunning', [ z.move.notation for z in naive_subnodes])
                     break
 
             # push to chess-tree cache
@@ -194,7 +194,11 @@ e4move = [z for z in e2moves if z.notation == 'e4'][0]
 
 # evaluate position
 mockup_node = Node(NodeMockup(), None, 0, 'w') # predecessor, move, depth_level, color, *other_arguments):
-test = test_ai.evaluate(mockup_node, 3)
+
+import cProfile
+cProfile.run('test = test_ai.evaluate(mockup_node, 4)')
+
+
 print('optimal move', test.optimal_cutoff_node.move_chain[0], 'with score', test.value, 'and move path:', test.optimal_cutoff_node.move_chain)
 
 

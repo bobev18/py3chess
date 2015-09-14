@@ -69,13 +69,16 @@ class Piece():
     def __init__(self, color, type_, location):
         self.color = color
         self.type_ = type_
+        self.color_n_type = color + type_
         self.location = location
         self.x = ord(self.location[0])-96
         self.y = int(self.location[1])
         self.valid_moves = None
 
     def __repr__(self):
-        return self.color + self.type_ + '@' + self.location
+        # return self.color + self.type_ + '@' + self.location
+        # return self.color_n_type + '@' + self.location
+        return self.color_n_type + self.location
 
     def designation(self):
         return self.color + self.type_
