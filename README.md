@@ -67,5 +67,4 @@ On the other hand, option (2) could be easier for refactoring into a multi-threa
 Ultimately only a direct comparison of execution times will tell for sure which option is better.
 Actually the copy needs to be of the Game instance, otherwise we cannot validate history dependent moves. Or implement compatible method in the AI class.
 
-
-Evaluation recursion in the AI class should return not only the optimal score, but the chain of moves that results in that optimum score. To do that I need to return cutoff_node.move_chain backwards in the recursion
+evaluating a move will always need to make full traversal - from the move node to all cutoff nodes, because the move score is not only dependent on the evaluation score of all cutoff nodes, but on comparison of scores on the intermediate nodes. In that regard, there will be no difference between evaluating a naive node, and one that has been verified.
