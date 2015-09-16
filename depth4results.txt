@@ -1,0 +1,57 @@
+         220620117 function calls (220414223 primitive calls) in 226.448 seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000  226.448  226.448 <string>:1(<module>)
+   205915    0.051    0.000    0.051    0.000 board.py:145(pieces_of_color)
+    86437    0.106    0.000    0.180    0.000 board.py:151(add_piece)
+    86437    0.120    0.000    0.231    0.000 board.py:190(remove_piece)
+ 10568862   20.675    0.000   39.646    0.000 board.py:209(relocate_piece)
+  3294572   33.569    0.000   42.641    0.000 board.py:307(naive_moves)
+ 10568862    9.181    0.000   49.238    0.000 board.py:405(process_actions)
+  5284431   11.188    0.000  110.818    0.000 board.py:418(execute_move)
+  5279556    1.915    0.000   28.364    0.000 board.py:435(undo_actions)
+  5284431    4.855    0.000   14.900    0.000 board.py:438(validate_move)
+  5432348   53.845    0.000   55.793    0.000 board.py:471(is_in_check)
+  5131639    7.671    0.000    8.079    0.000 board.py:508(discover_check)
+     9322    0.150    0.000    0.546    0.000 chesstree.py:100(<listcomp>)
+   196592    1.052    0.000  215.788    0.001 chesstree.py:102(score_node)
+   196592    7.025    0.000   24.183    0.000 chesstree.py:116(<listcomp>)
+    71201    0.119    0.000    0.126    0.000 chesstree.py:121(evaluator)
+        1    0.000    0.000  226.448  226.448 chesstree.py:133(evaluate_position)
+        1    0.000    0.000    0.000    0.000 chesstree.py:146(<listcomp>)
+       20    0.000    0.000    0.000    0.000 chesstree.py:154(<lambda>)
+205914/20    1.134    0.000  226.447   11.322 chesstree.py:157(evaluate)
+  2440564    0.266    0.000    0.266    0.000 chesstree.py:191(<lambda>)
+  5073643   12.321    0.000   17.554    0.000 chesstree.py:20(__init__)
+        1    0.000    0.000    0.000    0.000 chesstree.py:218(__init__)
+   196592    0.094    0.000    0.094    0.000 chesstree.py:80(__init__)
+     9322    0.023    0.000    8.235    0.001 chesstree.py:93(expand_node)
+  3294572   10.491    0.000  188.035    0.000 game.py:108(valid_moves_of_piece_at)
+   205915    3.273    0.000  192.050    0.001 game.py:62(determine_game_state)
+  5078842    1.390    0.000    1.390    0.000 game.py:98(validate_against_history)
+  5284431    6.709    0.000    7.767    0.000 move.py:25(actions)
+  5078842    5.134    0.000    5.134    0.000 move.py:3(__init__)
+  2237170    0.851    0.000    1.135    0.000 piece.py:90(notation)
+  3294572    2.306    0.000    2.306    0.000 piece.py:96(lookup_moves)
+        1    0.000    0.000  226.448  226.448 {built-in method exec}
+ 10947651    1.895    0.000    1.895    0.000 {built-in method isinstance}
+ 50631640    2.418    0.000    2.418    0.000 {built-in method len}
+   197027    0.595    0.000    0.842    0.000 {built-in method max}
+     8902    0.031    0.000    0.051    0.000 {built-in method min}
+ 10568862    0.596    0.000    0.596    0.000 {built-in method ord}
+ 31558414    3.301    0.000    3.301    0.000 {method 'append' of 'list' objects}
+  5279558    4.395    0.000    4.395    0.000 {method 'copy' of 'list' objects}
+   205914    0.056    0.000    0.056    0.000 {method 'count' of 'list' objects}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+  3294572    0.521    0.000    0.521    0.000 {method 'extend' of 'list' objects}
+ 21310598   16.634    0.000   16.634    0.000 {method 'index' of 'list' objects}
+   205914    0.160    0.000    0.160    0.000 {method 'join' of 'str' objects}
+    18644    0.004    0.000    0.004    0.000 {method 'pop' of 'list' objects}
+    86437    0.041    0.000    0.041    0.000 {method 'remove' of 'list' objects}
+  2208382    0.284    0.000    0.284    0.000 {method 'upper' of 'str' objects}
+
+
+optimal move d3 with score 0 and move path: ['', d3, e6, Qd2, e5]
+[Finished in 247.6s]

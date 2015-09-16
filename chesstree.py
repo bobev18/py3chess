@@ -1,36 +1,3 @@
-
-# def validate_n_score_move(self, move, evaluator):
-#     if self.validate_against_history(move):
-#         undo = self.board.execute_move(move)
-#         if undo:
-#             hash_ = ''.join(self.board.hashstate)
-#             try:
-#                 score = self.score_cache[hash_]
-#             except KeyError:
-#                 score = evaluator(self.board)
-#                 self.score_cache[hash_] = score
-#             self.board.undo_actions(undo)
-#             return score
-#     return None
-
-def score_node(self, node, evaluator):
-    # we know it's valid, because it would not be a node if it isn't
-    undo = self.board.execute_move(node.move) # this is the move @ cutoff level
-    game_state = self.determine_game_state() # returns 'mate', 'stalemate', or list of all valid expansions
-    #                                       this executes moves at cutoff+1 level
-    hash_ = ''.join(self.board.hashstate)
-    try:
-        score = self.score_cache[hash_]
-    except KeyError:
-        score = evaluator(game_state, self.board)
-        self.score_cache[hash_] = score
-
-    if isinstance(game_state, list): # create new nodes
-        node.subnodes = [  Node(node, z, node.depth_level + 1, node.predecessor.color) for z in game_state ]
-
-    self.board.undo_actions(undo)
-    return score
-
 class Node:
 
     def __init__(self, predecessor, move, depth_level, color, *other_arguments):
@@ -45,51 +12,11 @@ class Node:
         else:
             self.optimum = min
 
-        # these will gain value only if node is evaluated
-        self.naive_subnodes = []
         self.subnodes = []
         self.scores = {}
 
     def __repr__(self):
-        return str([self.move, self.depth_level, self.move_chain])
-
-    # def state(self):
-    #     if len(self.naive_subnodes) == 0 and len(self.subnodes) == 0:
-    #         return 'naked'
-    #     elif len(self.naive_subnodes) > 0 and len(self.subnodes) == 0:
-    #         return 'naive'
-    #     elif len(self.naive_subnodes) > 0 and len(self.subnodes) > 0:
-    #         return 'mixed'
-    #     elif len(self.naive_subnodes) == 0 and len(self.subnodes) > 0:
-    #         return 'valid'
-    #     else:
-    #         return 'error [naive,velid] ' + str([len(self.naive_subnodes), len(self.subnodes)])
-
-    def expand(self, board):
-        # generates the child nodes by naive expansion
-        self.naive_expansions = []
-        for piece in board.pieces_of_color(self.color):
-            self.naive_expansions.extend(board.naive_moves(piece))
-        self.subnodes = [ Node(self, z, self.depth_level + 1, self.predecessor.color) for z in self.naive_expansions ]
-
-    def selfevaluate(self, game, evaluator):
-        score = game.score_node(self, evaluator)
-        self.scores[self.depth_level] = score
-        return score
-
-    def record_subnode_validity(self, subnode):
-        self.subnodes.append
-
-    # def remove_invalid_move_node(self, subnode):
-    #     self.subnodes.remove(subnode)
-
-# class ChessTree:
-#     # should be possible to construct it from given position onwards
-#     # provides methods for expansion
-
-#     def __init__(self, *root_node_data):
-#         self.game = # definitely needs a game
-#         self.root = Node(*root_node_data)
+        return str([self.move, self.color, self.depth_level, self.move_chain[1:]])
 
 class Score:
 
@@ -104,11 +31,35 @@ class AI:
         self.cutoff = cutoff
         # when starting the evaluate from outside use evaluate(node, node.depth_level + cutoff)
         self.draw_desire = -1 # can be in range [-1..1] where -1 means doesnt want draw, 1 means wants draw, and 0 = indiferent
+        self.score_cache = {}
+
+    def expand_node(self, node):
+        # this method is called for nodes that are already executed onto the game object
+        game_state = self.game.determine_game_state() # returns 'mate', 'stalemate', or list of all valid expansions
+        if isinstance(game_state, list): # create new nodes
+            node.subnodes = [  Node(node, z, node.depth_level + 1, node.predecessor.color) for z in game_state ]
+
+    def score_node(self, node):
+        undo = self.game.board.execute_move(node.move)
+        game_state = self.game.determine_game_state()
+        hash_ = ''.join(self.game.board.hashstate)
+        try:
+            score = self.score_cache[hash_]
+        except KeyError:
+            score = self.evaluator(game_state, self.game.board)
+            self.score_cache[hash_] = score
+
+        if isinstance(game_state, list): # create new nodes
+            node.subnodes = [ Node(node, z, node.depth_level + 1, node.predecessor.color) for z in game_state ]
+
+        self.game.board.undo_actions(undo)
+        return score
 
     def evaluator(self, game_state, board):
         if game_state == 'mate':
             return 1000
         elif game_state == 'stalemate':
+            print(self.game.board)
             print ('whaaaat')
             raise Exception
             return 500*self.draw_desire
@@ -118,7 +69,7 @@ class AI:
 
     def evaluate_position(self, by_color, cutoff_depth):
         game_state = self.game.determine_game_state()
-        print('gamestate', game_state)
+        # print('gamestate', game_state)
         if isinstance(game_state, str):
             return evaluator(game_state, self.game.board)
         else:
@@ -128,65 +79,47 @@ class AI:
             else:
                 oposite_color = 'w'
                 color_optimum = min
-            root_node = Node(NodeMockup(), None, 0, oposite_color)
-            root_node.subnodes = [ Node(root_node, z, root_node.depth_level + 1, root_node.predecessor.color) for z in game_state ]
-            print('root_node subnodes', root_node.subnodes)
-            print()
+            root_node = Node(NodeMockup(), '', 0, oposite_color)
+            root_node.subnodes = [ Node(root_node, z, root_node.depth_level + 1, by_color) for z in game_state ]
             expansion_scores = []
             for sub_node in root_node.subnodes:
                 sub_node_score = self.evaluate(sub_node, cutoff_depth)
                 expansion_scores.append(sub_node_score)
-                print('root expansion', sub_node, 'score', sub_node_score)
             optimum = color_optimum(expansion_scores, key=lambda x: x.value)
             return optimum
 
     def evaluate(self, node, cutoff_depth, upper_level_optimum=None):  # cutoff_depth absolute count of (semi-)turns
-        # print('evaluate with arguments:', node, cutoff_depth, upper_level_optimum)
-        try: # read from chess-tree cache
-            return node.scores[cutoff_depth]       # this could be possible if oponent makes "undo"
+        # print('evaluate with arguments:', node, cutoff_depth, upper_level_optimum.value)
+        try:
+            return node.scores[cutoff_depth]
         except KeyError:
             pass
 
         if node.depth_level == cutoff_depth:
-            return Score(node.selfevaluate(self.game, self.evaluator), node)
+            score = Score(self.score_node(node), node)
+            node.scores[node.depth_level] = score
+            return score
         else:
-
             # PLACE GAME IN THE RELEVANT NODE
             if node.move: # false in the case of mockup Node
                 undo = self.game.board.execute_move(node.move)
+                if self.game.turnning_player == self.game.whites_player:
+                    self.game.turnning_player = self.game.blacks_player
+                else:
+                    self.game.turnning_player = self.game.whites_player
                 self.game.history.append(node.move)
-                self.game.backtrack.append(self.game.board.hashstate)
+                self.game.backtrack.append(''.join(self.game.board.hashstate))
 
-            if len(node.naive_subnodes) == 0 and len(node.subnodes) == 0:
-                node.expand(self.game.board)
+            if len(node.subnodes) == 0:
+                self.expand_node(node)
 
             local_optimum = None
             expansion_scores = []
-
-
-            # PROCESS VALIDATED SUBNODES
             if len(node.subnodes):
                 for sub_node in node.subnodes:
                     sub_node_score = self.evaluate(sub_node, cutoff_depth, local_optimum)
                     expansion_scores.append(sub_node_score)
                     local_optimum = node.optimum(expansion_scores, key=lambda x: x.value)
-                    # prune condition is: obtain local optimum that is more optimal than the upper_level_optimum
-                    if upper_level_optimum and \
-                                    local_optimum != None and \
-                                    upper_level_optimum.value != local_optimum.value and \
-                                    node.optimum(upper_level_optimum.value, local_optimum.value) == local_optimum.value:
-                        break
-
-            # PROCESS NAIVE SUBNODES
-            if len(node.naive_subnodes):
-                # subnodes = node.naive_subnodes.copy()
-                while len(node.naive_subnodes):
-                    sub_node = subnodes.pop()
-                    sub_node_score = self.evaluate(sub_node, cutoff_depth, local_optimum)
-                    if sub_node_score.value != None:
-                        node.subnodes.append(sub_node) #i.e. it's validated
-                        expansion_scores.append(sub_node_score)
-                        local_optimum = node.optimum(expansion_scores, key=lambda x: x.value)
                     # prune condition is: obtain local optimum that is more optimal than the upper_level_optimum
                     if upper_level_optimum and \
                                     local_optimum != None and \
@@ -202,6 +135,10 @@ class AI:
             # RESTORE GAME TO PREDECESOR NODE
             if node.move:
                 self.game.board.undo_actions(undo)
+                if self.game.turnning_player == self.game.whites_player:
+                    self.game.turnning_player = self.game.blacks_player
+                else:
+                    self.game.turnning_player = self.game.whites_player
                 self.game.history.pop()
                 self.game.backtrack.pop()
 
@@ -216,47 +153,13 @@ class NodeMockup:
     def remove_invalid_move_node(self, item):
         pass
 
+import cProfile
 from game import Game
-from move import Move
-Game.score_node = score_node
-
-MOCKUP_POSITION = {
-    'a8':'br', 'b8':'  ', 'c8':'bb', 'd8':'bq', 'e8':'bk', 'f8':'bb', 'g8':'bn', 'h8':'br',
-    'a7':'bp', 'b7':'bp', 'c7':'bp', 'd7':'bp', 'e7':'bp', 'f7':'bp', 'g7':'bp', 'h7':'bp',
-    'a6':'  ', 'b6':'  ', 'c6':'bn', 'd6':'  ', 'e6':'  ', 'f6':'  ', 'g6':'  ', 'h6':'  ',
-    'a5':'  ', 'b5':'  ', 'c5':'  ', 'd5':'  ', 'e5':'  ', 'f5':'  ', 'g5':'  ', 'h5':'  ',
-    'a4':'  ', 'b4':'  ', 'c4':'  ', 'd4':'  ', 'e4':'  ', 'f4':'  ', 'g4':'  ', 'h4':'  ',
-    'a3':'  ', 'b3':'  ', 'c3':'  ', 'd3':'  ', 'e3':'  ', 'f3':'  ', 'g3':'  ', 'h3':'  ',
-    'a2':'wp', 'b2':'wp', 'c2':'wp', 'd2':'wp', 'e2':'wp', 'f2':'wp', 'g2':'wp', 'h2':'wp',
-    'a1':'wr', 'b1':'wn', 'c1':'wb', 'd1':'wq', 'e1':'wk', 'f1':'wb', 'g1':'wn', 'h1':'wr',
-}
 
 # setup
-# test_game = Game(board_position=MOCKUP_POSITION)
 test_game = Game()
-test_ai = AI(5, test_game) # this cutoff value is not used, but the one passed in the evaluate method
+test_ai = AI(4, test_game) # this cutoff value is not used, but the one passed in the evaluate method
 
-# # prep move
-# e2moves = test_game.valid_moves_of_piece_at('e2')
-# e4move = [z for z in e2moves if z.notation == 'e4'][0]
-# # evaluate specific move
-# e4_node = Node(NodeMockup('w'), e4move, 1, 'b') #piece, type_, destination, notation, extra = None):
-# test = test_ai.evaluate(e4_node, 4)
-# print('score for opening e4', test.value)
+cProfile.run('test = test_ai.evaluate_position("w", 3)')
 
-# evaluate position
-###### to evaluate position, we need the move leadin to it (inbound move).
-###### If we lack such move, we can generate all valid moves available in the given the position and use them to
-###### populate mockup_node.subnodes
-
-# # MOVE __init__(self, piece, type_, destination, notation, extra = None):
-# mockup_inbound_move = Move(test_game.board.state['c6'], 'km', 'b8', 'Nb8')
-# # NODE __init__(self, predecessor, move, depth_level, color, *other_arguments):
-# mockup_node = Node(NodeMockup(), mockup_inbound_move, 0, 'w') # predecessor, move, depth_level, color, *other_arguments):
-# mockup_node
-# # import cProfile
-# # cProfile.run('test = test_ai.evaluate(mockup_node, 5)')
-# test = test_ai.evaluate(mockup_node, 5)
-test = test_ai.evaluate_position('w', 4)
-
-print('optimal move', test.optimal_cutoff_node.move_chain[0], 'with score', test.value, 'and move path:', test.optimal_cutoff_node.move_chain)
+print('optimal move', test.optimal_cutoff_node.move_chain[1], 'with score', test.value, 'and move path:', test.optimal_cutoff_node.move_chain[1:])
