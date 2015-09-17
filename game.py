@@ -42,8 +42,8 @@ class Game():
         self.backtrack = []       # past positions - to check for repetition draw
         self.score_cache = {}
         self.state = 'init'
-        with open(logfile,'w') as f:
-            self.logfile = logfile
+        with open(logfile,'wt') as f:
+            self.logfile = f
 
     def full_notation(self):
         result = ''

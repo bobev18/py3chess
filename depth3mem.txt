@@ -1,0 +1,231 @@
+nodecount after move h4 : 26716
+root_node KB size 14901
+game      KB size 12
+score_cache KB sz 115
+nodecount after move f4 : 62211
+root_node KB size 34661
+game      KB size 12
+score_cache KB sz 241
+nodecount after move Re1 : 93137
+root_node KB size 51906
+game      KB size 12
+score_cache KB sz 379
+nodecount after move Qe2 : 127795
+root_node KB size 71227
+game      KB size 12
+score_cache KB sz 470
+nodecount after move Qd2 : 171094
+root_node KB size 95377
+game      KB size 12
+score_cache KB sz 567
+nodecount after move Qe1 : 203606
+root_node KB size 113506
+game      KB size 12
+score_cache KB sz 731
+nodecount after move Qc1 : 240962
+root_node KB size 134336
+game      KB size 12
+score_cache KB sz 801
+nodecount after move Qb1 : 273274
+root_node KB size 152354
+game      KB size 12
+score_cache KB sz 872
+nodecount after move Ra2 : 300255
+root_node KB size 167396
+game      KB size 12
+score_cache KB sz 931
+nodecount after move Ra3 : 328123
+root_node KB size 182935
+game      KB size 12
+score_cache KB sz 988
+nodecount after move Ra4 : 355618
+root_node KB size 198264
+game      KB size 12
+score_cache KB sz 1041
+nodecount after move Rb1 : 381535
+root_node KB size 212711
+game      KB size 12
+score_cache KB sz 1091
+nodecount after move Rc1 : 399455
+root_node KB size 222692
+game      KB size 12
+score_cache KB sz 1140
+nodecount after move Kg2 : 432024
+root_node KB size 240852
+game      KB size 12
+score_cache KB sz 1192
+nodecount after move Kh2 : 464054
+root_node KB size 258711
+game      KB size 12
+score_cache KB sz 1428
+nodecount after move Kh1 : 492650
+root_node KB size 274655
+game      KB size 12
+score_cache KB sz 1466
+nodecount after move c3 : 522988
+root_node KB size 291599
+game      KB size 12
+score_cache KB sz 1506
+nodecount after move c4 : 553383
+root_node KB size 308578
+game      KB size 12
+score_cache KB sz 1548
+nodecount after move Ng3 : 576978
+root_node KB size 321723
+game      KB size 12
+score_cache KB sz 1564
+nodecount after move Ng5 : 598604
+root_node KB size 333770
+game      KB size 12
+score_cache KB sz 1576
+nodecount after move Nf6 : 601193
+root_node KB size 335213
+game      KB size 12
+score_cache KB sz 1580
+nodecount after move Nd2 : 620034
+root_node KB size 345708
+game      KB size 12
+score_cache KB sz 1591
+nodecount after move Nc3 : 641545
+root_node KB size 357728
+game      KB size 12
+score_cache KB sz 1605
+nodecount after move Nc5 : 663789
+root_node KB size 370125
+game      KB size 12
+score_cache KB sz 1615
+nodecount after move Nd6 : 666798
+root_node KB size 371802
+game      KB size 12
+score_cache KB sz 1616
+         2097434911 function calls (1683117767 primitive calls) in 2052.215 seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000 2052.215 2052.215 <string>:1(<module>)
+       17    0.000    0.000    0.000    0.000 asizeof.py:1038(__init__)
+ 77966327  159.260    0.000  273.841    0.000 asizeof.py:1074(flat)
+       17    0.000    0.000    0.000    0.000 asizeof.py:1097(kwds)
+       17    0.000    0.000    0.000    0.000 asizeof.py:1124(set)
+       34    0.000    0.000    0.000    0.000 asizeof.py:1134(reset)
+       17    0.000    0.000    0.001    0.000 asizeof.py:1429(_typedef)
+      150   10.874    0.072   10.878    0.073 asizeof.py:1648(_clear)
+414293259/75 1211.447    0.000 1982.192   26.429 asizeof.py:1685(_sizer)
+       75    0.001    0.000 1982.194   26.429 asizeof.py:1740(_sizes)
+       75    0.000    0.000 1982.195   26.429 asizeof.py:1777(asizeof)
+       75    0.000    0.000    0.000    0.000 asizeof.py:1795(exclude_refs)
+       75    0.000    0.000    0.000    0.000 asizeof.py:1853(print_stats)
+       75    0.000    0.000    0.000    0.000 asizeof.py:1956(set)
+       75    0.001    0.000    0.002    0.000 asizeof.py:2014(reset)
+       75    0.001    0.000 1993.075   26.574 asizeof.py:2127(asizeof)
+ 29725526   27.231    0.000   64.805    0.000 asizeof.py:253(_items)
+      150    0.000    0.000    0.005    0.000 asizeof.py:259(_keys)
+       75    0.000    0.000    0.000    0.000 asizeof.py:265(_values)
+       17    0.000    0.000    0.000    0.000 asizeof.py:312(_basicsize)
+ 19927630   11.985    0.000   33.351    0.000 asizeof.py:339(_dir2)
+        8    0.000    0.000    0.000    0.000 asizeof.py:382(_isdictclass)
+       16    0.000    0.000    0.000    0.000 asizeof.py:389(_issubclass)
+        8    0.000    0.000    0.000    0.000 asizeof.py:408(_iscell)
+        8    0.000    0.000    0.000    0.000 asizeof.py:413(_isnamedtuple)
+        8    0.000    0.000    0.000    0.000 asizeof.py:420(_itemsize)
+       75    0.000    0.000    0.000    0.000 asizeof.py:452(_objs_opts)
+ 19596917    7.037    0.000    7.037    0.000 asizeof.py:490(_power2)
+ 59782890   71.401    0.000  124.230    0.000 asizeof.py:521(_refs)
+345744630  102.062    0.000  166.867    0.000 asizeof.py:587(_dict_refs)
+ 19927630   21.974    0.000   21.974    0.000 asizeof.py:660(_inst_refs)
+ 19595867    2.974    0.000    2.974    0.000 asizeof.py:689(_seq_refs)
+ 29725526   28.485    0.000   40.498    0.000 asizeof.py:766(_len_dict)
+     1706    0.002    0.000    0.002    0.000 asizeof.py:793(_len_int)
+ 19595867   13.647    0.000   16.497    0.000 asizeof.py:817(_len_list)
+  8715523    4.708    0.000    6.056    0.000 asizeof.py:870(_len_unicode)
+        8    0.000    0.000    0.000    0.000 asizeof.py:892(__init__)
+      225    0.000    0.000    0.000    0.000 asizeof.py:920(_claskey)
+ 77966602   42.113    0.000   42.114    0.000 asizeof.py:990(_objkey)
+    23986    0.009    0.000    0.009    0.000 board.py:145(pieces_of_color)
+    34643    0.072    0.000    0.119    0.000 board.py:151(add_piece)
+    34643    0.081    0.000    0.155    0.000 board.py:190(remove_piece)
+  1383090    6.072    0.000   10.366    0.000 board.py:209(relocate_piece)
+   263768    6.431    0.000    8.614    0.000 board.py:305(naive_moves)
+  1382898    2.933    0.000   13.572    0.000 board.py:403(process_actions)
+   691449    2.952    0.000   31.964    0.000 board.py:416(execute_move)
+   690782    0.474    0.000    7.861    0.000 board.py:433(undo_actions)
+   691449    1.364    0.000    5.877    0.000 board.py:436(validate_move)
+   833471   16.790    0.000   17.413    0.000 board.py:469(is_in_check)
+   548946    1.584    0.000    1.656    0.000 board.py:506(discover_check)
+   335025    0.065    0.000    0.065    0.000 chesstree.py:130(<lambda>)
+        1    0.000    0.000    0.000    0.000 chesstree.py:157(__init__)
+    23039    0.017    0.000    0.017    0.000 chesstree.py:25(__init__)
+   666798    3.965    0.000    4.664    0.000 chesstree.py:3(__init__)
+      946    0.004    0.000    2.303    0.002 chesstree.py:38(expand_node)
+      946    0.039    0.000    0.341    0.000 chesstree.py:42(<listcomp>)
+    23039    0.213    0.000   56.276    0.002 chesstree.py:44(score_node)
+    23039    1.206    0.000    5.568    0.000 chesstree.py:55(<listcomp>)
+    13134    0.039    0.000    0.042    0.000 chesstree.py:60(evaluator)
+        1    0.001    0.001 2052.215 2052.215 chesstree.py:72(evaluate_position)
+        1    0.000    0.000    0.000    0.000 chesstree.py:85(<listcomp>)
+       25    0.000    0.000    0.000    0.000 chesstree.py:95(<lambda>)
+ 23985/25    0.233    0.000   59.123    2.365 chesstree.py:99(evaluate)
+      500    0.001    0.000    0.001    0.000 cp1252.py:18(encode)
+   263768    2.761    0.000   50.264    0.000 game.py:104(valid_moves_of_piece_at)
+    23986    0.577    0.000   50.985    0.002 game.py:62(determine_game_state)
+   667464    0.376    0.000    0.376    0.000 game.py:94(validate_against_history)
+       50    0.000    0.000    0.000    0.000 game.py:96(<listcomp>)
+       50    0.000    0.000    0.000    0.000 game.py:97(<listcomp>)
+       17    0.000    0.000    0.000    0.000 inspect.py:212(isframe)
+       17    0.000    0.000    0.000    0.000 inspect.py:226(iscode)
+        1    0.000    0.000    0.000    0.000 inspect.py:244(isbuiltin)
+ 69248965   43.512    0.000   78.835    0.000 inspect.py:68(ismodule)
+        9    0.000    0.000    0.000    0.000 inspect.py:77(isclass)
+       25    0.000    0.000    0.000    0.000 move.py:22(__repr__)
+   691449    1.991    0.000    2.298    0.000 move.py:25(actions)
+   667464    1.175    0.000    1.175    0.000 move.py:3(__init__)
+   577560    0.387    0.000    0.500    0.000 piece.py:90(notation)
+   263768    0.383    0.000    0.383    0.000 piece.py:96(lookup_moves)
+     1631    0.000    0.000    0.000    0.000 {built-in method abs}
+       17    0.000    0.000    0.000    0.000 {built-in method callable}
+      500    0.001    0.000    0.001    0.000 {built-in method charmap_encode}
+        1    0.000    0.000 2052.215 2052.215 {built-in method exec}
+ 69581077   40.348    0.000   40.348    0.000 {built-in method getattr}
+ 77966327   51.527    0.000   51.527    0.000 {built-in method getsizeof}
+ 59782890   33.169    0.000   33.169    0.000 {built-in method hasattr}
+414293634   45.987    0.000   45.987    0.000 {built-in method id}
+ 70725395   35.871    0.000   35.871    0.000 {built-in method isinstance}
+       16    0.000    0.000    0.000    0.000 {built-in method issubclass}
+ 64671563    9.886    0.000    9.886    0.000 {built-in method len}
+      939    0.010    0.000    0.017    0.000 {built-in method max}
+    23203    0.152    0.000    0.209    0.000 {built-in method min}
+  1383090    0.162    0.000    0.162    0.000 {built-in method ord}
+      100    0.012    0.000    0.014    0.000 {built-in method print}
+       75    0.000    0.000    0.000    0.000 {built-in method sum}
+  4204812    0.898    0.000    0.898    0.000 {method 'append' of 'list' objects}
+   690784    0.490    0.000    0.490    0.000 {method 'copy' of 'list' objects}
+    23985    0.007    0.000    0.007    0.000 {method 'count' of 'list' objects}
+       96    0.000    0.000    0.000    0.000 {method 'count' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+   263768    0.104    0.000    0.104    0.000 {method 'extend' of 'list' objects}
+ 77966910   13.923    0.000   13.923    0.000 {method 'get' of 'dict' objects}
+  2835466    3.679    0.000    3.679    0.000 {method 'index' of 'list' objects}
+ 29725526    4.906    0.000    4.906    0.000 {method 'items' of 'dict' objects}
+    23985    0.030    0.000    0.030    0.000 {method 'join' of 'str' objects}
+      150    0.000    0.000    0.000    0.000 {method 'keys' of 'dict' objects}
+     1892    0.001    0.000    0.001    0.000 {method 'pop' of 'list' objects}
+    34643    0.026    0.000    0.026    0.000 {method 'remove' of 'list' objects}
+       75    0.000    0.000    0.000    0.000 {method 'setdefault' of 'dict' objects}
+       17    0.000    0.000    0.000    0.000 {method 'update' of 'dict' objects}
+   570795    0.114    0.000    0.114    0.000 {method 'upper' of 'str' objects}
+       75    0.000    0.000    0.000    0.000 {method 'values' of 'dict' objects}
+
+
+
+|br|  |  |  |bk|  |  |br|
+|bb|bp|bp|  |  |bp|bp|bp|
+|bp|  |  |  |  |  |  |  |
+|wp|  |  |  |  |  |  |  |
+|  |bq|  |bp|wn|  |  |  |
+|  |  |  |wp|  |wp|  |wp|
+|  |  |wp|  |  |wp|  |  |
+|wr|  |  |wq|  |wr|wk|  |
+
+optimal move h4 with score -3 and move path: [h4, g6, h5]
+[Finished in 2057.0s]

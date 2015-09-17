@@ -1,6 +1,8 @@
 class Node:
 
-    def __init__(self, predecessor, move, depth_level, color, *other_arguments):
+    def __init__(self, predecessor, move, depth_level, color):
+        global nodecount
+        nodecount += 1
         self.predecessor = predecessor
         self.move_chain = predecessor.move_chain.copy()
         self.move_chain.append(move)
@@ -59,9 +61,9 @@ class AI:
         if game_state == 'mate':
             return 1000
         elif game_state == 'stalemate':
-            print(self.game.board)
             print ('whaaaat')
-            raise Exception
+            print(self.game.board)
+            # raise Exception
             return 500*self.draw_desire
         else:
             # insert something with len(game_state) to consider number of moves available for the oponent
@@ -85,7 +87,13 @@ class AI:
             for sub_node in root_node.subnodes:
                 sub_node_score = self.evaluate(sub_node, cutoff_depth)
                 expansion_scores.append(sub_node_score)
+                print('nodecount after move', sub_node.move, ':', nodecount)
+                print('root_node KB size', asizeof.asizeof(root_node)//1024)
+                print('game      KB size', asizeof.asizeof(self.game)//1024)
+                print('score_cache KB sz', asizeof.asizeof(self.score_cache)//1024)
+                # print('score_cache be? size', asizeof.asizeof(self.score_cache))
             optimum = color_optimum(expansion_scores, key=lambda x: x.value)
+
             return optimum
 
     def evaluate(self, node, cutoff_depth, upper_level_optimum=None):  # cutoff_depth absolute count of (semi-)turns
@@ -153,13 +161,22 @@ class NodeMockup:
     def remove_invalid_move_node(self, item):
         pass
 
+# import pickle
+from pympler import asizeof
 import cProfile
 from game import Game
 
+nodecount = 0
+
+
 # setup
-test_game = Game()
+# test_game = Game()
+position = {'e2':'  ','c8':'  ','e1':'  ','b6':'  ','e8':'bk','e7':'  ','g5':'  ','b1':'  ','a2':'  ','g6':'  ','e6':'  ','f6':'  ','h4':'  ','h7':'bp','g1':'wk','a5':'wp','b2':'  ','d3':'wp','c1':'  ','e3':'  ','c4':'  ','a6':'bp','a4':'  ','d8':'  ','f3':'wp','a8':'br','d2':'  ','c6':'  ','c7':'bp','g8':'  ','d1':'wq','f2':'wp','f1':'wr','g3':'  ','g2':'  ','b8':'  ','c2':'wp','f8':'  ','b4':'bq','b7':'bp','f5':'  ','f4':'  ','d4':'bp','h3':'wp','a3':'  ','c3':'  ','b3':'  ','d7':'  ','b5':'  ','e4':'wn','h6':'  ','d5':'  ','h2':'  ','h8':'br','a1':'wr','h1':'  ','g4':'  ','g7':'bp','h5':'  ','c5':'  ','a7':'bb','f7':'bp','e5':'  ','d6':'  '}
+test_game = Game(board_position=position)
 test_ai = AI(4, test_game) # this cutoff value is not used, but the one passed in the evaluate method
 
-cProfile.run('test = test_ai.evaluate_position("w", 3)')
 
+cProfile.run('test = test_ai.evaluate_position("w", 3)')
+print(test_game.board)
 print('optimal move', test.optimal_cutoff_node.move_chain[1], 'with score', test.value, 'and move path:', test.optimal_cutoff_node.move_chain[1:])
+
