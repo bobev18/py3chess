@@ -98,6 +98,19 @@ nodecount after move Nd6 : 666798
 root_node KB size 371802
 game      KB size 12
 score_cache KB sz 1616
+>>>>>> this is with score as value instead of dict but on 64bit py???
+nodecount after move h4 : 666838
+root_node KB size 488902
+game      KB size 23
+score_cache KB sz 2308
+>>>>>> this is with score as value instead of dict but on 64bit py???
+node count after move Rc1 : 666861
+root_node KB size 451747
+game      KB size 23
+score_cache KB sz 2308
+
+
+
          2097434911 function calls (1683117767 primitive calls) in 2052.215 seconds
 
    Ordered by: standard name
@@ -229,3 +242,9913 @@ score_cache KB sz 1616
 
 optimal move h4 with score -3 and move path: [h4, g6, h5]
 [Finished in 2057.0s]
+
+
+
+
+====================================================================================================
+
+
+node  count after move Ra2 : 27008
+root_node KB size 18316
+game      KB size 23
+score_cache KB sz 162
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25312
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30080
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26168
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28176
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24648
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23056
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23256
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26672
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21512
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21864
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25456
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26616
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27864
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26920
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25976
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24328
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25096
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23248
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23856
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23800
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25312
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30080
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26168
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28176
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24648
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23056
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23256
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26312
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21512
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21864
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25456
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26616
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27864
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26920
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25976
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24328
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25096
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23248
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23856
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23800
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26656
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26656
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25280
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26024
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26024
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30048
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26136
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28144
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27872
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27872
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24472
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23024
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23224
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26280
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21480
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21848
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25424
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26584
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27664
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26736
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25776
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24296
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25064
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23232
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23824
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23768
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27128
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27128
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25752
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26496
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26496
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 32
+cutoff subnodes 29664
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26496
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27872
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28232
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28232
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25640
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23024
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26280
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21480
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21848
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25424
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26584
+cutoff score    376
+
+cutoff node::: Nxg5
+cutoff move     2488
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23256
+cutoff score    368
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28832
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 27104
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26256
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24656
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25424
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23592
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24296
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24240
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25312
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30080
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26168
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28176
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24648
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23056
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23256
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26312
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21512
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21864
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25456
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26616
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27864
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26920
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25976
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24328
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25096
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23248
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23856
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23800
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25312
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30080
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26168
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28176
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24648
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23056
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23256
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26312
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21512
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21864
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25456
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26976
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27864
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26920
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25976
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24328
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25096
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23248
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23856
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23800
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25312
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30080
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26168
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28176
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24648
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23056
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23256
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26312
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21512
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21864
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25456
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26616
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27864
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26920
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25976
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24328
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25096
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23248
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23856
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23800
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26656
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26656
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25280
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26024
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26024
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30408
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26136
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28616
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27872
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27872
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24472
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23024
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 22864
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25920
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21480
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21848
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25424
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26584
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27664
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26736
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25776
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24296
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25064
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23232
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23824
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23768
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26656
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26656
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25280
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26024
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26024
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30048
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26136
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28144
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27872
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27872
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23208
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23496
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 22864
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26280
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21480
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21848
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25424
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26584
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28144
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26736
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25776
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24296
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25064
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23232
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23824
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23768
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27128
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27128
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25752
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26496
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26496
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30408
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26496
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28616
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28232
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28232
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24952
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23024
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 22864
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21480
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21848
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25424
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26224
+cutoff score    376
+
+cutoff node::: Nxf6
+cutoff move     2488
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26312
+cutoff score    368
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28144
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 27104
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26256
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24656
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25424
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23592
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24296
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24240
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26656
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26656
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25280
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26024
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26024
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30048
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26136
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28144
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27872
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27872
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24472
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23496
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 22864
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26280
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21480
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21848
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25424
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26584
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26568
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26736
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25776
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24296
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25064
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23232
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23824
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23768
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25312
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30080
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26168
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28176
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24648
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23056
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23256
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25952
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21512
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21864
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25456
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26256
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27864
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26920
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25976
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24328
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25096
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23248
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23856
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23800
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25312
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30080
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26168
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28176
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24648
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23056
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23256
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25952
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21512
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21864
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25456
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26256
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27864
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26920
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25976
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24328
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25096
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23248
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23856
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23800
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25312
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30080
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26168
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28176
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24648
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23056
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23256
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26312
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21512
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21864
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25816
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26256
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27864
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26920
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25976
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24328
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25096
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23248
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23856
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23800
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25312
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30080
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26168
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28176
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24648
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23056
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23256
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25952
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21512
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21864
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25456
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26256
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27864
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26920
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25976
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24328
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25096
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23248
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23856
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23800
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25312
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30080
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26168
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28176
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24648
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23056
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23256
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26312
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21512
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21864
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25456
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26256
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27864
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26920
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25976
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24328
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25096
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23248
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23856
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23800
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25312
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30080
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26168
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28176
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24680
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23056
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23256
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25952
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21512
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21864
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25456
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26616
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26944
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26000
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24328
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25096
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23248
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23856
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23800
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27160
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27160
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25784
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26528
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26528
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30080
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26168
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28648
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30496
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28264
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25120
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23056
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23256
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26312
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21512
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21864
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26616
+cutoff score    376
+
+cutoff node::: Nxc5
+cutoff move     2488
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25456
+cutoff score    368
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28336
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26176
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25376
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26200
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27688
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21760
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24328
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24272
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25728
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25040
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25784
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25784
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 32
+cutoff subnodes 29336
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25424
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 32
+cutoff subnodes 29752
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27520
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24296
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23056
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 22512
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25568
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 21
+cutoff subnodes 20768
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21120
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24632
+cutoff score    376
+
+cutoff node::: Nxd6
+cutoff move     2488
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26616
+cutoff score    368
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28336
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25432
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25704
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25456
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26944
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 22864
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23584
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23528
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25312
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 29608
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25696
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28176
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30136
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24648
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23056
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23256
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26312
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21512
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21864
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25456
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26616
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27864
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25816
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25976
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25840
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27328
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23248
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23856
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23800
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25312
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 29608
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25696
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28176
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30136
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24648
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23056
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23256
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26312
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21512
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21864
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25456
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26616
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27864
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25816
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25976
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25840
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27328
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23248
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23856
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23800
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25336
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25336
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23880
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24704
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24704
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27512
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23520
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26824
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28704
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25336
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23232
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21704
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 21
+cutoff subnodes 21792
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24768
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 20
+cutoff subnodes 20216
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23944
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 25160
+cutoff score    376
+
+cutoff node::: Nxc3
+cutoff move     2488
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21864
+cutoff score    368
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26560
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24352
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25896
+cutoff score    376
+
+cutoff node::: Rxc3
+cutoff move     2456
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23248
+cutoff score    368
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 22504
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 22448
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27160
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27160
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25784
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26528
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26528
+cutoff score    376
+
+cutoff node::: Qxd2
+cutoff move     2432
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 29608
+cutoff score    368
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24736
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25784
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30496
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28264
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25120
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23528
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23616
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26672
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 22368
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25816
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26976
+cutoff score    376
+
+cutoff node::: Nxd2
+cutoff move     2488
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21512
+cutoff score    368
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28336
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26176
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26448
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26200
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27688
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23640
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24328
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24272
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27160
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27160
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25784
+cutoff score    376
+
+cutoff node::: Rxe1
+cutoff move     2488
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    368
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23584
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27272
+cutoff score    376
+
+cutoff node::: Qxe1
+cutoff move     2432
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25696
+cutoff score    368
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27960
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 29120
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26200
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25120
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23528
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23616
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26672
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21984
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 22336
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25816
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26976
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28336
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26176
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26448
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26200
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27688
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23608
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24328
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24272
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 22584
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25312
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 29608
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25696
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28176
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28648
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24648
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23056
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23256
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26312
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21512
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 22368
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25456
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26976
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27864
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25816
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27192
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25840
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25840
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23248
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23856
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23800
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28320
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28320
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26944
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27688
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27688
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 34
+cutoff subnodes 31240
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27328
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 32
+cutoff subnodes 29808
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30496
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 29424
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26280
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24688
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 24776
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 27832
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23144
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23528
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26976
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 28136
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 29496
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 27336
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27608
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 27360
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27688
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24800
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25568
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25512
+cutoff score    376
+
+cutoff node::: axb6
+cutoff move     2520
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 29208
+cutoff score    368
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27576
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27576
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26200
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26944
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26944
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30496
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26584
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 29064
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30912
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28680
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25544
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23944
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 24032
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 27088
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 22400
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23496
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 26232
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 27392
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28760
+cutoff score    376
+
+cutoff node::: dxc4
+cutoff move     2456
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28320
+cutoff score    368
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26656
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25512
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 28104
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 22176
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24744
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24688
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27160
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27160
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25784
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26528
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26528
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30080
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26168
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28648
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27160
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28264
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25120
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23528
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23616
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26672
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21984
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23472
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25816
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26976
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28336
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25488
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25072
+cutoff score    376
+
+cutoff node::: cxb3
+cutoff move     2456
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23168
+cutoff score    368
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26944
+cutoff score    376
+
+cutoff node::: Rxb3
+cutoff move     2488
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27328
+cutoff score    368
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25152
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25096
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25312
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 29608
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25696
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28648
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26472
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26472
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24648
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23056
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23256
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26312
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21512
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21864
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25456
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26616
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27864
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25816
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25976
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25840
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 27000
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23248
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24328
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23800
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26472
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26472
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25096
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25840
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25840
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 32
+cutoff subnodes 29392
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25480
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27960
+cutoff score    376
+
+cutoff node::: Qxb1
+cutoff move     2432
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30136
+cutoff score    368
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24352
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 22840
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 22928
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25984
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 21
+cutoff subnodes 21296
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21680
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 25048
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 26288
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27648
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25488
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25760
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25512
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26944
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 22896
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23640
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23584
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27160
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27160
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25784
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26528
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26528
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30080
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26168
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28648
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30496
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28264
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25120
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23528
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23616
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26672
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21984
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 22336
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25816
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26976
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28336
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26176
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26448
+cutoff score    376
+
+cutoff node::: Rxa4
+cutoff move     2488
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25840
+cutoff score    368
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27328
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23248
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24328
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24272
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26688
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25312
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26056
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30080
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26168
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28176
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27904
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24648
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23056
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23256
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26312
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21512
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21864
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25456
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26616
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27864
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26920
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25976
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24328
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25096
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23248
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23856
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23800
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28320
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28320
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26944
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27688
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27688
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 34
+cutoff subnodes 31600
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27688
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 32
+cutoff subnodes 29808
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 29424
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 29424
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26280
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24688
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 24776
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 27832
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23144
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23528
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26976
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 28136
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 29496
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 28440
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27608
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25928
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26616
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24800
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25568
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25512
+cutoff score    376
+
+cutoff node::: axb6
+cutoff move     2464
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 28104
+cutoff score    368
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27160
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27160
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25784
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26528
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26528
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30440
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26528
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28648
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28264
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28264
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25120
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23056
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23256
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26312
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21512
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21864
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26616
+cutoff score    376
+
+cutoff node::: Nxc5
+cutoff move     2432
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25456
+cutoff score    368
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28336
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 27280
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25376
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24688
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25456
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21760
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24328
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24272
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26656
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 26656
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25280
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26024
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26024
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30048
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26136
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28144
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27872
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27872
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24472
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23024
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23224
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26280
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21480
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21848
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25424
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26584
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 27664
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26736
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 25776
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24296
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25064
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 22488
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23824
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 23768
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27128
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27128
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25752
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26496
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26496
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 33
+cutoff subnodes 30408
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26496
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 28616
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28232
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28232
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 24952
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23024
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23224
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26280
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21480
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 21848
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26584
+cutoff score    376
+
+cutoff node::: Nxc5
+cutoff move     2488
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25456
+cutoff score    368
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28144
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 27104
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 25184
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24656
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25424
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 22
+cutoff subnodes 21744
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24296
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24240
+cutoff score    376
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28288
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28288
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26912
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27656
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27656
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 34
+cutoff subnodes 31568
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27656
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 32
+cutoff subnodes 29776
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 29392
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 29392
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26104
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24656
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 24744
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 27800
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23112
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23512
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26584
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 27744
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 29296
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 28256
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27408
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25896
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26584
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24784
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25536
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25480
+cutoff score    376
+
+cutoff node::: axb6
+cutoff move     2464
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 29896
+cutoff score    368
+
+cutoff node::: Kg2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28344
+cutoff score    376
+
+cutoff node::: Kh2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28344
+cutoff score    376
+
+cutoff node::: Kh1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 26968
+cutoff score    376
+
+cutoff node::: Re1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27712
+cutoff score    376
+
+cutoff node::: Qe2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27712
+cutoff score    376
+
+cutoff node::: Qd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 34
+cutoff subnodes 31680
+cutoff score    376
+
+cutoff node::: Qe1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 27768
+cutoff score    376
+
+cutoff node::: Qc1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 32
+cutoff subnodes 29832
+cutoff score    376
+
+cutoff node::: Qb1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 29504
+cutoff score    376
+
+cutoff node::: Qa1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 29504
+cutoff score    376
+
+cutoff node::: h4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26160
+cutoff score    376
+
+cutoff node::: Ng3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24712
+cutoff score    376
+
+cutoff node::: Ng5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 24856
+cutoff score    376
+
+cutoff node::: Nf6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 27912
+cutoff score    376
+
+cutoff node::: Nd2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 23
+cutoff subnodes 23168
+cutoff score    376
+
+cutoff node::: Nc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 24
+cutoff subnodes 23568
+cutoff score    376
+
+cutoff node::: Nc5
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26696
+cutoff score    376
+
+cutoff node::: Nd6
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 28
+cutoff subnodes 27800
+cutoff score    376
+
+cutoff node::: f4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 29352
+cutoff score    376
+
+cutoff node::: c3
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 29
+cutoff subnodes 28368
+cutoff score    376
+
+cutoff node::: c4
+cutoff move     1928
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 30
+cutoff subnodes 28208
+cutoff score    376
+
+cutoff node::: Ra4
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 26008
+cutoff score    376
+
+cutoff node::: Rb3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 27
+cutoff subnodes 26696
+cutoff score    376
+
+cutoff node::: Rc3
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 25
+cutoff subnodes 24896
+cutoff score    376
+
+cutoff node::: Ra2
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25592
+cutoff score    376
+
+cutoff node::: Ra1
+cutoff move     1984
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 26
+cutoff subnodes 25536
+cutoff score    376
+
+cutoff node::: axb6
+cutoff move     2488
+cutoff path     64
+cutoff depth    32
+cutoff color    32
+cutoff optimum  0
+cutoff len subs 31
+cutoff subnodes 29896
+cutoff score    368

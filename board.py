@@ -433,6 +433,9 @@ class Board():
     def undo_actions(self, actions):
         self.process_actions(actions)
 
+    Because of that, and because no validation will be required during execution, the methods execute_move, process_actions and
+     undo_actions - should have an alternative implementation utilizing the "flat" actions structure
+
     def validate_move(self, move):
         # assumes the move in question is executed onto board state, but values of attributes like 'self.white_checked' reflect the state prior the move
         if move.piece.color == 'w':

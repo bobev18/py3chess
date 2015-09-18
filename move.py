@@ -60,6 +60,44 @@ class Move():
 
         return actions, undo
 
+    def flat_actions(self):
+        actions=[]
+        undo=[]
+
+        if self.type_ == 'm' or self.type_ == 'm2' or self.type_ == 'mk':
+            actions = [('relocate_piece', [self.origin, self.destination])]
+            undo    = [('relocate_piece', [self.destination, self.origin])]
+        elif self.type_ == 't' or self.type_ == 'e':
+            actions = [('remove_piece', [self.taken.location]),
+                       ('relocate_piece', [self.origin, self.destination])]
+            undo = [('relocate_piece', [self.destination, self.origin]),
+                    ('add_piece', [self.taken.designation+'@'+self.taken.location])]
+        elif self.type_ == 'p':
+            actions = [('add_piece', [self.piece.color, self.promote_to.lower(), self.destination]),
+                       ('remove_piece', [self.origin])]
+            undo = [('add_piece', [self.piece.designation+'@'+self.piece.location]),
+                    ('remove_piece', [self.destination])]
+        elif self.type_ == '+':
+            actions = [('remove_piece', [self.taken.location]),
+                       ('add_piece', [self.piece.color, self.promote_to.lower(), self.destination]),
+                       ('remove_piece',[self.origin])]
+            undo = [('add_piece', [self.piece.designation+'@'+self.piece.location]),
+                    ('remove_piece', [self.destination]),
+                    ('add_piece', [self.taken.designation+'@'+self.taken.location])]
+        elif self.type_ == 'c':
+            if self.notation == 'O-O':
+                actions = [('relocate_piece', [self.catsling_rook.location, 'f'+self.origin[1]]),
+                           ('relocate_piece', [self.origin, self.destination])]
+                undo = [('relocate_piece', [self.destination, self.origin]),
+                        ('relocate_piece', ['f'+self.origin[1], 'h'+self.origin[1]])]
+            else: #O-O-O
+                actions = [('relocate_piece', [self.catsling_rook.location, 'd'+self.origin[1]]),
+                           ('relocate_piece', [self.origin, self.destination])]
+                undo = [('relocate_piece', [self.destination, self.origin]),
+                        ('relocate_piece', ['d'+self.origin[1], 'a'+self.origin[1]])]
+
+        return actions, undo
+
     def __eq__(self, other):
         if isinstance(other, self.__class__) \
         and self.piece == other.piece \

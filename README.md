@@ -72,3 +72,30 @@ Furthermore we want to evaluate the cutoff position not only via heuristic but w
 If we generate the new lvl 14 nodes during evaluation of a lvl 13 move, and we have to execute lvl 14 moves to check for mate/stalemate, there is no case of a node with expansions for naive moves; should not create nodes for lvl 14 at the time of evaluating cutoff=13
 
 every node needs to pass gamestate check, because game can hit mate/stalemate in the nodes between root and cutoff
+
+
+The mem usage for cutoff node @ depth 3 is about 1KB per avaible subsequent move i.e 
+cutoff subnodes    : 28
+cutoff subnodes mem: 26056 bytes
+Evaluating to depth 3, actualy expands and creates depth 4, and the total number of nodes is the vicinity of 666838, which on 64bit system took about 450MB. If going to next level adds 30 nodes on average, we are looking at ~15GB mem usage, which is crazy.
+The nodes should be shrunk! How are the nodes to be reused when next move is to be generated? Due to the opponent move, we will be expanding from a node that is on a node of depth 2 in the existing tree. We will need to carry out the entire recursion anyway to properly compare all position at the new depth. The cost that could be saved is determining expansions and validating the moves in corresponding to nodes in the current tree. The cost of the nodes is in great part storeing the Move objects, which contain at least one Piece object. The core of the Move is ability to provide "actions" which are instructions for executing a move. They make calls to add_piece, relocate_piece, remove_piece with the relevant arguments:
+```
+	actions [ {'act':'remove_piece', 'args':[self.taken]},
+    	      {'act':'relocate_piece', 'args':[self.piece, self.destination]}, ]
+```
+in paralel the undo actions are produced:
+```
+	undo    [ {'act':'relocate_piece', 'args':[self.destination, self.piece.location]},
+    	      {'act':'add_piece', 'args':[self.taken]}, ]
+```
+These constructs rely on Piece objects stored in the Move, however the methods add_piece, relocate_piece, remove_piece also suport arguments in the form of strings indicating positions in the board.state.
+If a method that generates actions and undo with string params is implemented, the Nodes could store only that information instead the entire Move object
+
+Changed the structure of the actions structure:
+```
+	actions = [('remove_piece', [self.taken.location]),
+               ('relocate_piece', [self.origin, self.destination])]
+    undo = [('relocate_piece', [self.destination, self.origin]),
+            ('add_piece', [self.taken.designation+'@'+self.taken.location])]
+```
+Because of that, and because no validation will be required during execution, the methods execute_move, process_actions and undo_actions - should have an alternative implementation utilizing the "flat" actions structure
