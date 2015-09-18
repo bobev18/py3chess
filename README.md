@@ -68,27 +68,27 @@ Ultimately only a direct comparison of execution times will tell for sure which 
 Actually the copy needs to be of the Game instance, otherwise we cannot validate history dependent moves. Or implement compatible method in the AI class.
 
 evaluating a move will always need to make full traversal - from the move node to all cutoff nodes, because the move score is not only dependent on the evaluation score of all cutoff nodes, but on comparison of scores on the intermediate nodes. In that regard, there will be no difference between evaluating a naive node, and one that has been verified.
-Furthermore we want to evaluate the cutoff position not only via heuristic but whether the it's mate/stalemate; the mate/stalemate evaluation, requires generating all valid moves for the position reached. That means that cutting off at semi-move 13, will need to evaluate position resulting of executing move 13. That evaluation includes validating all moves available at this position, which is achieved via executing them i.e. to fully evaluate move 13, we need to execute all posible depth 14 moves;
+Furthermore we want to evaluate the cutoff position not only via heuristic but whether the it's mate/stalemate; the mate/stalemate evaluation, requires generating all valid moves for the position reached. That means that cutting off at semi-move 13, will need to evaluate position resulting of executing move 13. That evaluation includes validating all moves available at this position, which is achieved via executing them i.e. to fully evaluate move 13, we need to execute all possible depth 14 moves;
 If we generate the new lvl 14 nodes during evaluation of a lvl 13 move, and we have to execute lvl 14 moves to check for mate/stalemate, there is no case of a node with expansions for naive moves; should not create nodes for lvl 14 at the time of evaluating cutoff=13
 
-every node needs to pass gamestate check, because game can hit mate/stalemate in the nodes between root and cutoff
+every node needs to pass game state check, because game can hit mate/stalemate in the nodes between root and cutoff
 
 
-The mem usage for cutoff node @ depth 3 is about 1KB per avaible subsequent move i.e 
+The mem usage for cutoff node @ depth 3 is about 1KB per available subsequent move i.e
 cutoff subnodes    : 28
 cutoff subnodes mem: 26056 bytes
-Evaluating to depth 3, actualy expands and creates depth 4, and the total number of nodes is the vicinity of 666838, which on 64bit system took about 450MB. If going to next level adds 30 nodes on average, we are looking at ~15GB mem usage, which is crazy.
-The nodes should be shrunk! How are the nodes to be reused when next move is to be generated? Due to the opponent move, we will be expanding from a node that is on a node of depth 2 in the existing tree. We will need to carry out the entire recursion anyway to properly compare all position at the new depth. The cost that could be saved is determining expansions and validating the moves in corresponding to nodes in the current tree. The cost of the nodes is in great part storeing the Move objects, which contain at least one Piece object. The core of the Move is ability to provide "actions" which are instructions for executing a move. They make calls to add_piece, relocate_piece, remove_piece with the relevant arguments:
+Evaluating to depth 3, actually expands and creates depth 4, and the total number of nodes is the vicinity of 666838, which on 64bit system took about 450MB. If going to next level adds 30 nodes on average, we are looking at ~15GB mem usage, which is crazy.
+The nodes should be shrunk! How are the nodes to be reused when next move is to be generated? Due to the opponent move, we will be expanding from a node that is on a node of depth 2 in the existing tree. We will need to carry out the entire recursion anyway to properly compare all position at the new depth. The cost that could be saved is determining expansions and validating the moves in corresponding to nodes in the current tree. The cost of the nodes is in great part storing the Move objects, which contain at least one Piece object. The core of the Move is ability to provide "actions" which are instructions for executing a move. They make calls to add_piece, relocate_piece, remove_piece with the relevant arguments:
 ```
 	actions [ {'act':'remove_piece', 'args':[self.taken]},
     	      {'act':'relocate_piece', 'args':[self.piece, self.destination]}, ]
 ```
-in paralel the undo actions are produced:
+in parallel the undo actions are produced:
 ```
 	undo    [ {'act':'relocate_piece', 'args':[self.destination, self.piece.location]},
     	      {'act':'add_piece', 'args':[self.taken]}, ]
 ```
-These constructs rely on Piece objects stored in the Move, however the methods add_piece, relocate_piece, remove_piece also suport arguments in the form of strings indicating positions in the board.state.
+These constructs rely on Piece objects stored in the Move, however the methods add_piece, relocate_piece, remove_piece also support arguments in the form of strings indicating positions in the board.state.
 If a method that generates actions and undo with string params is implemented, the Nodes could store only that information instead the entire Move object
 
 Changed the structure of the actions structure:
@@ -99,3 +99,20 @@ Changed the structure of the actions structure:
             ('add_piece', [self.taken.designation+'@'+self.taken.location])]
 ```
 Because of that, and because no validation will be required during execution, the methods execute_move, process_actions and undo_actions - should have an alternative implementation utilizing the "flat" actions structure
+However 1. determine_game_state pulls moves from Board.naive_moves, which are of type Move. 2. pre-defined moves from the chesstree, which would be flat type, so this will result in mixing flat and non flat execute_move methods. This can be resolved in 2 ways:
+ a) make duplicate determine_game_state, that provides flat instead of Move type
+ b) make a check within execute_move method, which of the two types of data is provided, and process accordingly
+
+Actually there is c) that uses determine_game_state to pull type Move, but uses Move.flat_actions() to save in the Node
+NOTE:
+ With using flat_execute moves, there are few tasks to be done alongside the method call:
+  - the method returns 'data' to be appended to the undo_actions
+  - the `board.white_checked` & `board.black_checked` should be updated by `board.update_incheck_variable_state(<turning color>)`
+  - both execute and undo processes call the same `process_flat_actions` method
+
+
+game.history takes Moves, and info from Nodes has only move_actions !!!  => the gamestate check will error. Options:
+  XXXa) flatten historyXXX - wont work, because hist check relies on move.type_ for the e.p moves
+ b) new flat format
+ c) rework history to contain be individual variables for each of the 4 castling moves, and just the prior move for the en passant
+   - this may be tricky for handling undo

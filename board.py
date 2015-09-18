@@ -423,6 +423,7 @@ class Board():
         # --- end of invalidation ---
 
         undo.append({'act':'data', 'args':[self.white_checked, self.black_checked]})
+        # refresh being in check state
         if move.piece.color == 'w':
             self.black_checked = self.is_in_check(self.black_king.location, 'w')
         else:
@@ -433,8 +434,28 @@ class Board():
     def undo_actions(self, actions):
         self.process_actions(actions)
 
-    Because of that, and because no validation will be required during execution, the methods execute_move, process_actions and
-     undo_actions - should have an alternative implementation utilizing the "flat" actions structure
+
+    def reset_incheck(self, white_is_in_check, black_is_in_check):
+        self.white_checked = white_is_in_check
+        self.black_checked = black_is_in_check
+
+    def process_flat_actions(self, actions):
+        for act in actions:
+            method = act[0]
+            arguments = act[1]
+            getattr(self, method)(*arguments)
+
+    def flat_execute(self, move_actions):
+        self.process_flat_actions(move_actions)
+        old_data_to_push_into_undo = ('reset_incheck', [self.white_checked, self.black_checked])
+        return old_data_to_push_into_undo
+
+    def update_incheck_variable_state(self, color):
+        if color == 'w':
+            self.black_checked = self.is_in_check(self.black_king.location, 'w')
+        else:
+            self.white_checked = self.is_in_check(self.white_king.location, 'b')
+
 
     def validate_move(self, move):
         # assumes the move in question is executed onto board state, but values of attributes like 'self.white_checked' reflect the state prior the move

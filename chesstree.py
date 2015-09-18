@@ -1,12 +1,13 @@
 class Node:
 
-    def __init__(self, path, move, depth_level, color):
+    def __init__(self, notation, path, depth_level, color, move_actions=[], undo_actions=[]):
         global nodecount
         nodecount += 1
         # self.predecessor = predecessor
-        self.move = move
-        self.path = path + '|' + move.notation
-        # self.move_chain = path # this is used only for analysis 
+        self.move_actions = move_actions
+        self.undo_actions = undo_actions
+        self.path = path + '|' + notation
+        # self.move_chain = path # this is used only for analysis
         # self.move_chain += move.notation + '|'
         self.depth_level = depth_level
         self.color = color
@@ -42,10 +43,10 @@ class AI:
         # this method is called for nodes that are already executed onto the game object
         game_state = self.game.determine_game_state() # returns 'mate', 'stalemate', or list of all valid expansions
         if isinstance(game_state, list): # create new nodes
-            node.subnodes = [  Node(node.path, z, node.depth_level + 1, not node.color) for z in game_state ]
+            node.subnodes = [  Node(node.path, z.flat_actions(), node.depth_level + 1, not node.color) for z in game_state ]
 
     def score_node(self, node):
-        undo = self.game.board.execute_move(node.move)
+        undo = self.game.board.execute_move(*node.move)
         game_state = self.game.determine_game_state()
         hash_ = ''.join(self.game.board.hashstate)
         try:
@@ -55,9 +56,9 @@ class AI:
             self.score_cache[hash_] = score
 
         if isinstance(game_state, list): # create new nodes
-            node.subnodes = [ Node(node.path, z, node.depth_level + 1, not node.color) for z in game_state ]
+            node.subnodes = [ Node(node.path, z.flat_actions(), node.depth_level + 1, not node.color) for z in game_state ]
 
-        self.game.board.undo_actions(undo)
+        self.game.board.process_flat_actions(undo)
         return score
 
     def evaluator(self, game_state, board):
@@ -84,8 +85,8 @@ class AI:
             else:
                 oposite_color = 'w'
                 color_optimum = min
-            root_node = Node('', MoveMockup(), 0, oposite_color)
-            root_node.subnodes = [ Node(root_node.path, z, root_node.depth_level + 1, by_color) for z in game_state ]
+            root_node = Node('', '', 0, oposite_color)
+            root_node.subnodes = [ Node(z.notation, root_node.path, root_node.depth_level + 1, by_color, *z.flat_actions()) for z in game_state ]
             expansion_scores = []
             for sub_node in root_node.subnodes:
                 sub_node_score = self.evaluate(sub_node, cutoff_depth)
@@ -96,7 +97,7 @@ class AI:
                 # print('score_cache KB sz', asizeof.asizeof(self.score_cache)//1024)
             optimum = color_optimum(expansion_scores, key=lambda x: x.value)
 
-            print('root node KB sz', asizeof.asizeof(root_node)//1024)
+            print('final root node size (KB)', asizeof.asizeof(root_node)//1024)
             return optimum
 
     def evaluate(self, node, cutoff_depth, upper_level_optimum=None):  # cutoff_depth absolute count of (semi-)turns
@@ -129,13 +130,15 @@ class AI:
             return node.score
         else:
             # PLACE GAME IN THE RELEVANT NODE
-            if node.move: # false in the case of mockup Node
-                undo = self.game.board.execute_move(node.move)
+            if node.move_actions: # false in the case of mockup Node
+                undo = self.game.board.flat_execute(node.move_actions)
+                node.undo_actions.append(undo)
+                self.game.board.update_incheck_variable_state(self.game.turnning_player.color)
                 if self.game.turnning_player == self.game.whites_player:
                     self.game.turnning_player = self.game.blacks_player
                 else:
                     self.game.turnning_player = self.game.whites_player
-                self.game.history.append(node.move)
+                self.game.history.append(node.move_actions)
                 self.game.backtrack.append(''.join(self.game.board.hashstate))
 
             if len(node.subnodes) == 0:
