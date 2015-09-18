@@ -1,6 +1,5 @@
 class Move():
-
-    def __init__(self, piece, type_, destination, notation, extra = None):
+    def __init__(self, piece, type_, destination, notation, extra=None):
         self.piece = piece
         self.origin = piece.location
         self.type_ = type_
@@ -23,8 +22,8 @@ class Move():
         return self.notation
 
     def actions(self):
-        actions=[]
-        undo=[]
+        actions = []
+        undo = []
 
         if self.type_ == 'm' or self.type_ == 'm2' or self.type_ == 'mk':
             actions.append({'act':'relocate_piece', 'args':[self.piece, self.destination]})
@@ -52,7 +51,7 @@ class Move():
                 actions.append({'act':'relocate_piece', 'args':[self.piece, self.destination]})
                 undo.append({'act':'relocate_piece', 'args':[self.destination, self.piece.location]})
                 undo.append({'act':'relocate_piece', 'args':[self.catsling_rook, 'h'+self.piece.location[1]]})
-            else: #O-O-O
+            else:  # O-O-O
                 actions.append({'act':'relocate_piece', 'args':[self.catsling_rook, 'd'+self.piece.location[1]]})
                 actions.append({'act':'relocate_piece', 'args':[self.piece, self.destination]})
                 undo.append({'act':'relocate_piece', 'args':[self.destination, self.piece.location]})
@@ -61,12 +60,12 @@ class Move():
         return actions, undo
 
     def flat_actions(self):
-        actions=[]
-        undo=[]
+        actions = []
+        undo = []
 
         if self.type_ == 'm' or self.type_ == 'm2' or self.type_ == 'mk':
             actions = [('relocate_piece', [self.origin, self.destination])]
-            undo    = [('relocate_piece', [self.destination, self.origin])]
+            undo = [('relocate_piece', [self.destination, self.origin])]
         elif self.type_ == 't' or self.type_ == 'e':
             actions = [('remove_piece', [self.taken.location]),
                        ('relocate_piece', [self.origin, self.destination])]
@@ -90,7 +89,7 @@ class Move():
                            ('relocate_piece', [self.origin, self.destination])]
                 undo = [('relocate_piece', [self.destination, self.origin]),
                         ('relocate_piece', ['f'+self.origin[1], 'h'+self.origin[1]])]
-            else: #O-O-O
+            else:  # O-O-O
                 actions = [('relocate_piece', [self.catsling_rook.location, 'd'+self.origin[1]]),
                            ('relocate_piece', [self.origin, self.destination])]
                 undo = [('relocate_piece', [self.destination, self.origin]),

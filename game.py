@@ -38,7 +38,8 @@ class Game():
         self.turn_count = 1
         self.undo_stack = []
         # self.full_notation = '' # quite as the values in hist, but with the count and # + ? !
-        self.history = []         # to check past Moves of King or Rooks or enpassant setup
+        self.history = []
+        self.special_moves = [[False, False, False, False, '']]         # to check past Moves of King or Rooks or enpassant setup
         self.backtrack = []       # past positions - to check for repetition draw
         self.score_cache = {}
         self.state = 'init'
@@ -86,25 +87,51 @@ class Game():
                 return 'stalemate'
         else:
             # repeated moves
-            if len(self.history) > 0 and self.backtrack.count(self.backtrack[-1]) >= 3:
+            if len(self.backtrack) > 0 and self.backtrack.count(self.backtrack[-1]) >= 3:
                 return 'stalemate'
 
         return result
 
-    def validate_against_history(self, move):
+    def record_history(self, move):
+        history_dependant_move_state = [ self.special_moves[-1][0] or move.origin in ['a8', 'e8'],
+                                         self.special_moves[-1][1] or move.origin in ['e8', 'h8'],
+                                         self.special_moves[-1][2] or move.origin in ['a1', 'e1'],
+                                         self.special_moves[-1][3] or move.origin in ['e1', 'h1'],
+                                         int(move.type_ == 'm2')*move.destination[0]
+                                       ]
+        self.special_moves.append(history_dependant_move_state)
+        self.history.append(move)
+        self.backtrack.append(self.board.hashit())
+
+    def validate_special_moves(self, move):
         if move.type_ == 'c':
-            color_relevant_history_moves = [ z for z in self.history if z.piece.color == move.piece.color ]
-            nullifying_moves = [ z for z in color_relevant_history_moves if z.origin in ['a1', 'e1', 'h1', 'a8', 'e8', 'h8'] ]
-            return len(nullifying_moves) == 0
+            if move.catsling_rook.location == 'a8':
+                return not self.special_moves[-1][0]        # because the field being True indicates move is no longer valid
+            elif move.catsling_rook.location == 'h8':
+                return not self.special_moves[-1][1]
+            elif move.catsling_rook.location == 'a1':
+                return not self.special_moves[-1][2]
+            elif move.catsling_rook.location == 'h1':
+                return not self.special_moves[-1][3]
         if move.type_ == 'e':
-            return len(self.history) == 0 or (self.history[-1].type_ == 'm2' and self.history[-1].destination[0] == move.destination[0])
+             return self.special_moves[-1][4] == move.destination[0]
 
         return True
+
+    # def validate_against_history(self, move):
+    #     if move.type_ == 'c':
+    #         color_relevant_history_moves = [ z for z in self.history if z.piece.color == move.piece.color ]
+    #         nullifying_moves = [ z for z in color_relevant_history_moves if z.origin in ['a1', 'e1', 'h1', 'a8', 'e8', 'h8'] ]
+    #         return len(nullifying_moves) == 0
+    #     if move.type_ == 'e':
+    #         return len(self.history) == 0 or (self.history[-1].type_ == 'm2' and self.history[-1].destination[0] == move.destination[0])
+
+    #     return True
 
     def valid_moves_of_piece_at(self, location):
         result = []
         for move in self.board.naive_moves(self.board.state[location]):
-            if self.validate_against_history(move):
+            if self.validate_special_moves(move):
                 undo = self.board.execute_move(move)
                 if undo:
                     result.append(move)
@@ -116,11 +143,13 @@ class Game():
         undo = self.undo_stack.pop()
         self.board.undo_actions(undo)
         temp = self.history.pop()
+        temp = self.special_moves.pop()
         self.backtrack.pop()
         # undo last own move
         undo = self.undo_stack.pop()
         self.board.undo_actions(undo)
         temp = self.history.pop()
+        temp = self.special_moves.pop()
         self.backtrack.pop()
         # repopulate the state, so that validation check passes
         self.state = self.determine_game_state()
@@ -151,11 +180,10 @@ class Game():
                 self.state = valid_input
             else:
                 undo = self.board.execute_move(valid_input)
-                self.backtrack.append(self.board.hashit())
+                self.record_history(valid_input)   # also records backtrack
                 self.undo_stack.append(undo)
                 self.whites_player.is_in_check = self.board.white_checked
                 self.blacks_player.is_in_check = self.board.black_checked
-                self.history.append(valid_input)
                 if self.turnning_player == self.whites_player:
                     self.turnning_player = self.blacks_player
                 else:
