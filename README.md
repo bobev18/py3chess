@@ -126,3 +126,8 @@ The switch of the history validation to utilize `special_moves` instead of `hist
 
 
 noticed that python process hit 872 MB mem use (in task manager) while final size for root node reached 468 MB
+
+going to depth 4 is absurd - mem usage hit over 20GB
+I think the previous depth 4 results were captured without having the check gamestate create depth 5 nodes without evaluating them
+I could probably reduce the tree, by keeping only the best candidate depth 1 branch. Since AI cant choose non optimal score, an inferior branch can be cut.
+On deeper branches we cannot cut oponent branches, but on any own branches we can apply the same strategy

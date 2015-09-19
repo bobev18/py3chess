@@ -99,13 +99,13 @@ class AI:
             for sub_node in root_node.subnodes:
                 sub_node_score = self.evaluate(sub_node, cutoff_depth)
                 expansion_scores.append(sub_node_score)
-                print('node  count after move', sub_node.notation, ':', nodecount)
-                print('root_node KB size', asizeof.asizeof(root_node)//1024)
-                print('game      KB size', asizeof.asizeof(self.game)//1024)
-                print('score_cache KB sz', asizeof.asizeof(self.score_cache)//1024)
+                print('node  count after move #',root_node.subnodes.index(sub_node), '(', sub_node.notation, ') :', nodecount)
+                # print('root_node KB size', asizeof.asizeof(root_node)//1024)
+                # print('game      KB size', asizeof.asizeof(self.game)//1024)
+                # print('score_cache KB sz', asizeof.asizeof(self.score_cache)//1024)
             optimum = color_optimum(expansion_scores, key=lambda x: x.value)
 
-            print('final root node size (KB)', asizeof.asizeof(root_node)//1024)
+            # print('final root node size (KB)', asizeof.asizeof(root_node)//1024)
             return optimum
 
     def evaluate(self, node, cutoff_depth, upper_level_optimum=None):  # cutoff_depth absolute count of (semi-)turns
@@ -115,28 +115,22 @@ class AI:
 
         if node.depth_level == cutoff_depth:
             node.score = Score(self.score_node(node), node.path)
-            print('cutoff node:::', node.notation)
-            print('cutoff node    ', asizeof.asizeof(node))
-            mas = asizeof.asizeof(node.move_actions)
-            uas = asizeof.asizeof(node.undo_actions)
-            mns = asizeof.asizeof(node.notation)
-            print('cutoff move    ', mas + uas + mns)
-            print('cutoff move actions  ', mas, '     ', node.move_actions)
-            print('cutoff move undo acts', uas, '     ', node.undo_actions)
-            print('cutoff move notation ', mns)
-            # print('cutoff move destin   ', asizeof.asizeof(node.move.destination))
-            # print('cutoff move notati   ', asizeof.asizeof(node.move.notation))
-            # print('cutoff move promo2   ', asizeof.asizeof(node.move.promote_to))
-            # print('cutoff move taken    ', asizeof.asizeof(node.move.taken))
-            # print('cutoff move cast_r   ', asizeof.asizeof(node.move.catsling_rook))
-
-            print('cutoff path    ', asizeof.asizeof(node.path))
-            print('cutoff depth   ', asizeof.asizeof(node.depth_level))
-            print('cutoff color   ', asizeof.asizeof(node.color))
-            print('cutoff optimum ', asizeof.asizeof(node.optimum))
-            print('cutoff len subs', len(node.subnodes))
-            print('cutoff subnodes', asizeof.asizeof(node.subnodes))
-            print('cutoff score   ', asizeof.asizeof(node.score))
+            # print('cutoff node:::', node.notation)
+            # print('cutoff node    ', asizeof.asizeof(node))
+            # mas = asizeof.asizeof(node.move_actions)
+            # uas = asizeof.asizeof(node.undo_actions)
+            # mns = asizeof.asizeof(node.notation)
+            # print('cutoff move    ', mas + uas + mns)
+            # print('cutoff move actions  ', mas, '     ', node.move_actions)
+            # print('cutoff move undo acts', uas, '     ', node.undo_actions)
+            # print('cutoff move notation ', mns)
+            # print('cutoff path    ', asizeof.asizeof(node.path))
+            # print('cutoff depth   ', asizeof.asizeof(node.depth_level))
+            # print('cutoff color   ', asizeof.asizeof(node.color))
+            # print('cutoff optimum ', asizeof.asizeof(node.optimum))
+            # print('cutoff len subs', len(node.subnodes))
+            # print('cutoff subnodes', asizeof.asizeof(node.subnodes))
+            # print('cutoff score   ', asizeof.asizeof(node.score))
             # print()
             return node.score
         else:
@@ -218,8 +212,8 @@ test_game = Game(board_position=position)
 test_ai = AI(4, test_game) # this cutoff value is not used, but the one passed in the evaluate method
 
 
-# cProfile.run('test = test_ai.evaluate_position("w", 3)')
-test = test_ai.evaluate_position("w", 3)
+# test = test_ai.evaluate_position("w", 4)
+cProfile.run('test = test_ai.evaluate_position("w", 4)')
 print(test_game.board)
 print('optimal move with score', test.value, 'and move path:', test.optimal_cutoff_path)
 

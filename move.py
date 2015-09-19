@@ -70,10 +70,12 @@ class Move():
             actions = [self.taken.location, None, self.origin, self.destination, None, None, None, None, None, None]
             undo = [None, None, None, None, self.destination, self.origin, self.taken.designation+'@'+self.taken.location, None, None, None]
         elif self.type_ == 'p':
-            actions = [self.origin, None, None, None, None, None, self.promote_to.designation+'@'+self.destination, None, None, None]
+            promotion = self.piece.color + self.promote_to.lower() + '@' + self.destination
+            actions = [self.origin, None, None, None, None, None, promotion, None, None, None]
             undo = [self.destination, None, None, None, None, None, self.piece.designation+'@'+self.origin, None, None, None]
         elif self.type_ == '+':
-            actions = [self.origin, self.taken.location, None, None, None, None, self.promote_to.designation+'@'+self.destination, None, None, None]
+            promotion = self.piece.color + self.promote_to.lower() + '@' + self.destination
+            actions = [self.origin, self.taken.location, None, None, None, None, promotion, None, None, None]
             undo = [self.destination, None, None, None, None, None, self.piece.designation+'@'+self.origin, self.taken.designation+'@'+self.taken.location, None, None]
         elif self.type_ == 'c':
             if self.notation == 'O-O':
