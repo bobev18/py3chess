@@ -120,7 +120,7 @@ game.history takes Moves, and info from Nodes has only move_actions !!!  => the 
 
 Possible bugs :
 1. original `validate_against_history` uses `return len(nullifying_moves) == 0` which means moving either rook invalidates both castling moves
-
+2. node.optimum is based on node.color, but is actually used to compare evaluations of instance node.subnodes ==> needs to be inversed
 
 The switch of the history validation to utilize `special_moves` instead of `history` attribute still left move as argument of the record_history which beats the purpose of the change. The record_history needs to operate with flat_actions as input argument :(
 
