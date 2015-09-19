@@ -1,11 +1,14 @@
 class Node:
 
     def __init__(self, notation, path, depth_level, color, move_actions=[], undo_actions=[]):
+        # print('ma', move_actions)
+        # print('ua', undo_actions)
         global nodecount
         nodecount += 1
         # self.predecessor = predecessor
         self.move_actions = move_actions
         self.undo_actions = undo_actions
+        self.notation = notation
         self.path = path + '|' + notation
         # self.move_chain = path # this is used only for analysis
         # self.move_chain += move.notation + '|'
@@ -43,10 +46,14 @@ class AI:
         # this method is called for nodes that are already executed onto the game object
         game_state = self.game.determine_game_state() # returns 'mate', 'stalemate', or list of all valid expansions
         if isinstance(game_state, list): # create new nodes
-            node.subnodes = [  Node(node.path, z.flat_actions(), node.depth_level + 1, not node.color) for z in game_state ]
+            node.subnodes = [ Node(z.notation, node.path, node.depth_level + 1, not node.color, *z.flat_actions()) for z in game_state ]
 
     def score_node(self, node):
-        undo = self.game.board.execute_move(*node.move)
+        # print('node', node.notation)
+        # print('fla')
+        undo = self.game.board.flat_execute(node.move_actions)
+        node.undo_actions.append(undo)
+        self.game.board.update_incheck_variable_state(node.color*'w')
         game_state = self.game.determine_game_state()
         hash_ = ''.join(self.game.board.hashstate)
         try:
@@ -56,9 +63,9 @@ class AI:
             self.score_cache[hash_] = score
 
         if isinstance(game_state, list): # create new nodes
-            node.subnodes = [ Node(node.path, z.flat_actions(), node.depth_level + 1, not node.color) for z in game_state ]
+            node.subnodes = [ Node(z.notation, node.path, node.depth_level + 1, not node.color, *z.flat_actions()) for z in game_state ]
 
-        self.game.board.process_flat_actions(undo)
+        self.game.board.process_flat_actions(node.undo_actions)
         return score
 
     def evaluator(self, game_state, board):
@@ -91,10 +98,10 @@ class AI:
             for sub_node in root_node.subnodes:
                 sub_node_score = self.evaluate(sub_node, cutoff_depth)
                 expansion_scores.append(sub_node_score)
-                # print('node  count after move', sub_node.move, ':', nodecount)
-                # print('root_node KB size', asizeof.asizeof(root_node)//1024)
-                # print('game      KB size', asizeof.asizeof(self.game)//1024)
-                # print('score_cache KB sz', asizeof.asizeof(self.score_cache)//1024)
+                print('node  count after move', sub_node.notation, ':', nodecount)
+                print('root_node KB size', asizeof.asizeof(root_node)//1024)
+                print('game      KB size', asizeof.asizeof(self.game)//1024)
+                print('score_cache KB sz', asizeof.asizeof(self.score_cache)//1024)
             optimum = color_optimum(expansion_scores, key=lambda x: x.value)
 
             print('final root node size (KB)', asizeof.asizeof(root_node)//1024)
@@ -107,39 +114,43 @@ class AI:
 
         if node.depth_level == cutoff_depth:
             node.score = Score(self.score_node(node), node.path)
-            # print('cutoff node:::', node.move.notation)
-            # print('cutoff node    ', asizeof.asizeof(node))
-            # print('cutoff move    ', asizeof.asizeof(node.move))
-            # print('cutoff move piece    ', asizeof.asizeof(node.move.piece))
-            # print('cutoff move origin   ', asizeof.asizeof(node.move.origin))
-            # print('cutoff move type     ', asizeof.asizeof(node.move.type_))
+            print('cutoff node:::', node.notation)
+            print('cutoff node    ', asizeof.asizeof(node))
+            mas = asizeof.asizeof(node.move_actions)
+            uas = asizeof.asizeof(node.undo_actions)
+            mns = asizeof.asizeof(node.notation)
+            print('cutoff move    ', mas + uas + mns)
+            print('cutoff move actions  ', mas, '     ', node.move_actions)
+            print('cutoff move undo acts', uas, '     ', node.undo_actions)
+            print('cutoff move notation ', mns)
             # print('cutoff move destin   ', asizeof.asizeof(node.move.destination))
             # print('cutoff move notati   ', asizeof.asizeof(node.move.notation))
             # print('cutoff move promo2   ', asizeof.asizeof(node.move.promote_to))
             # print('cutoff move taken    ', asizeof.asizeof(node.move.taken))
             # print('cutoff move cast_r   ', asizeof.asizeof(node.move.catsling_rook))
 
-            # print('cutoff path    ', asizeof.asizeof(node.path))
-            # print('cutoff depth   ', asizeof.asizeof(node.depth_level))
-            # print('cutoff color   ', asizeof.asizeof(node.color))
-            # print('cutoff optimum ', asizeof.asizeof(node.optimum))
-            # print('cutoff len subs', len(node.subnodes))
-            # print('cutoff subnodes', asizeof.asizeof(node.subnodes))
-            # print('cutoff score   ', asizeof.asizeof(node.score))
+            print('cutoff path    ', asizeof.asizeof(node.path))
+            print('cutoff depth   ', asizeof.asizeof(node.depth_level))
+            print('cutoff color   ', asizeof.asizeof(node.color))
+            print('cutoff optimum ', asizeof.asizeof(node.optimum))
+            print('cutoff len subs', len(node.subnodes))
+            print('cutoff subnodes', asizeof.asizeof(node.subnodes))
+            print('cutoff score   ', asizeof.asizeof(node.score))
             # print()
             return node.score
         else:
             # PLACE GAME IN THE RELEVANT NODE
-            if node.move_actions: # false in the case of mockup Node
-                undo = self.game.board.flat_execute(node.move_actions)
-                node.undo_actions.append(undo)
-                self.game.board.update_incheck_variable_state(self.game.turnning_player.color)
-                if self.game.turnning_player == self.game.whites_player:
-                    self.game.turnning_player = self.game.blacks_player
-                else:
-                    self.game.turnning_player = self.game.whites_player
-                self.game.history.append(node.move_actions)
-                self.game.backtrack.append(''.join(self.game.board.hashstate))
+            # if node.move_actions: # false in the case of root Node, but evaluare is called for subnodes, never for root
+            undo = self.game.board.flat_execute(node.move_actions)
+            node.undo_actions.append(undo)
+            self.game.board.update_incheck_variable_state(self.game.turnning_player.color)
+            if self.game.turnning_player == self.game.whites_player:
+                self.game.turnning_player = self.game.blacks_player
+            else:
+                self.game.turnning_player = self.game.whites_player
+            self.game.record_flat_history(node.move_actions, node.notation)
+            # self.game.history.append(node.move_actions)
+            # self.game.backtrack.append(''.join(self.game.board.hashstate))
 
             if len(node.subnodes) == 0:
                 self.expand_node(node)
@@ -164,14 +175,15 @@ class AI:
             # print(' .'*node.depth_level, str(node.move).ljust(6), ':', local_optimum, '      ', self.game.history)
 
             # RESTORE GAME TO PREDECESOR NODE
-            if node.move:
-                self.game.board.undo_actions(undo)
-                if self.game.turnning_player == self.game.whites_player:
-                    self.game.turnning_player = self.game.blacks_player
-                else:
-                    self.game.turnning_player = self.game.whites_player
-                self.game.history.pop()
-                self.game.backtrack.pop()
+            # if node.move:
+            self.game.board.process_flat_actions(node.undo_actions)
+            if self.game.turnning_player == self.game.whites_player:
+                self.game.turnning_player = self.game.blacks_player
+            else:
+                self.game.turnning_player = self.game.whites_player
+            # self.game.history.pop()   # flat recording ignores history, and it's no longer part of validations
+            self.game.special_moves.pop()
+            self.game.backtrack.pop()
 
             return local_optimum
 

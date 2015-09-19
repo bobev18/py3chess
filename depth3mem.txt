@@ -108,6 +108,8 @@ node count after move Rc1 : 666861
 root_node KB size 451747
 game      KB size 23
 score_cache KB sz 2308
+>>>>>> after removing Move obj from Node
+final root node size (KB) 587089
 
 
 

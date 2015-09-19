@@ -116,3 +116,10 @@ game.history takes Moves, and info from Nodes has only move_actions !!!  => the 
  b) new flat format
  c) rework history to contain be individual variables for each of the 4 castling moves, and just the prior move for the en passant
    - this may be tricky for handling undo
+
+
+Possible bugs :
+1. original `validate_against_history` uses `return len(nullifying_moves) == 0` which means moving either rook invalidates both castling moves
+
+
+The switch of the history validation to utilize `special_moves` instead of `history` attribute still left move as argument of the record_history which beats the purpose of the change. The record_history needs to operate with flat_actions as input argument :(

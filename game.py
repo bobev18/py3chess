@@ -103,6 +103,39 @@ class Game():
         self.history.append(move)
         self.backtrack.append(self.board.hashit())
 
+    def record_flat_history(self, flat_actions, notation):
+        # we need to find the number of "relocate" actions:
+        relocations = [z for z in flat_actions if z[0] == 'relocate_piece']
+        if len(relocations) == 0:
+            # only promotion moves lack relocation action, and they dont affect the special_moves, so we return them unaffected:
+            history_dependant_move_state = self.special_moves[-1].copy()
+            history_dependant_move_state[-1] = ''   # in case last move was allowing en passant
+        elif len(relocations) == 1:
+            # this case needs further checks
+            # [('relocate_piece', [self.origin, self.destination])]
+            relocation_details = relocations[0][1]
+            origin = relocation_details[0]
+            destination = relocation_details[1]
+            m2_type = int(notation in ['a4', 'b4', 'c4', 'd4', 'e4', 'f4', 'g4', 'h4', 'a5', 'b5', 'c5', 'd5', 'e5', 'f5', 'g5', 'h5'])
+            history_dependant_move_state = [ self.special_moves[-1][0] or origin in ['a8', 'e8'],
+                                             self.special_moves[-1][1] or origin in ['e8', 'h8'],
+                                             self.special_moves[-1][2] or origin in ['a1', 'e1'],
+                                             self.special_moves[-1][3] or origin in ['e1', 'h1'],
+                                             m2_type*destination[0]
+                                           ]
+        else:
+            # only castling involves two relocations. this first one should the one for the rook, but all we need to know is the row
+            relocation_details = relocations[0][1]
+            origin_row = relocation_details[0][1]
+            if origin_row == '1':
+                history_dependant_move_state = [self.special_moves[-1][0], self.special_moves[-1][1], True, True, '']
+            else:
+                history_dependant_move_state = [True, True, self.special_moves[-1][2], self.special_moves[-1][3], '']
+
+        self.special_moves.append(history_dependant_move_state)
+        # self.history.append(move)
+        self.backtrack.append(self.board.hashit())
+
     def validate_special_moves(self, move):
         if move.type_ == 'c':
             if move.catsling_rook.location == 'a8':
