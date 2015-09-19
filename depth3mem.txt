@@ -94,11 +94,11 @@ nodecount after move Nc5 : 663789
 root_node KB size 370125
 game      KB size 12
 score_cache KB sz 1615
-nodecount after move Nd6 : 666798
+nodecount after move Nd6 : 666798          <<<<<< 32bit result
 root_node KB size 371802
 game      KB size 12
 score_cache KB sz 1616
->>>>>> this is with score as value instead of dict but on 64bit py???
+>>>>>> this is with node.score as value instead of dict but on 64bit py???
 nodecount after move h4 : 666838
 root_node KB size 488902
 game      KB size 23
@@ -110,6 +110,14 @@ game      KB size 23
 score_cache KB sz 2308
 >>>>>> after removing Move obj from Node
 final root node size (KB) 587089
+>>>>>> after making flat_actions a list
+final root node size (KB) 479588
+>>>>>> after making flat_actions a list and removing node.score
+node  count after move c4 : 666840
+root_node KB size 479664
+game      KB size 24
+score_cache KB sz 2308
+final root node size (KB) 479664
 
 
 

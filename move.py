@@ -62,38 +62,26 @@ class Move():
     def flat_actions(self):
         actions = []
         undo = []
-
+        # DDRRAAI with R & I having 2 args, and the rest 1 arg, so [D1, D2, R1a, R1b, R2a, R2b, A1, A2, Ia, Ib]
         if self.type_ == 'm' or self.type_ == 'm2' or self.type_ == 'mk':
-            actions = [('relocate_piece', [self.origin, self.destination])]
-            undo = [('relocate_piece', [self.destination, self.origin])]
+            actions = [None, None, self.origin, self.destination, None, None, None, None, None, None]
+            undo = [None, None, self.destination, self.origin, None, None, None, None, None, None]
         elif self.type_ == 't' or self.type_ == 'e':
-            actions = [('remove_piece', [self.taken.location]),
-                       ('relocate_piece', [self.origin, self.destination])]
-            undo = [('relocate_piece', [self.destination, self.origin]),
-                    ('add_piece', [self.taken.designation+'@'+self.taken.location])]
+            actions = [self.taken.location, None, self.origin, self.destination, None, None, None, None, None, None]
+            undo = [None, None, None, None, self.destination, self.origin, self.taken.designation+'@'+self.taken.location, None, None, None]
         elif self.type_ == 'p':
-            actions = [('add_piece', [self.piece.color, self.promote_to.lower(), self.destination]),
-                       ('remove_piece', [self.origin])]
-            undo = [('add_piece', [self.piece.designation+'@'+self.piece.location]),
-                    ('remove_piece', [self.destination])]
+            actions = [self.origin, None, None, None, None, None, self.promote_to.designation+'@'+self.destination, None, None, None]
+            undo = [self.destination, None, None, None, None, None, self.piece.designation+'@'+self.origin, None, None, None]
         elif self.type_ == '+':
-            actions = [('remove_piece', [self.taken.location]),
-                       ('add_piece', [self.piece.color, self.promote_to.lower(), self.destination]),
-                       ('remove_piece',[self.origin])]
-            undo = [('add_piece', [self.piece.designation+'@'+self.piece.location]),
-                    ('remove_piece', [self.destination]),
-                    ('add_piece', [self.taken.designation+'@'+self.taken.location])]
+            actions = [self.origin, self.taken.location, None, None, None, None, self.promote_to.designation+'@'+self.destination, None, None, None]
+            undo = [self.destination, None, None, None, None, None, self.piece.designation+'@'+self.origin, self.taken.designation+'@'+self.taken.location, None, None]
         elif self.type_ == 'c':
             if self.notation == 'O-O':
-                actions = [('relocate_piece', [self.catsling_rook.location, 'f'+self.origin[1]]),
-                           ('relocate_piece', [self.origin, self.destination])]
-                undo = [('relocate_piece', [self.destination, self.origin]),
-                        ('relocate_piece', ['f'+self.origin[1], 'h'+self.origin[1]])]
+                actions = [None, None, self.catsling_rook.location, 'f'+self.origin[1], self.origin, self.destination, None, None, None, None]
+                undo = [None, None, self.destination, self.origin, 'f'+self.origin[1], self.catsling_rook.location, None, None, None, None]
             else:  # O-O-O
-                actions = [('relocate_piece', [self.catsling_rook.location, 'd'+self.origin[1]]),
-                           ('relocate_piece', [self.origin, self.destination])]
-                undo = [('relocate_piece', [self.destination, self.origin]),
-                        ('relocate_piece', ['d'+self.origin[1], 'a'+self.origin[1]])]
+                actions = [None, None, self.catsling_rook.location, 'd'+self.origin[1], self.origin, self.destination, None, None, None, None]
+                undo = [None, None, self.destination, self.origin, 'd'+self.origin[1], self.catsling_rook.location, None, None, None, None]
 
         return actions, undo
 

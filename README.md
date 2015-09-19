@@ -123,3 +123,6 @@ Possible bugs :
 
 
 The switch of the history validation to utilize `special_moves` instead of `history` attribute still left move as argument of the record_history which beats the purpose of the change. The record_history needs to operate with flat_actions as input argument :(
+
+
+noticed that python process hit 872 MB mem use (in task manager) while final size for root node reached 468 MB

@@ -22,7 +22,7 @@ class Node:
 
         self.subnodes = []
         # self.scores = {}
-        self.score = None
+        # self.score = None
 
     def __repr__(self):
         return str([self.move, self.color, self.depth_level, self.path[1:]])
@@ -51,8 +51,9 @@ class AI:
     def score_node(self, node):
         # print('node', node.notation)
         # print('fla')
-        undo = self.game.board.flat_execute(node.move_actions)
-        node.undo_actions.append(undo)
+        wchecked, bchecked = self.game.board.flat_execute(node.move_actions)
+        node.undo_actions[-2] = wchecked
+        node.undo_actions[-1] = bchecked
         self.game.board.update_incheck_variable_state(node.color*'w')
         game_state = self.game.determine_game_state()
         hash_ = ''.join(self.game.board.hashstate)
@@ -109,8 +110,8 @@ class AI:
 
     def evaluate(self, node, cutoff_depth, upper_level_optimum=None):  # cutoff_depth absolute count of (semi-)turns
         # print('evaluate with arguments:', node, cutoff_depth, upper_level_optimum.value)
-        if node.score != None:
-            return node.score
+        # if node.score != None:
+        #     return node.score
 
         if node.depth_level == cutoff_depth:
             node.score = Score(self.score_node(node), node.path)
@@ -141,8 +142,9 @@ class AI:
         else:
             # PLACE GAME IN THE RELEVANT NODE
             # if node.move_actions: # false in the case of root Node, but evaluare is called for subnodes, never for root
-            undo = self.game.board.flat_execute(node.move_actions)
-            node.undo_actions.append(undo)
+            wchecked, bchecked = self.game.board.flat_execute(node.move_actions)
+            node.undo_actions[-2] = wchecked
+            node.undo_actions[-1] = bchecked
             self.game.board.update_incheck_variable_state(self.game.turnning_player.color)
             if self.game.turnning_player == self.game.whites_player:
                 self.game.turnning_player = self.game.blacks_player
