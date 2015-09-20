@@ -121,6 +121,9 @@ game.history takes Moves, and info from Nodes has only move_actions !!!  => the 
 Possible bugs :
 1. original `validate_against_history` uses `return len(nullifying_moves) == 0` which means moving either rook invalidates both castling moves
 2. node.optimum is based on node.color, but is actually used to compare evaluations of instance node.subnodes ==> needs to be inversed
+3. ai.expand_node should handle mate/stalemate results of the gamestate check and set the local_optimum default value (which later passes to the node.score)
+4. got test that went Nd6, Kf8, ??  -- response to Nd6 should be cxd6
+   - turned out same as (3) - had "fixed" the optimum under `evaluate_position`, instead of under Node
 
 The switch of the history validation to utilize `special_moves` instead of `history` attribute still left move as argument of the record_history which beats the purpose of the change. The record_history needs to operate with flat_actions as input argument :(
 
@@ -130,4 +133,15 @@ noticed that python process hit 872 MB mem use (in task manager) while final siz
 going to depth 4 is absurd - mem usage hit over 20GB
 I think the previous depth 4 results were captured without having the check gamestate create depth 5 nodes without evaluating them
 I could probably reduce the tree, by keeping only the best candidate depth 1 branch. Since AI cant choose non optimal score, an inferior branch can be cut.
-On deeper branches we cannot cut oponent branches, but on any own branches we can apply the same strategy
+On deeper branches we cannot cut oponent branches, but on any own branches we can apply the same strategy. No, because the optimum will change due to deeper lvl evaluataions.
+
+
+The timing of the results indicate about 200sec out of 800sec are in `board.is_in_check`. Instead of checking potential hitters, a heat map could be used. The heated nodes are the destinations in the non capturing naive expansions;
+  Moving one piece can influence the naive expansions of another piece that is not involved in the move. This will require recalculating all naives for all pieces. This is actually part of gamestate check which makes valid moves, which in order are based on naive moves. However it's done in order of pieces: piece.naives -> piece.valids -> execute -> validate for discover_/is_in_ check -> undo ===> next piece
+  Finding all naives for a position before proceeding to validation process will require two separate cycles through pieces:
+    cycle opponent pieces and pull naives to gen the heat map
+    cycle through own pieces and pass the validation where is_in_check reads the heat map instead of INVERSE_HIT_MAP
+^^^^
+the above is structural change to many modules/classes, and needs to be carried in new branch stemming from master!!!!
+
+The way undo_actions get the 'data' for the w_in_check/b_in_check position, the same should be added to the move_actions before undo is processed. This should allow conditioning the calls to `update_incheck_variable_state` which relies on `is_in_check`, to avoid the call id the 'data' is present in the move_actions

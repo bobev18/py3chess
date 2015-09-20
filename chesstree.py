@@ -16,9 +16,9 @@ class Node:
         self.color = color
         # if color == 'w': # switcing color to boolean ('w' = True, 'b' = False)
         if color:
-            self.optimum = max
-        else:
             self.optimum = min
+        else:
+            self.optimum = max
 
         self.subnodes = []
         # self.scores = {}
@@ -47,6 +47,9 @@ class AI:
         game_state = self.game.determine_game_state() # returns 'mate', 'stalemate', or list of all valid expansions
         if isinstance(game_state, list): # create new nodes
             node.subnodes = [ Node(z.notation, node.path, node.depth_level + 1, not node.color, *z.flat_actions()) for z in game_state ]
+            return None
+        else:
+            return self.evaluator(game_state, None) #board is irrelevant because evaluator does not reference board when gamestate type is str
 
     def score_node(self, node):
         # print('node', node.notation)
@@ -125,6 +128,7 @@ class AI:
             return 9*pieceset_value(board.white) - 9*pieceset_value(board.black) + 3*int(board.black_checked) - 3*int(board.black_checked) + board_position_value(board.white) - board_position_value(board.black)
 
     def evaluate_position(self, by_color, cutoff_depth):
+        self.by_color = by_color
         game_state = self.game.determine_game_state()
         # print('gamestate', game_state)
         if isinstance(game_state, str):
@@ -132,20 +136,20 @@ class AI:
         else:
             if by_color == 'w':
                 oposite_color = 'b'
-                color_optimum = min
+                color_optimum = max
             else:
                 oposite_color = 'w'
-                color_optimum = max
+                color_optimum = min
             root_node = Node('', '', 0, oposite_color)
             # root_node.subnodes = [ Node(z.notation, root_node.path, root_node.depth_level + 1, by_color, *z.flat_actions()) for z in game_state ]
             first_move = game_state.pop()
-            first_node = Node(first_move.notation, root_node.path, root_node.depth_level + 1, by_color, *first_move.flat_actions())
+            first_node = Node(first_move.notation, root_node.path, root_node.depth_level + 1, by_color=='w', *first_move.flat_actions())
             # expansion_scores = []
             optimum = self.evaluate(first_node, cutoff_depth)
             optimal_node = first_node
             print('first node', first_node.notation, 'opt score', optimum.value, optimum.optimal_cutoff_path)
             for sub_move in game_state:
-                sub_node = Node(sub_move.notation, root_node.path, root_node.depth_level + 1, by_color, *sub_move.flat_actions())
+                sub_node = Node(sub_move.notation, root_node.path, root_node.depth_level + 1, by_color=='w', *sub_move.flat_actions())
                 sub_node_score = self.evaluate(sub_node, cutoff_depth)
                 if color_optimum(optimum.value, sub_node_score.value) != optimum.value:
                     optimum = sub_node_score
@@ -205,9 +209,11 @@ class AI:
             # self.game.backtrack.append(''.join(self.game.board.hashstate))
 
             if len(node.subnodes) == 0:
-                self.expand_node(node)
+                local_optimum = self.expand_node(node)  # returns score if mate or stalemate
+            else:
+                local_optimum = None
 
-            local_optimum = None
+            # if node.color
             expansion_scores = []
             if len(node.subnodes):
                 for sub_node in node.subnodes:
@@ -272,8 +278,8 @@ test_game = Game(board_position=position)
 test_ai = AI(4, test_game) # this cutoff value is not used, but the one passed in the evaluate method
 
 
-# cProfile.run('test = test_ai.evaluate_position("w", 3)')
-test = test_ai.evaluate_position("w", 3)
+# test = test_ai.evaluate_position("w", 3)
+cProfile.run('test = test_ai.evaluate_position("w", 4)')
 print(test_game.board)
 print('optimal move with score', test.value, 'and move path:', test.optimal_cutoff_path)
 

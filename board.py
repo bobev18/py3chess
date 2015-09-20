@@ -225,8 +225,8 @@ class Board():
             raise MoveException(message)
 
         piece.location = to
-        piece.x = ord(piece.location[0])-96
-        piece.y = int(piece.location[1])
+        # piece.x = ord(piece.location[0])-96
+        # piece.y = int(piece.location[1])
 
         self.state[to] = piece
         self.hashstate[ORDERED_BOARD_KEYS.index(to)] = piece.hashtype
