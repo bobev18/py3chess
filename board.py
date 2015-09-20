@@ -107,7 +107,7 @@ class Board():
         self.white = []
         self.black = []
         self.state = EMPTYBOARD.copy()
-        self.hashstate = list(' '*64)
+        self.hashstate = ' '*64
         if construction_state == {}:
             self.white_king = None
             self.black_king = None
@@ -174,7 +174,8 @@ class Board():
             self.black.append(new_piece)
 
         self.state[location] = new_piece
-        self.hashstate[ORDERED_BOARD_KEYS.index(location)] = new_piece.hashtype
+        index = 8*(ord(location[0])-97) + int(location[1])
+        self.hashstate = self.hashstate[:index] + new_piece.hashtype + self.hashstate[index+1:]
 
     def spawn_pieces(self, init_state):
         # 'state' here should be the input of the constructor, which should be dict of string values!
@@ -202,7 +203,8 @@ class Board():
             raise MoveException(message)
 
         self.state[location] = None
-        self.hashstate[ORDERED_BOARD_KEYS.index(location)] = ' '
+        index = 8*(ord(location[0])-97) + int(location[1])
+        self.hashstate = self.hashstate[:index] + ' ' + self.hashstate[index+1:]
         if piece.color == 'w':
             self.white.remove(piece)
         else:
@@ -229,9 +231,11 @@ class Board():
         # piece.y = int(piece.location[1])
 
         self.state[to] = piece
-        self.hashstate[ORDERED_BOARD_KEYS.index(to)] = piece.hashtype
+        index = 8*(ord(to[0])-97) + int(to[1])
+        self.hashstate = self.hashstate[:index] + piece.hashtype + self.hashstate[index+1:]
         self.state[origin] = None
-        self.hashstate[ORDERED_BOARD_KEYS.index(origin)] = ' '
+        index = 8*(ord(origin[0])-97) + int(origin[1])
+        self.hashstate = self.hashstate[:index] + ' ' + self.hashstate[index+1:]
 
     # def naive_moves(self, piece):
     #     results = []

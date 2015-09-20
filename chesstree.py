@@ -59,7 +59,7 @@ class AI:
         node.undo_actions[-1] = bchecked
         self.game.board.update_incheck_variable_state(node.color*'w')
         game_state = self.game.determine_game_state()
-        hash_ = ''.join(self.game.board.hashstate)
+        hash_ = self.game.board.hashstate
         try:
             score = self.score_cache[hash_]
         except KeyError:
@@ -128,7 +128,7 @@ class AI:
             return 9*pieceset_value(board.white) - 9*pieceset_value(board.black) + 3*int(board.black_checked) - 3*int(board.black_checked) + board_position_value(board.white) - board_position_value(board.black)
 
     def evaluate_position(self, by_color, cutoff_depth):
-        self.by_color = by_color
+        # self.by_color = by_color
         game_state = self.game.determine_game_state()
         # print('gamestate', game_state)
         if isinstance(game_state, str):
@@ -206,7 +206,7 @@ class AI:
                 self.game.turnning_player = self.game.whites_player
             self.game.record_flat_history(node.move_actions, node.notation)
             # self.game.history.append(node.move_actions)
-            # self.game.backtrack.append(''.join(self.game.board.hashstate))
+            # self.game.backtrack.append(self.game.board.hashstate)
 
             if len(node.subnodes) == 0:
                 local_optimum = self.expand_node(node)  # returns score if mate or stalemate
@@ -278,8 +278,8 @@ test_game = Game(board_position=position)
 test_ai = AI(4, test_game) # this cutoff value is not used, but the one passed in the evaluate method
 
 
-# test = test_ai.evaluate_position("w", 3)
-cProfile.run('test = test_ai.evaluate_position("w", 4)')
+test = test_ai.evaluate_position("w", 3)
+# cProfile.run('test = test_ai.evaluate_position("w", 4)')
 print(test_game.board)
 print('optimal move with score', test.value, 'and move path:', test.optimal_cutoff_path)
 
