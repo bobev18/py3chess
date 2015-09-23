@@ -1,0 +1,23 @@
+C:\gits\py3chess>python chesstree.py
+first node Re1 opt score -37 ||Re1|Qe7|Nf6|gxf6
+new optimum -17 ||Qd2|Qb5|c3|Qxd3
+new optimum -11 ||Qb1|Qe7|Ng3|Qe5
+final root node size (KB) 405189
+
+|br|  |  |  |bk|  |  |br|
+|bb|bp|bp|  |  |bp|bp|bp|
+|bp|  |  |  |  |  |  |  |
+|wp|  |  |  |  |  |  |  |
+|  |bq|  |bp|wn|  |  |  |
+|  |  |  |wp|  |wp|  |wp|
+|  |  |wp|  |  |wp|  |  |
+|wr|  |  |wq|  |wr|wk|  |
+
+optimal move with score -11 and move path: ||Qb1|Qe7|Ng3|Qe5
+
+
+Last   564 645 888 bytes
+Avrg 1 036 523 409 bytes
+Max  1 455 075 328 bytes
+
+Duration 16:40 (1000s) + 3:50 = 20:30
