@@ -15,9 +15,11 @@ class Score:
 
 
 class Node:
-    def __init__(self, path, depth_level, color, move):
-        self.move = move
-        self.path = path + '|' + move.notation
+    def __init__(self, notation, path, depth_level, color, move_actions=[], undo_actions=[]):
+        self.move_actions = move_actions
+        self.undo_actions = undo_actions
+        self.notation = notation
+        self.path = path + '|' + notation
         self.depth_level = depth_level
         self.subnodes = []
         self.color = color
@@ -60,7 +62,10 @@ class AI:
             return 9*pieceset_value(board.white) - 9*pieceset_value(board.black) + 3*int(board.black_checked) - 3*int(board.black_checked) + board_position_value(board.white) - board_position_value(board.black)
 
     def score_node(self, node):
-        undo = self.game.board.execute_move(node.move)
+        wchecked, bchecked = self.game.board.execute_flat(node.move_actions)
+        node.undo_actions[-2] = wchecked
+        node.undo_actions[-1] = bchecked
+        self.game.board.update_incheck(node.color*'w')
         game_state = self.game.determine_game_state()
         try:
             score = self.score_cache[self.game.board.hashstate]
@@ -69,16 +74,16 @@ class AI:
             self.score_cache[self.game.board.hashstate] = score
 
         if isinstance(game_state, list):
-            node.subnodes = [ Node(node.path, node.depth_level + 1, not node.color, z) for z in game_state ]
+            node.subnodes = [ Node(z.notation, node.path, node.depth_level + 1, not node.color, *z.flat_actions()) for z in game_state ]
 
-        self.game.board.undo_actions(undo)
+        self.game.board.process_flat_actions(node.undo_actions)
         return score
 
     def expand_node(self, node):
         # this method is called for nodes that are already executed onto the game object
         game_state = self.game.determine_game_state()   # returns 'mate', 'stalemate', or list of all valid expansions
         if isinstance(game_state, list):
-            node.subnodes = [ Node(node.path, node.depth_level + 1, not node.color, z) for z in game_state ]
+            node.subnodes = [ Node(z.notation, node.path, node.depth_level + 1, not node.color, *z.flat_actions()) for z in game_state ]
             return None
         else:
             return self.evaluator(game_state, None)    #board is irrelevant because evaluator does not reference board when gamestate type is str
@@ -94,14 +99,14 @@ class AI:
             else:
                 oposite_color = 'w'
                 color_optimum = min
-            root_node = Node('', 0, oposite_color, MoveMockup())
+            root_node = Node('', '', 0, oposite_color)
             first_move = game_state.pop()
-            first_node = Node(root_node.path, root_node.depth_level + 1, by_color=='w', first_move)
+            first_node = Node(first_move.notation, root_node.path, root_node.depth_level + 1, by_color=='w', *first_move.flat_actions())
             optimum = self.evaluate(first_node, cutoff_depth)
             optimal_node = first_node
-            print('first node', first_node.move.notation, 'opt score', optimum.value, optimum.optimal_cutoff_path)
+            print('first node', first_node.notation, 'opt score', optimum.value, optimum.optimal_cutoff_path)
             for sub_move in game_state:
-                sub_node = Node(root_node.path, root_node.depth_level + 1, by_color=='w', sub_move)
+                sub_node = Node(sub_move.notation, root_node.path, root_node.depth_level + 1, by_color=='w', *sub_move.flat_actions())
                 sub_node_score = self.evaluate(sub_node, cutoff_depth)
                 if color_optimum(optimum.value, sub_node_score.value) != optimum.value:
                     optimum = sub_node_score
@@ -125,12 +130,16 @@ class AI:
             return Score(self.score_node(node), node.path)
         else:
             # PLACE GAME IN THE RELEVANT NODE
-            undo = self.game.board.execute_move(node.move)
+            print('move_actions', node.move_actions)
+            wchecked, bchecked = self.game.board.execute_flat(node.move_actions)
+            node.undo_actions[-2] = wchecked
+            node.undo_actions[-1] = bchecked
+            self.game.board.update_incheck(self.game.turnning_player.color)
             if self.game.turnning_player == self.game.whites_player:
                 self.game.turnning_player = self.game.blacks_player
             else:
                 self.game.turnning_player = self.game.whites_player
-            self.game.record_history(node.move)
+            self.game.record_flat_history(node.move_actions, node.notation)
 
             if len(node.subnodes) == 0:
                 local_optimum = self.expand_node(node)   # returns score if mate or stalemate
@@ -154,12 +163,11 @@ class AI:
                         break
 
             # RESTORE GAME TO PREDECESOR NODE
-            self.game.board.undo_actions(undo)
+            self.game.board.process_flat_actions(node.undo_actions)
             if self.game.turnning_player == self.game.whites_player:
                 self.game.turnning_player = self.game.blacks_player
             else:
                 self.game.turnning_player = self.game.whites_player
-            self.game.history.pop()
             self.game.special_moves.pop()
             self.game.backtrack.pop()
 

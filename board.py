@@ -334,6 +334,27 @@ class Board():
         self.update_incheck(move.piece.color)
         return undo
 
+    def execute_flat(self, move_actions):
+        self.process_flat_actions(move_actions)
+        return self.white_checked, self.black_checked
+
+    def process_flat_actions(self, actions):
+        # DDRRAAI
+        if actions[0]:
+            self.remove_piece(actions[0])
+        if actions[1]:
+            self.remove_piece(actions[1])
+        if actions[2]:
+            self.relocate_piece(actions[2], actions[3])
+        if actions[4]:
+            self.relocate_piece(actions[4], actions[5])
+        if actions[6]:
+            self.add_piece(actions[6])
+        if actions[7]:
+            self.add_piece(actions[7])
+        if actions[8]:
+            self.reset_incheck(actions[8], actions[9])
+
     def reset_incheck(self, white_is_in_check, black_is_in_check):
         self.white_checked = white_is_in_check
         self.black_checked = black_is_in_check

@@ -103,6 +103,34 @@ class Game():
         self.history.append(move)
         self.backtrack.append(self.board.hashstate)
 
+    def record_flat_history(self, flat_actions, notation):
+        # move type is determined via number of "relocate" actions
+        if not flat_actions[2] and not flat_actions[4]:
+            # only promotion moves lack relocation action, and they dont affect the special_moves, so we return them unaffected:
+            history_dependant_move_entry = self.special_moves[-1].copy()
+            history_dependant_move_entry[-1] = ''   # in case last move was allowing en passant
+        elif flat_actions[2] and not flat_actions[4]:
+            # this case can involve move that affects the special_moves
+            origin = flat_actions[2]
+            destination = flat_actions[3]
+            m2_type = int(notation in ['a4', 'b4', 'c4', 'd4', 'e4', 'f4', 'g4', 'h4', 'a5', 'b5', 'c5', 'd5', 'e5', 'f5', 'g5', 'h5'])
+            history_dependant_move_entry = [ self.special_moves[-1][0] or origin in ['a8', 'e8'],
+                                             self.special_moves[-1][1] or origin in ['e8', 'h8'],
+                                             self.special_moves[-1][2] or origin in ['a1', 'e1'],
+                                             self.special_moves[-1][3] or origin in ['e1', 'h1'],
+                                             m2_type*destination[0]
+                                           ]
+        else:
+            # only castling involves two relocations. this first one should be the one for the rook, but all we need to know is the row
+            origin_row = flat_actions[2][1]
+            if origin_row == '1':
+                history_dependant_move_entry = [self.special_moves[-1][0], self.special_moves[-1][1], True, True, '']
+            else:
+                history_dependant_move_entry = [True, True, self.special_moves[-1][2], self.special_moves[-1][3], '']
+
+        self.special_moves.append(history_dependant_move_entry)
+        self.backtrack.append(self.board.hashstate)
+
     def validate_special_moves(self, move):
         if move.type_ == 'c':
             if move.catsling_rook.location == 'a8':
