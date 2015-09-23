@@ -93,13 +93,13 @@ class Game():
         return result
 
     def record_history(self, move):
-        history_dependant_move_state = [ self.special_moves[-1][0] or move.origin in ['a8', 'e8'],
+        history_dependant_move_entry = [ self.special_moves[-1][0] or move.origin in ['a8', 'e8'],
                                          self.special_moves[-1][1] or move.origin in ['e8', 'h8'],
                                          self.special_moves[-1][2] or move.origin in ['a1', 'e1'],
                                          self.special_moves[-1][3] or move.origin in ['e1', 'h1'],
                                          int(move.type_ == 'm2')*move.destination[0]
                                        ]
-        self.special_moves.append(history_dependant_move_state)
+        self.special_moves.append(history_dependant_move_entry)
         self.history.append(move)
         self.backtrack.append(self.board.hashstate)
 
