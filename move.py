@@ -1,6 +1,5 @@
 class Move():
-
-    def __init__(self, piece, type_, destination, notation, extra = None):
+    def __init__(self, piece, type_, destination, notation, extra=None):
         self.piece = piece
         self.origin = piece.location
         self.type_ = type_
@@ -23,8 +22,8 @@ class Move():
         return self.notation
 
     def actions(self):
-        actions=[]
-        undo=[]
+        actions = []
+        undo = []
 
         if self.type_ == 'm' or self.type_ == 'm2' or self.type_ == 'mk':
             actions.append({'act':'relocate_piece', 'args':[self.piece, self.destination]})
@@ -52,11 +51,39 @@ class Move():
                 actions.append({'act':'relocate_piece', 'args':[self.piece, self.destination]})
                 undo.append({'act':'relocate_piece', 'args':[self.destination, self.piece.location]})
                 undo.append({'act':'relocate_piece', 'args':[self.catsling_rook, 'h'+self.piece.location[1]]})
-            else: #O-O-O
+            else:  # O-O-O
                 actions.append({'act':'relocate_piece', 'args':[self.catsling_rook, 'd'+self.piece.location[1]]})
                 actions.append({'act':'relocate_piece', 'args':[self.piece, self.destination]})
                 undo.append({'act':'relocate_piece', 'args':[self.destination, self.piece.location]})
                 undo.append({'act':'relocate_piece', 'args':[self.catsling_rook, 'a'+self.piece.location[1]]})
+
+        return actions, undo
+
+    def flat_actions(self):
+        actions = []
+        undo = []
+        # DDRRAAI with R & I having 2 args, and the rest 1 arg, so [D1, D2, R1a, R1b, R2a, R2b, A1, A2, Ia, Ib]
+        if self.type_ == 'm' or self.type_ == 'm2' or self.type_ == 'mk':
+            actions = [None, None, self.origin, self.destination, None, None, None, None, None, None]
+            undo = [None, None, self.destination, self.origin, None, None, None, None, None, None]
+        elif self.type_ == 't' or self.type_ == 'e':
+            actions = [self.taken.location, None, self.origin, self.destination, None, None, None, None, None, None]
+            undo = [None, None, None, None, self.destination, self.origin, self.taken.designation+'@'+self.taken.location, None, None, None]
+        elif self.type_ == 'p':
+            promotion = self.piece.color + self.promote_to.lower() + '@' + self.destination
+            actions = [self.origin, None, None, None, None, None, promotion, None, None, None]
+            undo = [self.destination, None, None, None, None, None, self.piece.designation+'@'+self.origin, None, None, None]
+        elif self.type_ == '+':
+            promotion = self.piece.color + self.promote_to.lower() + '@' + self.destination
+            actions = [self.origin, self.taken.location, None, None, None, None, promotion, None, None, None]
+            undo = [self.destination, None, None, None, None, None, self.piece.designation+'@'+self.origin, self.taken.designation+'@'+self.taken.location, None, None]
+        elif self.type_ == 'c':
+            if self.notation == 'O-O':
+                actions = [None, None, self.catsling_rook.location, 'f'+self.origin[1], self.origin, self.destination, None, None, None, None]
+                undo = [None, None, self.destination, self.origin, 'f'+self.origin[1], self.catsling_rook.location, None, None, None, None]
+            else:  # O-O-O
+                actions = [None, None, self.catsling_rook.location, 'd'+self.origin[1], self.origin, self.destination, None, None, None, None]
+                undo = [None, None, self.destination, self.origin, 'd'+self.origin[1], self.catsling_rook.location, None, None, None, None]
 
         return actions, undo
 

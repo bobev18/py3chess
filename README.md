@@ -61,7 +61,88 @@ The question for the AI is as follows:
   2. multiple boardsets - new board is spawned by copy from the old one, and one forward move is applied.
 Option (2) is more demanding on memory, and, generally, reducing execution time comes at the cost of more memory. However it may turn out that making a copy of the board takes more time than processing undo - here's why:
 a) Board class has an attribute that is a dict of instances of Piece objects. Simple board.copy() will create new variables for the attributes, but the new dict, will still refer to the same instances of the Piece objects. So a custom copy process needs to be implemented that creates copies of the Piece objects along with the other Board attributes. That will take execution time.
-b) The exploration of the chesstree is depth first - there will not be a need to switch between nodes that are not linked by single move (either execute_move to go a level deeper, or undo to go a level up).
-On the other hand, option (2) could be easier to refactor into a multithreaded solution
+b) The exploration of the chess-tree is depth first - there will not be a need to switch between nodes that are not linked by single move (either execute_move to go a level deeper, or undo to go a level up).
+On the other hand, option (2) could be easier for refactoring into a multi-threaded solution
 
-Ultimately only a direct comparison of execution times will tell for sure which option is better. 
+Ultimately only a direct comparison of execution times will tell for sure which option is better.
+Actually the copy needs to be of the Game instance, otherwise we cannot validate history dependent moves. Or implement compatible method in the AI class.
+
+evaluating a move will always need to make full traversal - from the move node to all cutoff nodes, because the move score is not only dependent on the evaluation score of all cutoff nodes, but on comparison of scores on the intermediate nodes. In that regard, there will be no difference between evaluating a naive node, and one that has been verified.
+Furthermore we want to evaluate the cutoff position not only via heuristic but whether the it's mate/stalemate; the mate/stalemate evaluation, requires generating all valid moves for the position reached. That means that cutting off at semi-move 13, will need to evaluate position resulting of executing move 13. That evaluation includes validating all moves available at this position, which is achieved via executing them i.e. to fully evaluate move 13, we need to execute all possible depth 14 moves;
+If we generate the new lvl 14 nodes during evaluation of a lvl 13 move, and we have to execute lvl 14 moves to check for mate/stalemate, there is no case of a node with expansions for naive moves; should not create nodes for lvl 14 at the time of evaluating cutoff=13
+
+every node needs to pass game state check, because game can hit mate/stalemate in the nodes between root and cutoff
+
+
+The mem usage for cutoff node @ depth 3 is about 1KB per available subsequent move i.e
+cutoff subnodes    : 28
+cutoff subnodes mem: 26056 bytes
+Evaluating to depth 3, actually expands and creates depth 4, and the total number of nodes is the vicinity of 666838, which on 64bit system took about 450MB. If going to next level adds 30 nodes on average, we are looking at ~15GB mem usage, which is crazy.
+The nodes should be shrunk! How are the nodes to be reused when next move is to be generated? Due to the opponent move, we will be expanding from a node that is on a node of depth 2 in the existing tree. We will need to carry out the entire recursion anyway to properly compare all position at the new depth. The cost that could be saved is determining expansions and validating the moves in corresponding to nodes in the current tree. The cost of the nodes is in great part storing the Move objects, which contain at least one Piece object. The core of the Move is ability to provide "actions" which are instructions for executing a move. They make calls to add_piece, relocate_piece, remove_piece with the relevant arguments:
+```
+	actions [ {'act':'remove_piece', 'args':[self.taken]},
+    	      {'act':'relocate_piece', 'args':[self.piece, self.destination]}, ]
+```
+in parallel the undo actions are produced:
+```
+	undo    [ {'act':'relocate_piece', 'args':[self.destination, self.piece.location]},
+    	      {'act':'add_piece', 'args':[self.taken]}, ]
+```
+These constructs rely on Piece objects stored in the Move, however the methods add_piece, relocate_piece, remove_piece also support arguments in the form of strings indicating positions in the board.state.
+If a method that generates actions and undo with string params is implemented, the Nodes could store only that information instead the entire Move object
+
+Changed the structure of the actions structure:
+```
+	actions = [('remove_piece', [self.taken.location]),
+               ('relocate_piece', [self.origin, self.destination])]
+    undo = [('relocate_piece', [self.destination, self.origin]),
+            ('add_piece', [self.taken.designation+'@'+self.taken.location])]
+```
+Because of that, and because no validation will be required during execution, the methods execute_move, process_actions and undo_actions - should have an alternative implementation utilizing the "flat" actions structure
+However 1. determine_game_state pulls moves from Board.naive_moves, which are of type Move. 2. pre-defined moves from the chesstree, which would be flat type, so this will result in mixing flat and non flat execute_move methods. This can be resolved in 2 ways:
+ a) make duplicate determine_game_state, that provides flat instead of Move type
+ b) make a check within execute_move method, which of the two types of data is provided, and process accordingly
+
+Actually there is c) that uses determine_game_state to pull type Move, but uses Move.flat_actions() to save in the Node
+NOTE:
+ With using flat_execute moves, there are few tasks to be done alongside the method call:
+  - the method returns 'data' to be appended to the undo_actions
+  - the `board.white_checked` & `board.black_checked` should be updated by `board.update_incheck_variable_state(<turning color>)`
+  - both execute and undo processes call the same `process_flat_actions` method
+
+
+game.history takes Moves, and info from Nodes has only move_actions !!!  => the gamestate check will error. Options:
+  XXXa) flatten historyXXX - wont work, because hist check relies on move.type_ for the e.p moves
+ b) new flat format
+ c) rework history to contain be individual variables for each of the 4 castling moves, and just the prior move for the en passant
+   - this may be tricky for handling undo
+
+
+Possible bugs :
+1. original `validate_against_history` uses `return len(nullifying_moves) == 0` which means moving either rook invalidates both castling moves
+2. node.optimum is based on node.color, but is actually used to compare evaluations of instance node.subnodes ==> needs to be inversed
+3. ai.expand_node should handle mate/stalemate results of the gamestate check and set the local_optimum default value (which later passes to the node.score)
+4. got test that went Nd6, Kf8, ??  -- response to Nd6 should be cxd6
+   - turned out same as (3) - had "fixed" the optimum under `evaluate_position`, instead of under Node
+
+The switch of the history validation to utilize `special_moves` instead of `history` attribute still left move as argument of the record_history which beats the purpose of the change. The record_history needs to operate with flat_actions as input argument :(
+
+
+noticed that python process hit 872 MB mem use (in task manager) while final size for root node reached 468 MB
+
+going to depth 4 is absurd - mem usage hit over 20GB
+I think the previous depth 4 results were captured without having the check gamestate create depth 5 nodes without evaluating them
+I could probably reduce the tree, by keeping only the best candidate depth 1 branch. Since AI cant choose non optimal score, an inferior branch can be cut.
+On deeper branches we cannot cut oponent branches, but on any own branches we can apply the same strategy. No, because the optimum will change due to deeper lvl evaluataions.
+
+
+The timing of the results indicate about 200sec out of 800sec are in `board.is_in_check`. Instead of checking potential hitters, a heat map could be used. The heated nodes are the destinations in the non capturing naive expansions;
+  Moving one piece can influence the naive expansions of another piece that is not involved in the move. This will require recalculating all naives for all pieces. This is actually part of gamestate check which makes valid moves, which in order are based on naive moves. However it's done in order of pieces: piece.naives -> piece.valids -> execute -> validate for discover_/is_in_ check -> undo ===> next piece
+  Finding all naives for a position before proceeding to validation process will require two separate cycles through pieces:
+    cycle opponent pieces and pull naives to gen the heat map
+    cycle through own pieces and pass the validation where is_in_check reads the heat map instead of INVERSE_HIT_MAP
+^^^^
+the above is structural change to many modules/classes, and needs to be carried in new branch stemming from master!!!!
+
+The way undo_actions get the 'data' for the w_in_check/b_in_check position, the same should be added to the move_actions before undo is processed. This should allow conditioning the calls to `update_incheck_variable_state` which relies on `is_in_check`, to avoid the call id the 'data' is present in the move_actions
+MMM the first execution is done based on result from move.actions while the 2nd is from move.flat_actions so values from the 1st cannot be transfered in the 2nd. To make it work we'll need global use of flat actions and retaining them from the gamestate moves to the <expand> moves

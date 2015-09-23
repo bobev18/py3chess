@@ -2,24 +2,26 @@ import re
 from move import Move
 from board import CAPTURE_SIGN
 
-CORE_NOTATION_PATTERN = re.compile(r'(?P<piece_type>[NBRQK]?)(?P<disambiguation>[a-h]?\d?)(?P<capture_sign>' + \
-            CAPTURE_SIGN + '?)(?P<destination>[a-h]\d)(?P<promotion>[NBRQ]?)')
+CORE_NOTATION_PATTERN = re.compile(r'(?P<piece_type>[NBRQK]?)(?P<disambiguation>[a-h]?\d?)(?P<capture_sign>' +
+    CAPTURE_SIGN + '?)(?P<destination>[a-h]\d)(?P<promotion>[NBRQ]?)')
 
 COMMANDS = ['', '?', 'help', 'history', 'notation', 'export', 'undo', 'quit', 'exit', 'draw', 'forefit']
+
 
 class DecodeException(Exception):
     # to handle as "invalid input"
     def __init__(self, *args):
         self.args = [a for a in args]
 
+
 class MoveExhaustException(Exception):
     # to handle exhaust of simulated moves
     def __init__(self, *args):
         self.args = [a for a in args]
 
-class Player():
 
-    def __init__(self, game, type_, color, initial_clock_time, AI_depth = 0):
+class Player():
+    def __init__(self, game, type_, color, initial_clock_time, AI_depth=0):
         self.type_ = type_
         self.color = color
         self.clock = initial_clock_time
@@ -83,7 +85,7 @@ class Player():
             else:
                 try:
                     # input_ = self.game.decode_move(raw, self.game.board.pieces_of_color(self.color))
-                    input_ = self.decode_move(raw) #, self.game.board.pieces_of_color(self.color))
+                    input_ = self.decode_move(raw)  # self.game.board.pieces_of_color(self.color))
                 except DecodeException as error:
                     if self.simulation_flag:
                         raise
@@ -91,7 +93,7 @@ class Player():
                         self.comm_output('erroneous move' + str(error.args))
                         self.comm_output('enter "?" to view help')
 
-        return input_ #returns move or command
+        return input_   # returns move or command
 
     def decode_move(self, _input_):
         piece_set = self.game.board.pieces_of_color(self.color)
@@ -109,19 +111,20 @@ class Player():
 
         # ----- STAGE 1 ----- #
         # rule out casteling
-        if move_input.count('O') == 2 or move_input.count('0') == 2: #king side castle
+        if move_input.count('O') == 2 or move_input.count('0') == 2:   # king side castle
             king_piece = [ z for z in piece_set if z.type_ == 'k' ][0]
-            destination = 'g' + king_piece.location[1] #the rank of king - could be 1 or 8
+            destination = 'g' + king_piece.location[1]   # the rank of king - could be 1 or 8
             rook = [ z for z in piece_set if z.type_ == 'r' and z.location == ('h' + king_piece.location[1]) ][0]
             return Move(king_piece, 'c', destination, 'O-O', rook)
 
-        if move_input.count('O') == 3 or move_input.count('0') == 3: #queen side castle
+        if move_input.count('O') == 3 or move_input.count('0') == 3:   # queen side castle
             king_piece = [ z for z in piece_set if z.type_ == 'k' ][0]
             destination = 'c' + king_piece.location[1]
             rook = [ z for z in piece_set if z.type_ == 'r' and z.location == ('a' + king_piece.location[1]) ][0]
             return Move(king_piece, 'c', destination, 'O-O-O', rook)
 
-        if debug_verbosing: print('past stage 1', move_input, ' (means no casteling)')
+        if debug_verbosing:
+            print('past stage 1', move_input, ' (means no casteling)')
 
         # ----- STAGE 2 ----- #
         # filter by piece type
@@ -143,11 +146,11 @@ class Player():
                 extra = [promotion, self.game.board.state[destination]]
             else:
                 move_type = 't'
-                extra = self.game.board.state[destination] 
+                extra = self.game.board.state[destination]
                 if not extra:
-                    if piece_type == 'p' and destination[1] in ['3','6']:
+                    if piece_type == 'p' and destination[1] in ['3', '6']:
                         enpassan = True
-                        move_type='e'
+                        move_type = 'e'
                         if destination[1] == '3':
                             taken_location = destination[0] + '4'
                         else:
@@ -163,7 +166,7 @@ class Player():
             else:
                 move_type = 'm'
                 extra = None
-        
+
         relevant_pieces = [ z for z in piece_set if z.type_ == piece_type ]
         if len(relevant_pieces) == 0:
             message = 'no piece of the needed type (' + piece_type + ') is found in the piece set'
@@ -171,26 +174,28 @@ class Player():
         if len(relevant_pieces) == 1:
             return Move(relevant_pieces[0], move_type, destination, move_input, extra)
 
-        if debug_verbosing: print('stage 2: filtered pieces', relevant_pieces, 'extra', extra, 'type', move_type, 'piece_type', piece_type)
+        if debug_verbosing:
+            print('stage 2: filtered pieces', relevant_pieces, 'extra', extra, 'type', move_type, 'piece_type', piece_type)
 
         # ----- STAGE 3 ----- #
         # filter by disambiguation
         if len(disambiguation):
             if len(disambiguation) == 1:
                 if disambiguation in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']:
-                    relevant_pieces = [ z for z in relevant_pieces if disambiguation == z.location[0]] # by file
+                    relevant_pieces = [ z for z in relevant_pieces if disambiguation == z.location[0]]   # by file
                 else:
-                    relevant_pieces = [ z for z in relevant_pieces if disambiguation == z.location[1]] # by rank
+                    relevant_pieces = [ z for z in relevant_pieces if disambiguation == z.location[1]]   # by rank
             if len(disambiguation) == 2:
-                relevant_pieces = [ z for z in relevant_pieces if disambiguation == z.location] # by origin
-        
+                relevant_pieces = [ z for z in relevant_pieces if disambiguation == z.location]   # by origin
+
             if len(relevant_pieces) == 0:
                 message = 'no piece matching the disambiguation (' + disambiguation + ') is found in the piece set'
                 raise DecodeException(message)
             if len(relevant_pieces) == 1:
                 return Move(relevant_pieces[0], move_type, destination, move_input, extra)
 
-        if debug_verbosing: print('stage 3: filtered pieces', relevant_pieces)
+        if debug_verbosing:
+            print('stage 3: filtered pieces', relevant_pieces)
 
         # ----- STAGE 4 ----- #
         # filter by matching input against generated moves (for the remaining piece candidates)
