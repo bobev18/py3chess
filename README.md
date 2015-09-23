@@ -152,3 +152,4 @@ the plan is to:
 2. revert the chessboard to use non-flat moves === Move objects
 3. make a flat branch and implement only the flat moves
 4. make direct comparison between flat and non flat mem usage
+results are -- storing Move obj is better than a flat list !!!!!!!
