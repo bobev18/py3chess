@@ -146,3 +146,9 @@ the above is structural change to many modules/classes, and needs to be carried 
 
 The way undo_actions get the 'data' for the w_in_check/b_in_check position, the same should be added to the move_actions before undo is processed. This should allow conditioning the calls to `update_incheck_variable_state` which relies on `is_in_check`, to avoid the call id the 'data' is present in the move_actions
 MMM the first execution is done based on result from move.actions while the 2nd is from move.flat_actions so values from the 1st cannot be transfered in the 2nd. To make it work we'll need global use of flat actions and retaining them from the gamestate moves to the <expand> moves
+
+the plan is to:
+1. update the original board methods to simplify structure
+2. revert the chessboard to use non-flat moves === Move objects
+3. make a flat branch and implement only the flat moves
+4. make direct comparison between flat and non flat mem usage

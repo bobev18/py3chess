@@ -26,36 +26,36 @@ class Move():
         undo = []
 
         if self.type_ == 'm' or self.type_ == 'm2' or self.type_ == 'mk':
-            actions.append({'act':'relocate_piece', 'args':[self.piece, self.destination]})
-            undo.append({'act':'relocate_piece', 'args':[self.destination, self.piece.location]})
+            actions.append(('relocate_piece', [self.piece, self.destination]))
+            undo.append(('relocate_piece', [self.destination, self.piece.location]))
         elif self.type_ == 't' or self.type_ == 'e':
-            actions.append({'act':'remove_piece', 'args':[self.taken]})
-            actions.append({'act':'relocate_piece', 'args':[self.piece, self.destination]})
-            undo.append({'act':'relocate_piece', 'args':[self.destination, self.piece.location]})
-            undo.append({'act':'add_piece', 'args':[self.taken]})
+            actions.append(('remove_piece', [self.taken]))
+            actions.append(('relocate_piece', [self.piece, self.destination]))
+            undo.append(('relocate_piece', [self.destination, self.piece.location]))
+            undo.append(('add_piece', [self.taken]))
         elif self.type_ == 'p':
-            actions.append({'act':'add_piece', 'args':[self.piece.color, self.promote_to.lower(), self.destination]})
-            actions.append({'act':'remove_piece', 'args':[self.piece]})
-            undo.append({'act':'add_piece', 'args':[self.piece]})
-            undo.append({'act':'remove_piece', 'args':[self.destination]})
+            actions.append(('add_piece', [self.piece.color, self.promote_to.lower(), self.destination]))
+            actions.append(('remove_piece', [self.piece]))
+            undo.append(('add_piece', [self.piece]))
+            undo.append(('remove_piece', [self.destination]))
         elif self.type_ == '+':
-            actions.append({'act':'remove_piece', 'args':[self.taken]})
-            actions.append({'act':'add_piece', 'args':[self.piece.color, self.promote_to.lower(), self.destination]})
-            actions.append({'act':'remove_piece', 'args':[self.piece]})
-            undo.append({'act':'add_piece', 'args':[self.piece]})
-            undo.append({'act':'remove_piece', 'args':[self.destination]})
-            undo.append({'act':'add_piece', 'args':[self.taken]})
+            actions.append(('remove_piece', [self.taken]))
+            actions.append(('add_piece', [self.piece.color, self.promote_to.lower(), self.destination]))
+            actions.append(('remove_piece', [self.piece]))
+            undo.append(('add_piece', [self.piece]))
+            undo.append(('remove_piece', [self.destination]))
+            undo.append(('add_piece', [self.taken]))
         elif self.type_ == 'c':
             if self.notation == 'O-O':
-                actions.append({'act':'relocate_piece', 'args':[self.catsling_rook, 'f'+self.piece.location[1]]})
-                actions.append({'act':'relocate_piece', 'args':[self.piece, self.destination]})
-                undo.append({'act':'relocate_piece', 'args':[self.destination, self.piece.location]})
-                undo.append({'act':'relocate_piece', 'args':[self.catsling_rook, 'h'+self.piece.location[1]]})
+                actions.append(('relocate_piece', [self.catsling_rook, 'f'+self.piece.location[1]]))
+                actions.append(('relocate_piece', [self.piece, self.destination]))
+                undo.append(('relocate_piece', [self.destination, self.piece.location]))
+                undo.append(('relocate_piece', [self.catsling_rook, 'h'+self.piece.location[1]]))
             else:  # O-O-O
-                actions.append({'act':'relocate_piece', 'args':[self.catsling_rook, 'd'+self.piece.location[1]]})
-                actions.append({'act':'relocate_piece', 'args':[self.piece, self.destination]})
-                undo.append({'act':'relocate_piece', 'args':[self.destination, self.piece.location]})
-                undo.append({'act':'relocate_piece', 'args':[self.catsling_rook, 'a'+self.piece.location[1]]})
+                actions.append(('relocate_piece', [self.catsling_rook, 'd'+self.piece.location[1]]))
+                actions.append(('relocate_piece', [self.piece, self.destination]))
+                undo.append(('relocate_piece', [self.destination, self.piece.location]))
+                undo.append(('relocate_piece', [self.catsling_rook, 'a'+self.piece.location[1]]))
 
         return actions, undo
 

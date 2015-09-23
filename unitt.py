@@ -49,8 +49,8 @@ class MoveTest(unittest.TestCase):
         self.assertEqual('Nxc3', repr(test_move))
         self.assertEqual(taken_piece, test_move.taken)
         execution_actions, undo_actions = test_move.actions()
-        self.assertEqual([{'act':'remove_piece', 'args':[taken_piece]}, {'act':'relocate_piece', 'args':[test_piece, 'c3']}], execution_actions)
-        self.assertEqual([{'act':'relocate_piece', 'args':['c3', 'e4']}, {'act':'add_piece', 'args':[taken_piece]}], undo_actions)
+        self.assertEqual([('remove_piece', [taken_piece]), ('relocate_piece', [test_piece, 'c3'])], execution_actions)
+        self.assertEqual([('relocate_piece', ['c3', 'e4']), ('add_piece', [taken_piece])], undo_actions)
 
     def test_enpassant_move_initialization(self):
         test_piece = Piece('w', 'p', 'g5')
@@ -580,19 +580,19 @@ class TemporaryGameTest(unittest.TestCase):
     def test_for_disambiguation_in_generated_move_notation(self):
         position = {'h5':'  ', 'g2':'  ', 'f8':'  ', 'g5':'  ', 'd8':'  ', 'd4':'  ', 'c6':'  ', 'e2':'br', 'b6':'  ', 'd3':'  ', 'b3':'  ', 'f1':'  ', 'a8':'  ', 'a7':'  ', 'b1':'  ', 'f3':'  ', 'a6':'  ', 'a2':'  ', 'b2':'  ', 'h6':'  ', 'e3':'  ', 'f6':'  ', 'b7':'  ', 'd5':'  ', 'e4':'wn', 'd6':'  ', 'g7':'  ', 'e6':'  ', 'f2':'  ', 'g6':'  ', 'h7':'  ', 'c1':'  ', 'f4':'  ', 'd2':'  ', 'g1':'  ', 'a1':'wk', 'e8':'  ', 'c8':'  ', 'e5':'  ', 'e7':'br', 'a4':'  ', 'h4':'br', 'b5':'  ', 'c3':'  ', 'b4':'br', 'g3':'  ', 'f7':'  ', 'c7':'  ', 'h1':'  ', 'h8':'bk', 'g8':'  ', 'a3':'  ', 'a5':'  ', 'f5':'  ', 'c4':'  ', 'e1':'  ', 'd7':'  ', 'g4':'  ', 'b8':'  ', 'h2':'  ', 'd1':'  ', 'h3':'  ', 'c5':'  ', 'c2':'  '}
         test_game = Game(board_position=position)
-        
+
         moves_for_black = []
         for candidate_piece in test_game.board.black:
             expansions = [ z.notation for z in test_game.board.naive_moves(candidate_piece) ]
             moves_for_black.extend(expansions)
-        
+
         self.assertEqual(len(set(moves_for_black)), len(moves_for_black)) # true if all generated notations are unique
         # this will not lead to issues in decode_move because:
         #   the notation attribute of the generated moves is used only in stage 4 of the decode_move method
         #   stage 4 can be entered only in the following cases:
         #     1. the move is promotion
         #     2. lack of disambiguation in the input move (more than 1 candidate pieces at the end of stage 3)
-        # 
+        #
         #   case (1) - promotion notations include the pawn file, which stage 3 handles as disambiguation, reducing the candidate pieces to one.
         #       The promo character is properly handled in the generated move notation, thus move is correctly identified;
         #   case (2) will correctly demand disambiguation, although for the wrong reason (surplus of matches instead of none)
@@ -601,7 +601,7 @@ class TemporaryGameTest(unittest.TestCase):
         #       erroneous move('the move is ambiguous. Possible interpretations:[Rxe4, Rxe4, Rxe4, Rxe4]',)
         #       // if notation was proper, the list should have been [Rbxe4, R7xe4, Rhxe4, R2xe4]
 
-        # The disambiguation for generated move notations cannot be in "naive_moves" method because it cannot have visibility of other moves. 
+        # The disambiguation for generated move notations cannot be in "naive_moves" method because it cannot have visibility of other moves.
         # Apart from decode_move method, the notation attribute of the generated moves could potentially be used in the return of AI methods.
         # Disambiguation could be added to the move notation within such methods when needed. Alternatively that can be done
         # in prompt_input method under the Player calss.

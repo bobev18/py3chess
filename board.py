@@ -102,7 +102,6 @@ class MoveException(Exception):
 
 
 class Board():
-
     def __init__(self, construction_state={}):
         self.white = []
         self.black = []
@@ -130,25 +129,24 @@ class Board():
         return result
 
     def export(self):
-        return self.flatten_state()
-
-    def flatten_state(self):
-        def encoder(x):
-            if x:
-                return str(x)
-            else:
-                return '  '
-
-        return { k: encoder(v) for (k,v) in self.state.items() }
-
-    def hashit(self):
-        return str([ self.state[z] for z in ORDERED_BOARD_KEYS ])
+        return { k: str(v) if v else '  ' for (k,v) in self.state.items() }
 
     def pieces_of_color(self, color):
         if color == 'w':
             return self.white
         else:
             return self.black
+
+    def spawn_pieces(self, init_state):
+        # 'state' here should be the input of the constructor, which should be dict of string values!
+        for square in init_state.keys():
+            if init_state[square] != '  ':
+                self.add_piece(init_state[square][0], init_state[square][1], square)
+                if init_state[square] == 'wk':
+                    self.white_king = self.state[square]
+                if init_state[square] == 'bk':
+                    self.black_king = self.state[square]
+        self.update_incheck()
 
     def add_piece(self, color, type_=None, location=None):
         if isinstance(color, Piece):
@@ -176,19 +174,6 @@ class Board():
         self.state[location] = new_piece
         index = 8*(ord(location[0])-97) + int(location[1])
         self.hashstate = self.hashstate[:index] + new_piece.hashtype + self.hashstate[index+1:]
-
-    def spawn_pieces(self, init_state):
-        # 'state' here should be the input of the constructor, which should be dict of string values!
-        for square in init_state.keys():
-            if init_state[square] != '  ':
-                self.add_piece(init_state[square][0], init_state[square][1], square)
-                if init_state[square] == 'wk':
-                    self.white_king = self.state[square]
-                if init_state[square] == 'bk':
-                    self.black_king = self.state[square]
-
-        self.white_checked = self.is_in_check(self.white_king.location, 'b')
-        self.black_checked = self.is_in_check(self.black_king.location, 'w')
 
     def remove_piece(self, location_):
         if isinstance(location_, Piece):
@@ -227,9 +212,6 @@ class Board():
             raise MoveException(message)
 
         piece.location = to
-        # piece.x = ord(piece.location[0])-96
-        # piece.y = int(piece.location[1])
-
         self.state[to] = piece
         index = 8*(ord(to[0])-97) + int(to[1])
         self.hashstate = self.hashstate[:index] + piece.hashtype + self.hashstate[index+1:]
@@ -237,83 +219,9 @@ class Board():
         index = 8*(ord(origin[0])-97) + int(origin[1])
         self.hashstate = self.hashstate[:index] + ' ' + self.hashstate[index+1:]
 
-    # def naive_moves(self, piece):
-    #     results = []
-    #     preliminary = piece.lookup_moves()
-    #     for move_type in ['m','m2','mk','t','p','+','e','c','NE','SE','SW','NW','N','E','S','W']:
-    #         if not move_type in preliminary.keys():
-    #             preliminary[move_type] = []
-
-    #     # moving to empty square
-    #     for destination in preliminary['m']:
-    #         if not self.state[destination]:
-    #             results.append(Move(piece, 'm', destination, destination))
-
-    #     # for pawn jumps over empty square
-    #     for destination in preliminary['m2']:
-    #         if not self.state[destination] and ((piece.color == 'w' and not self.state[destination[0]+'3']) or (piece.color == 'b' and not self.state[destination[0]+'6'])):
-    #             results.append(Move(piece, 'm2', destination, destination))
-
-    #     # moving K to empty square
-    #     for destination in preliminary['mk']:
-    #         if not self.state[destination]:
-    #             results.append(Move(piece, 'mk', destination, piece.notation() + destination))
-
-    #     # taking non empty square
-    #     for destination in preliminary['t']:
-    #         if self.state[destination] and self.state[destination].color != piece.color:
-    #             results.append(Move(piece, 't', destination, piece.notation() + CAPTURE_SIGN + destination, self.state[destination]))
-
-    #     # promote on empty
-    #     for destination in preliminary['p']:
-    #         if not self.state[destination]:
-    #             for option in ['N', 'B', 'R', 'Q']:
-    #                 results.append(Move(piece, 'p', destination, destination + option, option))
-
-    #     # capture-promote on non empty
-    #     for destination in preliminary['+']:
-    #         if self.state[destination] and self.state[destination].color != piece.color:
-    #             for option in ['N', 'B', 'R', 'Q']:
-    #                 results.append(Move(piece, '+', destination, piece.notation() + CAPTURE_SIGN + destination + option, [option, self.state[destination]]))
-
-    #     # en passant - destination empty, side non empty of opposite color
-    #     for destination in preliminary['e']:
-    #         opponent = self.state[destination[0] + piece.location[1]]
-    #         if opponent and opponent.color != piece.color and opponent.type_ == 'p' and not self.state[destination]:
-    #             results.append(Move(piece, 'e', destination, piece.notation() + CAPTURE_SIGN + destination, opponent))
-
-    #     # castle - all
-    #     for destination in preliminary['c']:
-    #         if not self.state[destination]:
-    #             if piece.color == 'w':
-    #                 if destination[0] == 'g' and self.state['h1'] and self.state['h1'].designation == 'wr' and not self.state['f1']:
-    #                     results.append(Move(piece, 'c', destination, 'O-O', self.state['h1']))
-    #                 if destination[0] == 'c' and self.state['a1'] and self.state['a1'].designation == 'wr' and not self.state['d1'] and not self.state['b1']:
-    #                     results.append(Move(piece, 'c', destination, 'O-O-O', self.state['a1']))
-    #             else:
-    #                 if destination[0] == 'g' and self.state['h8'] and self.state['h8'].designation == 'br' and not self.state['f8']:
-    #                     results.append(Move(piece, 'c', destination, 'O-O', self.state['h8']))
-    #                 if destination[0] == 'c' and self.state['a8'] and self.state['a8'].designation == 'br' and not self.state['d8'] and not self.state['b8']:
-    #                     results.append(Move(piece, 'c', destination, 'O-O-O', self.state['a8']))
-
-    #     # directional
-    #     for direction in ['NE','SE','SW','NW','N','E','S','W']:
-    #         for destination in preliminary[direction]:
-    #             if not self.state[destination]:
-    #                 results.append(Move(piece, 'm', destination, piece.notation() + destination))
-    #             else:
-    #                 if self.state[destination].color != piece.color:
-    #                     results.append(Move(piece, 't', destination, piece.notation() + CAPTURE_SIGN + destination, self.state[destination]))
-    #                 break
-
-    #     return results
-
     def naive_moves(self, piece):
         results = []
         preliminary = piece.lookup_moves()
-        # for move_type in ['m','m2','mk','t','p','+','e','c','NE','SE','SW','NW','N','E','S','W']:
-        #     if not move_type in preliminary.keys():
-        #         preliminary[move_type] = []
 
         # moving to empty square
         try:
@@ -409,15 +317,9 @@ class Board():
     def process_actions(self, actions):
         # common routine of the exec_move and undo_move
         for act in actions:
-            if act['act'] == 'relocate_piece':
-                self.relocate_piece(*act['args'])
-            elif act['act'] == 'remove_piece':
-                self.remove_piece(*act['args'])
-            elif act['act'] == 'add_piece':
-                self.add_piece(*act['args'])
-            elif act['act'] == 'data':
-                self.white_checked = act['args'][0]
-                self.black_checked = act['args'][1]
+            getattr(self, act[0])(*act[1])
+
+    undo_actions = process_actions
 
     def execute_move(self, move):
         # the function that applies actions to the piece set (and thus the board)
@@ -428,47 +330,21 @@ class Board():
             return None
         # --- end of invalidation ---
 
-        undo.append({'act':'data', 'args':[self.white_checked, self.black_checked]})
-        # refresh being in check state
-        if move.piece.color == 'w':
-            self.black_checked = self.is_in_check(self.black_king.location, 'w')
-        else:
-            self.white_checked = self.is_in_check(self.white_king.location, 'b')
-
+        undo.append(('reset_incheck', [self.white_checked, self.black_checked]))
+        self.update_incheck(move.piece.color)
         return undo
-
-    def undo_actions(self, actions):
-        self.process_actions(actions)
 
     def reset_incheck(self, white_is_in_check, black_is_in_check):
         self.white_checked = white_is_in_check
         self.black_checked = black_is_in_check
 
-    def process_flat_actions(self, actions):
-        # DDRRAAI
-        if actions[0]:
-            self.remove_piece(actions[0])
-        if actions[1]:
-            self.remove_piece(actions[1])
-        if actions[2]:
-            self.relocate_piece(actions[2], actions[3])
-        if actions[4]:
-            self.relocate_piece(actions[4], actions[5])
-        if actions[6]:
-            self.add_piece(actions[6])
-        if actions[7]:
-            self.add_piece(actions[7])
-        if actions[8]:
-            self.reset_incheck(actions[8], actions[9])
-
-    def flat_execute(self, move_actions):
-        self.process_flat_actions(move_actions)
-        return self.white_checked, self.black_checked
-
-    def update_incheck_variable_state(self, color):
+    def update_incheck(self, color=None):
         if color == 'w':
             self.black_checked = self.is_in_check(self.black_king.location, 'w')
+        elif color == 'b':
+            self.white_checked = self.is_in_check(self.white_king.location, 'b')
         else:
+            self.black_checked = self.is_in_check(self.black_king.location, 'w')
             self.white_checked = self.is_in_check(self.white_king.location, 'b')
 
     def validate_move(self, move):

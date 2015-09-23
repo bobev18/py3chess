@@ -101,36 +101,7 @@ class Game():
                                        ]
         self.special_moves.append(history_dependant_move_state)
         self.history.append(move)
-        self.backtrack.append(self.board.hashit())
-
-    def record_flat_history(self, flat_actions, notation):
-        # we need to find the number of "relocate" actions:
-        # print('flat_actions', flat_actions)
-        if not flat_actions[2] and not flat_actions[4]:
-            # only promotion moves lack relocation action, and they dont affect the special_moves, so we return them unaffected:
-            history_dependant_move_state = self.special_moves[-1].copy()
-            history_dependant_move_state[-1] = ''   # in case last move was allowing en passant
-        elif flat_actions[2] and not flat_actions[4]:
-            # this case needs further checks
-            origin = flat_actions[2]
-            destination = flat_actions[3]
-            m2_type = int(notation in ['a4', 'b4', 'c4', 'd4', 'e4', 'f4', 'g4', 'h4', 'a5', 'b5', 'c5', 'd5', 'e5', 'f5', 'g5', 'h5'])
-            history_dependant_move_state = [ self.special_moves[-1][0] or origin in ['a8', 'e8'],
-                                             self.special_moves[-1][1] or origin in ['e8', 'h8'],
-                                             self.special_moves[-1][2] or origin in ['a1', 'e1'],
-                                             self.special_moves[-1][3] or origin in ['e1', 'h1'],
-                                             m2_type*destination[0]
-                                           ]
-        else:
-            # only castling involves two relocations. this first one should the one for the rook, but all we need to know is the row
-            origin_row = flat_actions[2][1]
-            if origin_row == '1':
-                history_dependant_move_state = [self.special_moves[-1][0], self.special_moves[-1][1], True, True, '']
-            else:
-                history_dependant_move_state = [True, True, self.special_moves[-1][2], self.special_moves[-1][3], '']
-
-        self.special_moves.append(history_dependant_move_state)
-        self.backtrack.append(self.board.hashit())
+        self.backtrack.append(self.board.hashstate)
 
     def validate_special_moves(self, move):
         if move.type_ == 'c':
@@ -146,16 +117,6 @@ class Game():
              return self.special_moves[-1][4] == move.destination[0]
 
         return True
-
-    # def validate_against_history(self, move):
-    #     if move.type_ == 'c':
-    #         color_relevant_history_moves = [ z for z in self.history if z.piece.color == move.piece.color ]
-    #         nullifying_moves = [ z for z in color_relevant_history_moves if z.origin in ['a1', 'e1', 'h1', 'a8', 'e8', 'h8'] ]
-    #         return len(nullifying_moves) == 0
-    #     if move.type_ == 'e':
-    #         return len(self.history) == 0 or (self.history[-1].type_ == 'm2' and self.history[-1].destination[0] == move.destination[0])
-
-    #     return True
 
     def valid_moves_of_piece_at(self, location):
         result = []
