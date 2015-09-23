@@ -35,7 +35,9 @@ class Game():
         self.whites_player = Player(self, whites_player_type, 'w', clock)
         self.blacks_player = Player(self, blacks_player_type, 'b', clock)
         self.turnning_player = self.whites_player
+        self.opposing_player = self.blacks_player
         self.turn_count = 1
+        self.semi_turn_count = 0
         self.undo_stack = []
         # self.full_notation = '' # quite as the values in hist, but with the count and # + ? !
         self.history = []
@@ -73,9 +75,18 @@ class Game():
             if extra_piece in ['n', 'b']:
                 return 'stalemate'
 
+        # produce heat map
+        hits = []
+        opposing_pieceset = self.board.pieces_of_color(self.opposing_player.color).copy()
+        for piece in opposing_pieceset:
+            [ hits.extend(v) for k,v in piece.lookup_moves().items() if k not in ['m', 'm2', 'p', 'c'] ]
+
+        # print('hits', hits)
+        self.board.heat_map[self.opposing_player.color] = hits
+
         # reduced ability to move
         result = []
-        turning_pieceset = self.board.pieces_of_color(self.turnning_player.color).copy()
+        turning_pieceset = self.board.pieces_of_color(self.turnning_player.color).copy()   # copy because `valid_moves_of_piece_at` may alter it
         for piece in turning_pieceset:
             temporary_result = self.valid_moves_of_piece_at(piece.location)
             result.extend(temporary_result)
@@ -119,6 +130,7 @@ class Game():
         return True
 
     def valid_moves_of_piece_at(self, location):
+        # the argument could be piece, but with location it's easier to construct assertions in the unit tests
         result = []
         for move in self.board.naive_moves(self.board.state[location]):
             if self.validate_special_moves(move):
@@ -174,11 +186,9 @@ class Game():
                 self.undo_stack.append(undo)
                 self.whites_player.is_in_check = self.board.white_checked
                 self.blacks_player.is_in_check = self.board.black_checked
-                if self.turnning_player == self.whites_player:
-                    self.turnning_player = self.blacks_player
-                else:
-                    self.turnning_player = self.whites_player
-                    self.turn_count += 1
+                self.turnning_player, self.opposing_player = self.opposing_player, self.turnning_player
+                self.semi_turn_count += 1
+                self.turn_count = self.semi_turn_count//2 + 1
 
             if isinstance(self.state, list):
                 self.state = self.determine_game_state()

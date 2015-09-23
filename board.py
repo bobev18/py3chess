@@ -107,6 +107,7 @@ class Board():
         self.black = []
         self.state = EMPTYBOARD.copy()
         self.hashstate = ' '*64
+        self.heat_map = {'w': [], 'b': []}
         if construction_state == {}:
             self.white_king = None
             self.black_king = None
@@ -114,6 +115,7 @@ class Board():
             self.black_checked = False
         else:
             self.spawn_pieces(construction_state)
+
 
     def __repr__(self):
         result = '\n'
@@ -381,7 +383,19 @@ class Board():
                 return not self.discover_check(turns_king_location, move.origin, opposite_color)  # returns true if does not discover check
 
     def is_in_check(self, location, by_color):
-        result = False
+        old = self.is_in_check_old(location, by_color)
+        new = self.is_in_check_new(location, by_color)
+        print(location, 'old', old, 'new', new)
+        return new
+
+
+    def is_in_check_new(self, location, by_color):
+        # print(self.heat_map[by_color])
+        # print(self.heat_map[by_color].index(location))
+        # print()
+        return location in self.heat_map[by_color]
+
+    def is_in_check_old(self, location, by_color):
         for hitter in INVERSE_HIT_MAP[location]['knight']:
             if self.state[hitter] and self.state[hitter].designation == by_color+'n':
                 return True
