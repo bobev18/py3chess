@@ -236,18 +236,21 @@ class BoardTest(unittest.TestCase):
 
     def test_determining_checks(self):
         test_board = Board(TEST_POSITION2)
-        self.assertFalse(test_board.discover_check('e8', 'd7', 'w'))
-        self.assertFalse(test_board.discover_check('e1', 'e4', 'b'))
-        test_board.remove_piece('e4')
-        self.assertTrue(test_board.discover_check('e1', 'e4', 'b'))
-        # |br|  |  |  |bk|  |  |  |
+        # |br|  |bb|bq|bk|bb|bn|  |
         # |  |wr|  |bb|  |  |  |  |
         # |  |  |  |  |  |  |  |  |
         # |  |wb|  |  |bq|  |  |  |
-        # |  |  |  |  |  |  |  |  |
+        # |  |  |  |  |wn|  |  |  |
         # |  |  |bn|  |  |  |  |  |
         # |  |  |  |  |  |  |  |  |
-        # |wr|  |  |  |wk|  |  |wr|
+        # |wr|wn|wb|wq|wk|wb|  |wr|
+        self.assertFalse(test_board.is_in_check('e1','b'))
+        self.assertFalse(test_board.discover_check('e8', 'd7', 'w'))
+        self.assertFalse(test_board.discover_check('e1', 'e4', 'b'))
+        test_board.remove_piece('e4')
+        test_board.update_heat_map('w')
+        test_board.update_heat_map('b')
+        self.assertTrue(test_board.discover_check('e1', 'e4', 'b'))
 
         self.assertTrue(test_board.is_in_check('e1','b'))
         self.assertTrue(test_board.is_in_check('e2','b'))

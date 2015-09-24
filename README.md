@@ -136,13 +136,6 @@ I could probably reduce the tree, by keeping only the best candidate depth 1 bra
 On deeper branches we cannot cut oponent branches, but on any own branches we can apply the same strategy. No, because the optimum will change due to deeper lvl evaluataions.
 
 
-The timing of the results indicate about 200sec out of 800sec are in `board.is_in_check`. Instead of checking potential hitters, a heat map could be used. The heated nodes are the destinations in the non capturing naive expansions;
-  Moving one piece can influence the naive expansions of another piece that is not involved in the move. This will require recalculating all naives for all pieces. This is actually part of gamestate check which makes valid moves, which in order are based on naive moves. However it's done in order of pieces: piece.naives -> piece.valids -> execute -> validate for discover_/is_in_ check -> undo ===> next piece
-  Finding all naives for a position before proceeding to validation process will require two separate cycles through pieces:
-    cycle opponent pieces and pull naives to gen the heat map
-    cycle through own pieces and pass the validation where is_in_check reads the heat map instead of INVERSE_HIT_MAP
-^^^^
-the above is structural change to many modules/classes, and needs to be carried in new branch stemming from master!!!!
 
 The way undo_actions get the 'data' for the w_in_check/b_in_check position, the same should be added to the move_actions before undo is processed. This should allow conditioning the calls to `update_incheck_variable_state` which relies on `is_in_check`, to avoid the call id the 'data' is present in the move_actions
 MMM the first execution is done based on result from move.actions while the 2nd is from move.flat_actions so values from the 1st cannot be transfered in the 2nd. To make it work we'll need global use of flat actions and retaining them from the gamestate moves to the <expand> moves
@@ -153,3 +146,28 @@ the plan is to:
 3. make a flat branch and implement only the flat moves
 4. make direct comparison between flat and non flat mem usage
 results are -- storing Move obj is better than a flat list !!!!!!!
+
+
+The timing of the results indicate about 200sec out of 800sec are in `board.is_in_check`. Instead of checking potential hitters, a heat map could be used. The heated nodes are the destinations in the non capturing naive expansions;
+  Moving one piece can influence the naive expansions of another piece that is not involved in the move. This will require recalculating all naives for all pieces. This is actually part of gamestate check which makes valid moves, which in order are based on naive moves. However it's done in order of pieces: piece.naives -> piece.valids -> execute -> validate for discover_/is_in_ check -> undo ===> next piece
+  Finding all naives for a position before proceeding to validation process will require two separate cycles through pieces:
+    cycle opponent pieces and pull naives to gen the heat map
+    cycle through own pieces and pass the validation where is_in_check reads the heat map instead of INVERSE_HIT_MAP
+^^^^
+the above is structural change to many modules/classes, and needs to be carried in new branch stemming from master!!!!
+^!^!^
+Got heat of Piece lookup_moves, but it fails, because these moves do not consider any obstructions pieces - the pawn on d2 in front of the queen queen on d1 will spare d2 from entering the heat map, but will list d3.
+Options:
+ a) use the naive moves as they are, and filter the relevant ones to pull the map
+ b) it seems only directional moves ['NE','SE','SW','NW','N','E','S','W'] needs to be upgraded from `lookup_moves` to `naive_moves`
+   b1) copy the code from `naive_moves` to the relevant spot for heat map generation
+   b2) encapsulate the directional moves code to it's own method to call on both spots
+      ^^ cant use the same code, since `naive_moves` needs result in Move objects, and the heat map generation cares only for the destination
+
+implemented b1 and places the whole `produce_heat_map` in a method
+test still fails, because there is positions change between the initial setup, and the assertion ==> the heat needs to be updated after executing a move
+
+test `test_determining_checks` passes, but cant figure out why discover_check call invokes is_in_check call
+never mind - its via spawn->update_incheck->is_in_check
+and that FAILS?! although every other assertion in the `test_determining_checks` passes
+fixed -- it was due to the shortcut around the inner if before the break during the handling of the ['NE','SE','SW','NW','N','E','S','W']

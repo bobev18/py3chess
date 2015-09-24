@@ -148,7 +148,39 @@ class Board():
                     self.white_king = self.state[square]
                 if init_state[square] == 'bk':
                     self.black_king = self.state[square]
+
+        # for piece in self.white:
+        #     [ self.heat_map['w'].extend(v) for k,v in piece.lookup_moves().items() if k not in ['m', 'm2', 'p', 'c'] ]
+        # for piece in self.black:
+        #     print(piece, [ (k,v) for k,v in piece.lookup_moves().items() if k not in ['m', 'm2', 'p', 'c'] ])
+        #     [ self.heat_map['b'].extend(v) for k,v in piece.lookup_moves().items() if k not in ['m', 'm2', 'p', 'c'] ]
+
+        self.update_heat_map('b')
+        self.update_heat_map('w')
         self.update_incheck()
+
+    def update_heat_map(self, by_color, verbose=False):
+        if verbose: print('\n','='*30, by_color, '='*30,'\n')
+        for piece in self.pieces_of_color(by_color):
+            preliminary = piece.lookup_moves()
+            if verbose: print(piece, preliminary)
+            for typ, destinations in preliminary.items():
+                if verbose: print('type', typ, 'dest', destinations)
+                if typ in ['mk', 't', '+', 'e']:
+                    self.heat_map[by_color].extend(destinations)
+                    if verbose: print('                   extended to', self.heat_map[by_color])
+                if typ in ['NE','SE','SW','NW','N','E','S','W']:
+                    for destination in destinations:
+                        if verbose: print('    dest', destination)
+                        if not self.state[destination]:
+                            self.heat_map[by_color].append(destination)
+                        else:
+                            if self.state[destination].color != piece.color:
+                                self.heat_map[by_color].append(destination)
+                            if verbose: print('break')
+                            break
+
+        if verbose: print(self.heat_map[by_color])
 
     def add_piece(self, color, type_=None, location=None):
         if isinstance(color, Piece):
@@ -326,13 +358,21 @@ class Board():
     def execute_move(self, move):
         # the function that applies actions to the piece set (and thus the board)
         actions, undo = move.actions()
+        backup_heat_map = self.heat_map.copy()
         self.process_actions(actions)
+        if move.piece.color == 'w':
+            target_color = 'b'
+        else:
+            target_color = 'w'
+        self.update_heat_map(target_color)
         if not self.validate_move(move):
             self.process_actions(undo)
+            self.heat_map = backup_heat_map
             return None
         # --- end of invalidation ---
 
         undo.append(('reset_incheck', [self.white_checked, self.black_checked]))
+        self.update_heat_map()
         self.update_incheck(move.piece.color)
         return undo
 
@@ -385,9 +425,8 @@ class Board():
     def is_in_check(self, location, by_color):
         old = self.is_in_check_old(location, by_color)
         new = self.is_in_check_new(location, by_color)
-        print(location, 'old', old, 'new', new)
+        print(location, 'by', by_color, 'old', old, 'new', new)
         return new
-
 
     def is_in_check_new(self, location, by_color):
         # print(self.heat_map[by_color])

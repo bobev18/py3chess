@@ -75,14 +75,15 @@ class Game():
             if extra_piece in ['n', 'b']:
                 return 'stalemate'
 
-        # produce heat map
-        hits = []
-        opposing_pieceset = self.board.pieces_of_color(self.opposing_player.color).copy()
-        for piece in opposing_pieceset:
-            [ hits.extend(v) for k,v in piece.lookup_moves().items() if k not in ['m', 'm2', 'p', 'c'] ]
+
+        # # produce heat map
+        # hits = []
+        # opposing_pieceset = self.board.pieces_of_color(self.opposing_player.color).copy()
+        # for piece in opposing_pieceset:
+        #     [ hits.extend(v) for k,v in piece.lookup_moves().items() if k not in ['m', 'm2', 'p', 'c'] ]
 
         # print('hits', hits)
-        self.board.heat_map[self.opposing_player.color] = hits
+        # self.board.heat_map[self.opposing_player.color] = hits
 
         # reduced ability to move
         result = []
