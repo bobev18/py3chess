@@ -176,7 +176,7 @@ test_game = Game(board_position=position)
 test_ai = AI(4, test_game) # this cutoff value is not used, but the one passed in the evaluate method
 
 test = test_ai.evaluate_position("w", 3)
-# cProfile.run('test = test_ai.evaluate_position("w", 4)')
+# cProfile.run('test = test_ai.evaluate_position("w", 3)')
 print(test_game.board)
 print('optimal move with score', test.value, 'and move path:', test.optimal_cutoff_path)
 

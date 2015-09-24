@@ -160,6 +160,7 @@ class Board():
         self.update_incheck()
 
     def update_heat_map(self, by_color, verbose=False):
+        self.heat_map[by_color] = []
         if verbose: print('\n','='*30, by_color, '='*30,'\n')
         for piece in self.pieces_of_color(by_color):
             preliminary = piece.lookup_moves()
@@ -364,7 +365,15 @@ class Board():
             target_color = 'b'
         else:
             target_color = 'w'
-        self.update_heat_map(target_color)
+        
+        # if move.notation == 'Qxf7':
+        #     self.update_heat_map(target_color, True)
+        # else:
+        #     self.update_heat_map(target_color)
+        # self.update_heat_map(target_color)
+        self.update_heat_map('w')
+        self.update_heat_map('b')
+        
         if not self.validate_move(move):
             self.process_actions(undo)
             self.heat_map = backup_heat_map
@@ -372,7 +381,6 @@ class Board():
         # --- end of invalidation ---
 
         undo.append(('reset_incheck', [self.white_checked, self.black_checked]))
-        self.update_heat_map()
         self.update_incheck(move.piece.color)
         return undo
 
@@ -422,13 +430,13 @@ class Board():
             else:
                 return not self.discover_check(turns_king_location, move.origin, opposite_color)  # returns true if does not discover check
 
-    def is_in_check(self, location, by_color):
+    def is_in_check22(self, location, by_color):
         old = self.is_in_check_old(location, by_color)
         new = self.is_in_check_new(location, by_color)
-        print(location, 'by', by_color, 'old', old, 'new', new)
+        # print(location, 'by', by_color, 'old', old, 'new', new)
         return new
 
-    def is_in_check_new(self, location, by_color):
+    def is_in_check(self, location, by_color):
         # print(self.heat_map[by_color])
         # print(self.heat_map[by_color].index(location))
         # print()
