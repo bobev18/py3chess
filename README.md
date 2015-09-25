@@ -153,3 +153,25 @@ the plan is to:
 3. make a flat branch and implement only the flat moves
 4. make direct comparison between flat and non flat mem usage
 results are -- storing Move obj is better than a flat list !!!!!!!
+
+heat map works twice slower than the current is_in_check!
+
+tottime - is time spend in the method minus the sub calls
+Have to find another way to optimize is_in_check:
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+   571117   11.666    0.000   12.110    0.000 board.py:388(is_in_check)
+
+merged directional cycles
+   549840   15.223    0.000   16.116    0.000 board.py:388(is_in_check)
+
+There is no point of altering the cycles -- the number of comparisons between hitters and board state cannot be reduced
+
+To avoid the verifying all potential hitter positions is to keep track of these during the move executions. That information cannot be the validated moves but it should work for naive moves
+This is more core change than the heat map
+
+High level concept is like this:
+keep Piece's equivalent of ACT_MAP and update it dynamically based on move executions
+let's have a method "update_naives"; for non directional moves, that will be an if check, but for directional ones it will be a cutoff for the direction sequence
+so after move execution we cycle through pieces, and call update_naives with the Move (or destination, etc)
+To avoid another cycle, the updated data should be passed into heatmap
+--- initial naive_moves for a piece need to be processed via the current naive_moves method

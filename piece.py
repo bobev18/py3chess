@@ -76,17 +76,10 @@ class Piece():
             self.hashtype = type_.lower()
         self.designation = color + type_
         self.location = location
-        # self.x = ord(self.location[0])-96
-        # self.y = int(self.location[1])
-        # self.valid_moves = None
+        self.naive_moves = []
 
     def __repr__(self):
-        # return self.color + self.type_ + '@' + self.location
-        # return self.color_n_type + '@' + self.location
         return self.designation + '@' + self.location
-
-    # def designation(self):
-    #     return self.color + self.type_
 
     def notation(self):
         if self.type_ == 'p':
