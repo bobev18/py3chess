@@ -65,6 +65,35 @@ ACT_MAP = {
     'h8': {'ab': {'SW': ['g7', 'f6', 'e5', 'd4', 'c3', 'b2', 'a1'], }, 'ak': {'mk': ['h7', 'g7', 'g8'], 't': ['h7', 'g7', 'g8'], }, 'an': {'mk': ['g6', 'f7'], 't': ['g6', 'f7'], }, 'aq': {'SW': ['g7', 'f6', 'e5', 'd4', 'c3', 'b2', 'a1'], 'S': ['h7', 'h6', 'h5', 'h4', 'h3', 'h2', 'h1'], 'W': ['g8', 'f8', 'e8', 'd8', 'c8', 'b8', 'a8'], }, 'ar': {'S': ['h7', 'h6', 'h5', 'h4', 'h3', 'h2', 'h1'], 'W': ['g8', 'f8', 'e8', 'd8', 'c8', 'b8', 'a8'], }, },
 }
 
+class Path():
+
+    def __init__(self, designation, squares):
+        self.designation = designation
+        self.squares = { z:False for z in squares }
+
+    def block(self, square, blocking_color):
+        try:
+            self.squares[square] = blocking_color
+        except KeyError:
+            pass
+
+    def unblock(self, square):
+        try:
+            self.squares[square] = False
+        except KeyError:
+            pass
+
+    def walk(self, as_color):
+        result = []
+        for square, value in squares.items():
+            if value:
+                if as_color != value:
+                    result.append(square)
+                break
+            else:
+                result.append(square)
+        return result
+
 
 class Piece():
     def __init__(self, color, type_, location):
@@ -77,6 +106,11 @@ class Piece():
         self.designation = color + type_
         self.location = location
         self.naive_moves = []
+        if self.type_ == 'p':
+            self.key_type = self.color + 'p'
+        else:
+            self.key_type = 'a' + self.type_
+        self.init_moves()
 
     def __repr__(self):
         return self.designation + '@' + self.location
@@ -88,17 +122,37 @@ class Piece():
             return self.type_.upper()
 
     def lookup_moves(self):
-        if self.color == 'w':
-            opposite_color = 'b'
-        else:
-            opposite_color = 'w'
-
-        if self.type_ == 'p':
-            key_type = self.color + 'p'
-        else:
-            key_type = 'a' + self.type_
-
         try:
-            return ACT_MAP[self.location][key_type]
+            return ACT_MAP[self.location][self.key_type]
         except KeyError:
-            return {}
+            return {}        
+
+    def init_moves(self):
+        self.paths = []
+        self.others = {}
+        try:
+            raw_moves = ACT_MAP[self.location][self.key_type]
+            for move_type in raw_moves.keys():
+                if move_type in ['NE','SE','SW','NW','N','E','S','W']:
+                    self.paths.append(Path(move_type, raw_moves[move_type]))
+                else:
+                    self.others[move_type] = raw_moves[move_type]
+        except KeyError:
+            pass
+
+    def block(self, square, by_color):
+        for path in self.paths:
+            path.block(square, by_color)
+
+    def unblock(self, square):
+        for path in self.paths:
+            path.unblock(square)
+
+    def heat(self):
+        results = []
+        for move_type, squares in self.others.items():
+            if move_type in ['t', 'e', '+']:
+                results.extend(squares)
+        for path in self.paths:
+            results.extend(path.walk(self.color))
+        return results
