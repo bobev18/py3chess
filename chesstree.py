@@ -1,4 +1,4 @@
-from pympler import asizeof
+# from pympler import asizeof
 import cProfile
 from game import Game
 
@@ -114,7 +114,7 @@ class AI:
                 # print('score_cache KB sz', asizeof.asizeof(self.score_cache)//1024)
             root_node.subnodes = [optimal_node]
 
-            print('final root node size (KB)', asizeof.asizeof(root_node)//1024)
+            # print('final root node size (KB)', asizeof.asizeof(root_node)//1024)
             return optimum
 
     def evaluate(self, node, cutoff_depth, upper_level_optimum=None):  # cutoff_depth absolute count of (semi-)turns
@@ -175,8 +175,8 @@ position = {'e2':'  ','c8':'  ','e1':'  ','b6':'  ','e8':'bk','e7':'  ','g5':'  
 test_game = Game(board_position=position)
 test_ai = AI(4, test_game) # this cutoff value is not used, but the one passed in the evaluate method
 
-test = test_ai.evaluate_position("w", 3)
-# cProfile.run('test = test_ai.evaluate_position("w", 4)')
+# test = test_ai.evaluate_position("w", 3)
+cProfile.run('test = test_ai.evaluate_position("w", 3)')
 print(test_game.board)
 print('optimal move with score', test.value, 'and move path:', test.optimal_cutoff_path)
 
