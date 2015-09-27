@@ -175,3 +175,4 @@ let's have a method "update_naives"; for non directional moves, that will be an 
 so after move execution we cycle through pieces, and call update_naives with the Move (or destination, etc)
 To avoid another cycle, the updated data should be passed into heatmap
 --- initial naive_moves for a piece need to be processed via the current naive_moves method
+!!! also for newly created pieces (pawn promos), the initial state also needs to be done via the current method !!!
