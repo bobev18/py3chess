@@ -106,6 +106,8 @@ class Board():
     def __init__(self, construction_state={}):
         self.white = []
         self.black = []
+        self.all = []
+        self.heat = {'w': [], 'b': []}
         self.state = EMPTYBOARD.copy()
         self.hashstate = ' '*64
         if construction_state == {}:
@@ -129,6 +131,28 @@ class Board():
                 result += piece + '|'
             result += '\n'
         return result
+
+    def heatness(self):
+        result = '\n'
+        for i in range(8,0,-1):
+            result += '|'
+            wh = ''
+            bh = ''
+            for j in range(97,105):
+                loc = chr(j)+str(i)
+                if loc in self.heat['w']:
+                    wh += 'x'
+                else:
+                    wh += ' '
+                if loc in self.heat['b']:
+                    bh += 'x'
+                else:
+                    bh += ' '
+                wh += '|'
+                bh += '|'
+            result += wh + '          |' + bh + '\n'
+        return result
+
 
     def export(self):
         return { k: str(v) if v else '  ' for (k,v) in self.state.items() }
@@ -168,14 +192,20 @@ class Board():
 
             new_piece = Piece(color, type_, location)
 
+        self.state[location] = new_piece
+        for old_piece in self.all:
+            new_piece.block(old_piece.location, old_piece.color)
+            old_piece.block(location, new_piece.color)
+            self.heat[old_piece.color].extend(old_piece.heat())
+            print(new_piece, 'o', old_piece, self.heatness())
+        self.heat[new_piece.color].extend(new_piece.heat())
+        print(new_piece, self.heatness())
+
+        self.all.append(new_piece)
         if new_piece.color == 'w':
             self.white.append(new_piece)
         else:
             self.black.append(new_piece)
-
-        self.state[location] = new_piece
-        [ z.block(location, new_piece.color) for z in self.white ]
-        [ z.block(location, new_piece.color) for z in self.black ]
         index = BOARD_KEY_INDEX[location]
         self.hashstate = self.hashstate[:index] + new_piece.hashtype + self.hashstate[index+1:]
 
@@ -192,10 +222,13 @@ class Board():
             raise MoveException(message)
 
         self.state[location] = None
-        [ z.unblock(location) for z in self.white ]
-        [ z.unblock(location) for z in self.black ]
+        for other_piece in self.all:
+            other_piece.unblock(location)
+            self.heat[other_piece.color].extend(other_piece.heat())
+
         index = BOARD_KEY_INDEX[location]
         self.hashstate = self.hashstate[:index] + ' ' + self.hashstate[index+1:]
+        self.all.remove(piece)
         if piece.color == 'w':
             self.white.remove(piece)
         else:
@@ -219,13 +252,18 @@ class Board():
 
         piece.location = to
         self.state[to] = piece
-        [ z.block(to, piece.color) for z in self.white ]
-        [ z.block(to, piece.color) for z in self.black ]
+        self.state[origin] = None
+        piece.init_moves()
+        for other_piece in self.all:
+            if piece != other_piece:
+                other_piece.block(to, piece.color)
+                other_piece.unblock(origin)
+                piece.block(other_piece.location, other_piece.color)
+                self.heat[other_piece.color].extend(other_piece.heat())
+        self.heat[piece.color].extend(piece.heat())
+
         index = BOARD_KEY_INDEX[to]
         self.hashstate = self.hashstate[:index] + piece.hashtype + self.hashstate[index+1:]
-        self.state[origin] = None
-        [ z.unblock(origin) for z in self.white ]
-        [ z.unblock(origin) for z in self.black ]
         index = BOARD_KEY_INDEX[origin]
         self.hashstate = self.hashstate[:index] + ' ' + self.hashstate[index+1:]
 
@@ -391,6 +429,9 @@ class Board():
                 return not self.discover_check(turns_king_location, move.origin, opposite_color)  # returns true if does not discover check
 
     def is_in_check(self, location, by_color):
+        return location in self.heat[by_color]
+
+    def old_is_in_check(self, location, by_color):
         for hitter in INVERSE_HIT_MAP[location]['knight']:
             if self.state[hitter] and self.state[hitter].designation == by_color+'n':
                 return True

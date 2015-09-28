@@ -176,3 +176,9 @@ so after move execution we cycle through pieces, and call update_naives with the
 To avoid another cycle, the updated data should be passed into heatmap
 --- initial naive_moves for a piece need to be processed via the current naive_moves method
 !!! also for newly created pieces (pawn promos), the initial state also needs to be done via the current method !!!
+
+DICTS ARE NOT ORDERED !
+bq@d8 path {'b8': False, 'a8': False, 'c8': False}
+===> no blocking
+
+change path structure to parallel lists!!!

@@ -72,20 +72,16 @@ class Path():
         self.squares = { z:False for z in squares }
 
     def block(self, square, blocking_color):
-        try:
+        if square in self.squares:
             self.squares[square] = blocking_color
-        except KeyError:
-            pass
 
     def unblock(self, square):
-        try:
+        if square in self.squares:
             self.squares[square] = False
-        except KeyError:
-            pass
 
     def walk(self, as_color):
         result = []
-        for square, value in squares.items():
+        for square, value in self.squares.items():
             if value:
                 if as_color != value:
                     result.append(square)
@@ -125,7 +121,7 @@ class Piece():
         try:
             return ACT_MAP[self.location][self.key_type]
         except KeyError:
-            return {}        
+            return {}
 
     def init_moves(self):
         self.paths = []
@@ -154,5 +150,7 @@ class Piece():
             if move_type in ['t', 'e', '+']:
                 results.extend(squares)
         for path in self.paths:
+            print(self, 'path', path.squares)
+            print(self, 'walk', path.walk(self.color))
             results.extend(path.walk(self.color))
         return results
