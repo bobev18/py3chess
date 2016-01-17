@@ -71,25 +71,24 @@ class Path():
         self.designation = designation
         self.squares = squares
         self.values = { z:False for z in squares }
+        self.walk = squares
+        # self.walks = [squares]
 
-    def block(self, square, blocking_color):
+    def block(self, square):
         if square in self.squares:
-            self.values[square] = blocking_color
+            self.values[square] = True
+            if square in self.walk:
+                self.walk = self.walk[:self.walk.index(square)]
 
     def unblock(self, square):
         if square in self.squares:
             self.values[square] = False
 
-    def walk(self, as_color):
-        result = []
-        for square in self.squares:
-            if self.values[square]:
-                result.append(square)
-                break
-            else:
-                result.append(square)
-        return result
-
+            self.walk = []
+            for square in self.squares:
+                self.walk.append(square)
+                if self.values[square]:
+                    break
 
 class Piece():
     def __init__(self, color, type_, location):
@@ -136,15 +135,33 @@ class Piece():
         except KeyError:
             pass
 
-    def block(self, square, by_color):
+    def block(self, square):
         for path in self.paths:
-            path.block(square, by_color)
+            path.block(square)
 
     def unblock(self, square):
         for path in self.paths:
             path.unblock(square)
 
     def heat(self):
+        results = []
+        try:
+            results.extend(self.others['t'])
+        except KeyError:
+            pass
+        try:
+            results.extend(self.others['e'])
+        except KeyError:
+            pass
+        try:
+            results.extend(self.others['+'])
+        except KeyError:
+            pass
+        for path in self.paths:
+            results.extend(path.walk)
+        return results
+
+    def old_heat(self):
         results = []
         for move_type, squares in self.others.items():
             if move_type in ['t', 'e', '+']:

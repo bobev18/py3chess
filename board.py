@@ -195,10 +195,10 @@ class Board():
 
         self.state[location] = new_piece
         for old_piece in self.all:
-            new_piece.block(old_piece.location, old_piece.color)
-            old_piece.block(location, new_piece.color)
-            self.heat[old_piece.color].extend(old_piece.heat())
-        self.heat[new_piece.color].extend(new_piece.heat())
+            new_piece.block(old_piece.location)
+            old_piece.block(location)
+        #     self.heat[old_piece.color].extend(old_piece.heat())
+        # self.heat[new_piece.color].extend(new_piece.heat())
 
         self.all.append(new_piece)
         if new_piece.color == 'w':
@@ -223,7 +223,7 @@ class Board():
         self.state[location] = None
         for other_piece in self.all:
             other_piece.unblock(location)
-            self.heat[other_piece.color].extend(other_piece.heat())
+            # self.heat[other_piece.color].extend(other_piece.heat())
 
         index = BOARD_KEY_INDEX[location]
         self.hashstate = self.hashstate[:index] + ' ' + self.hashstate[index+1:]
@@ -255,11 +255,11 @@ class Board():
         piece.init_moves()
         for other_piece in self.all:
             if piece != other_piece:
-                other_piece.block(to, piece.color)
+                other_piece.block(to)
                 other_piece.unblock(origin)
-                piece.block(other_piece.location, other_piece.color)
-                self.heat[other_piece.color].extend(other_piece.heat())
-        self.heat[piece.color].extend(piece.heat())
+                piece.block(other_piece.location)
+        #         self.heat[other_piece.color].extend(other_piece.heat())
+        # self.heat[piece.color].extend(piece.heat())
 
         index = BOARD_KEY_INDEX[to]
         self.hashstate = self.hashstate[:index] + piece.hashtype + self.hashstate[index+1:]
@@ -364,8 +364,10 @@ class Board():
     def process_actions(self, actions):
         # common routine of the exec_move and undo_move
         for act in actions:
-            self.heat = {'w': [], 'b': []}
             getattr(self, act[0])(*act[1])
+        self.heat = {'w': [], 'b': []}
+        for piece in self.all:
+            self.heat[piece.color].extend(piece.heat())
 
     undo_actions = process_actions
 

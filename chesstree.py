@@ -69,7 +69,7 @@ class AI:
             self.score_cache[self.game.board.hashstate] = score
 
         if isinstance(game_state, list):
-            node.subnodes = [ Node(node.path, node.depth_level + 1, not node.color, z) for z in game_state ]
+            node.subnodes = sorted([ Node(node.path, node.depth_level + 1, not node.color, z) for z in game_state ], key=lambda x: x.path)
 
         self.game.board.undo_actions(undo)
         return score
@@ -78,7 +78,7 @@ class AI:
         # this method is called for nodes that are already executed onto the game object
         game_state = self.game.determine_game_state()   # returns 'mate', 'stalemate', or list of all valid expansions
         if isinstance(game_state, list):
-            node.subnodes = [ Node(node.path, node.depth_level + 1, not node.color, z) for z in game_state ]
+            node.subnodes = sorted([ Node(node.path, node.depth_level + 1, not node.color, z) for z in game_state ], key=lambda x: x.path)
             return None
         else:
             return self.evaluator(game_state, None)    #board is irrelevant because evaluator does not reference board when gamestate type is str
@@ -95,6 +95,7 @@ class AI:
                 oposite_color = 'w'
                 color_optimum = min
             root_node = Node('', 0, oposite_color, MoveMockup())
+            game_state.sort(key = lambda x: x.notation)
             first_move = game_state.pop()
             first_node = Node(root_node.path, root_node.depth_level + 1, by_color=='w', first_move)
             optimum = self.evaluate(first_node, cutoff_depth)
