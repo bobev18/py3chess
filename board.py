@@ -173,7 +173,8 @@ class Board():
                     self.white_king = self.state[square]
                 if init_state[square] == 'bk':
                     self.black_king = self.state[square]
-        self.update_incheck()
+        self.update_incheck('w')
+        self.update_incheck('b')
 
     def add_piece(self, color, type_=None, location=None):
         if isinstance(color, Piece):
@@ -268,7 +269,7 @@ class Board():
 
     def naive_moves(self, piece):
         results = []
-        preliminary = piece.lookup_moves()
+        preliminary = piece.raw_moves
 
         # moving to empty square
         try:
@@ -388,13 +389,10 @@ class Board():
         self.white_checked = white_is_in_check
         self.black_checked = black_is_in_check
 
-    def update_incheck(self, color=None):
+    def update_incheck(self, color):
         if color == 'w':
             self.black_checked = self.is_in_check(self.black_king.location, 'w')
-        elif color == 'b':
-            self.white_checked = self.is_in_check(self.white_king.location, 'b')
         else:
-            self.black_checked = self.is_in_check(self.black_king.location, 'w')
             self.white_checked = self.is_in_check(self.white_king.location, 'b')
 
     def validate_move(self, move):

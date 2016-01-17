@@ -165,16 +165,17 @@ merged directional cycles
 
 ##### Heat Concept
 
-The timing of the results indicate about 200sec out of 800sec are in `board.is_in_check`. Instead of checking potential hitters, a heat map could be used. The heated nodes are the destinations in the non capturing naive expansions;
-  Moving one piece can influence the naive expansions of another piece that is not involved in the move. This will require recalculating all naives for all pieces. This is actually part of gamestate check which makes valid moves, which in order are based on naive moves. However it's done in order of pieces: piece.naives -> piece.valids -> execute -> validate for discover_/is_in_ check -> undo ===> next piece
+The timing of the results indicate about 200sec out of 800sec are in `board.is_in_check`. Instead of checking potential hitters, a heat map could be used. The heated nodes are the destinations in the naive expansions up to a blockage;
+  Moving one piece can influence the naive expansions of another piece that is not involved in the move. This will require recalculating all naives for all pieces. This work (naives for each piece) is actually done in the non-heat implementation. The difference is in the order. The non-heat order is:
+    loop pieces in `detemine_agmaestate` -> for each piece call `valid_moves_at`, which `board.naive_moves` i.e **recalculates** the naive moves for the piece -> loops over moves and for each move does -> execute -> validate for discover_/is_in_ check -> undo ===> next move ===> next piece
   Finding all naives for a position before proceeding to validation process will require two separate cycles through pieces:
-    cycle opponent pieces and pull naives to gen the heat map
+    cycle opponent pieces and call `board.naive_moves` to generate the heat map
     cycle through own pieces and pass the validation where is_in_check reads the heat map instead of INVERSE_HIT_MAP
 ^^^^
 the above is structural change to many modules/classes, and needs to be carried in new branch stemming from master!!!!
 
 **Preliminary Result: heat map works twice slower than the current is_in_check!**
-
+(This preliminary had a bug, see further down for the ?final? result)
 
 To avoid the verifying all potential hitter positions is to keep track of these during the move executions. That information cannot be the validated moves but it should work for naive moves
 This is more core change than the heat map

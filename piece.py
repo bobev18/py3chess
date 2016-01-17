@@ -100,7 +100,7 @@ class Piece():
             self.hashtype = type_.lower()
         self.designation = color + type_
         self.location = location
-        self.naive_moves = []
+        self.raw_moves = {}
         if self.type_ == 'p':
             self.key_type = self.color + 'p'
         else:
@@ -116,22 +116,22 @@ class Piece():
         else:
             return self.type_.upper()
 
-    def lookup_moves(self):
-        try:
-            return ACT_MAP[self.location][self.key_type]
-        except KeyError:
-            return {}
+    # def lookup_moves(self):
+    #     try:
+    #         return ACT_MAP[self.location][self.key_type]
+    #     except KeyError:
+    #         return {}
 
     def init_moves(self):
         self.paths = []
         self.others = {}
         try:
-            raw_moves = ACT_MAP[self.location][self.key_type]
-            for move_type in raw_moves.keys():
+            self.raw_moves = ACT_MAP[self.location][self.key_type]
+            for move_type in self.raw_moves.keys():
                 if move_type in ['NE','SE','SW','NW','N','E','S','W']:
-                    self.paths.append(Path(move_type, raw_moves[move_type]))
+                    self.paths.append(Path(move_type, self.raw_moves[move_type]))
                 else:
-                    self.others[move_type] = raw_moves[move_type]
+                    self.others[move_type] = self.raw_moves[move_type]
         except KeyError:
             pass
 
