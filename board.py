@@ -167,6 +167,7 @@ class Board():
         # 'state' here should be the input of the constructor, which should be dict of string values!
         for square in init_state.keys():
             if init_state[square] != '  ':
+                self.heat = {'w': [], 'b': []}
                 self.add_piece(init_state[square][0], init_state[square][1], square)
                 if init_state[square] == 'wk':
                     self.white_king = self.state[square]
@@ -197,9 +198,7 @@ class Board():
             new_piece.block(old_piece.location, old_piece.color)
             old_piece.block(location, new_piece.color)
             self.heat[old_piece.color].extend(old_piece.heat())
-            print(new_piece, 'o', old_piece, self.heatness())
         self.heat[new_piece.color].extend(new_piece.heat())
-        print(new_piece, self.heatness())
 
         self.all.append(new_piece)
         if new_piece.color == 'w':
@@ -365,6 +364,7 @@ class Board():
     def process_actions(self, actions):
         # common routine of the exec_move and undo_move
         for act in actions:
+            self.heat = {'w': [], 'b': []}
             getattr(self, act[0])(*act[1])
 
     undo_actions = process_actions

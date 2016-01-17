@@ -136,13 +136,7 @@ I could probably reduce the tree, by keeping only the best candidate depth 1 bra
 On deeper branches we cannot cut oponent branches, but on any own branches we can apply the same strategy. No, because the optimum will change due to deeper lvl evaluataions.
 
 
-The timing of the results indicate about 200sec out of 800sec are in `board.is_in_check`. Instead of checking potential hitters, a heat map could be used. The heated nodes are the destinations in the non capturing naive expansions;
-  Moving one piece can influence the naive expansions of another piece that is not involved in the move. This will require recalculating all naives for all pieces. This is actually part of gamestate check which makes valid moves, which in order are based on naive moves. However it's done in order of pieces: piece.naives -> piece.valids -> execute -> validate for discover_/is_in_ check -> undo ===> next piece
-  Finding all naives for a position before proceeding to validation process will require two separate cycles through pieces:
-    cycle opponent pieces and pull naives to gen the heat map
-    cycle through own pieces and pass the validation where is_in_check reads the heat map instead of INVERSE_HIT_MAP
-^^^^
-the above is structural change to many modules/classes, and needs to be carried in new branch stemming from master!!!!
+##### Concept to discard Move obj, and replace it with a list ===
 
 The way undo_actions get the 'data' for the w_in_check/b_in_check position, the same should be added to the move_actions before undo is processed. This should allow conditioning the calls to `update_incheck_variable_state` which relies on `is_in_check`, to avoid the call id the 'data' is present in the move_actions
 MMM the first execution is done based on result from move.actions while the 2nd is from move.flat_actions so values from the 1st cannot be transfered in the 2nd. To make it work we'll need global use of flat actions and retaining them from the gamestate moves to the <expand> moves
@@ -152,11 +146,13 @@ the plan is to:
 2. revert the chessboard to use non-flat moves === Move objects
 3. make a flat branch and implement only the flat moves
 4. make direct comparison between flat and non flat mem usage
-results are -- storing Move obj is better than a flat list !!!!!!!
 
-heat map works twice slower than the current is_in_check!
+**Results are: storing Move obj is better than a flat list !!!!!!!**
 
-tottime - is time spend in the method minus the sub calls
+*Note: tottime - is time spend in the method minus the sub calls*
+
+##### Concept to merge directional cycles
+
 Have to find another way to optimize is_in_check:
    ncalls  tottime  percall  cumtime  percall filename:lineno(function)
    571117   11.666    0.000   12.110    0.000 board.py:388(is_in_check)
@@ -164,21 +160,30 @@ Have to find another way to optimize is_in_check:
 merged directional cycles
    549840   15.223    0.000   16.116    0.000 board.py:388(is_in_check)
 
-There is no point of altering the cycles -- the number of comparisons between hitters and board state cannot be reduced
+**Result: There is no point of altering the cycles -- the number of comparisons between hitters and board state cannot be reduced**
+
+
+##### Heat Concept
+
+The timing of the results indicate about 200sec out of 800sec are in `board.is_in_check`. Instead of checking potential hitters, a heat map could be used. The heated nodes are the destinations in the non capturing naive expansions;
+  Moving one piece can influence the naive expansions of another piece that is not involved in the move. This will require recalculating all naives for all pieces. This is actually part of gamestate check which makes valid moves, which in order are based on naive moves. However it's done in order of pieces: piece.naives -> piece.valids -> execute -> validate for discover_/is_in_ check -> undo ===> next piece
+  Finding all naives for a position before proceeding to validation process will require two separate cycles through pieces:
+    cycle opponent pieces and pull naives to gen the heat map
+    cycle through own pieces and pass the validation where is_in_check reads the heat map instead of INVERSE_HIT_MAP
+^^^^
+the above is structural change to many modules/classes, and needs to be carried in new branch stemming from master!!!!
+
+**Preliminary Result: heat map works twice slower than the current is_in_check!**
+
 
 To avoid the verifying all potential hitter positions is to keep track of these during the move executions. That information cannot be the validated moves but it should work for naive moves
 This is more core change than the heat map
 
 High level concept is like this:
-keep Piece's equivalent of ACT_MAP and update it dynamically based on move executions
+keep Piece's own equivalent of ACT_MAP and update it dynamically based on move executions
 let's have a method "update_naives"; for non directional moves, that will be an if check, but for directional ones it will be a cutoff for the direction sequence
 so after move execution we cycle through pieces, and call update_naives with the Move (or destination, etc)
 To avoid another cycle, the updated data should be passed into heatmap
 --- initial naive_moves for a piece need to be processed via the current naive_moves method
 !!! also for newly created pieces (pawn promos), the initial state also needs to be done via the current method !!!
 
-DICTS ARE NOT ORDERED !
-bq@d8 path {'b8': False, 'a8': False, 'c8': False}
-===> no blocking
-
-change path structure to parallel lists!!!

@@ -69,22 +69,22 @@ class Path():
 
     def __init__(self, designation, squares):
         self.designation = designation
-        self.squares = { z:False for z in squares }
+        self.squares = squares
+        self.values = { z:False for z in squares }
 
     def block(self, square, blocking_color):
         if square in self.squares:
-            self.squares[square] = blocking_color
+            self.values[square] = blocking_color
 
     def unblock(self, square):
         if square in self.squares:
-            self.squares[square] = False
+            self.values[square] = False
 
     def walk(self, as_color):
         result = []
-        for square, value in self.squares.items():
-            if value:
-                if as_color != value:
-                    result.append(square)
+        for square in self.squares:
+            if self.values[square]:
+                result.append(square)
                 break
             else:
                 result.append(square)
@@ -150,7 +150,5 @@ class Piece():
             if move_type in ['t', 'e', '+']:
                 results.extend(squares)
         for path in self.paths:
-            print(self, 'path', path.squares)
-            print(self, 'walk', path.walk(self.color))
             results.extend(path.walk(self.color))
         return results
