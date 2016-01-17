@@ -153,6 +153,22 @@ class Board():
             result += wh + '          |' + bh + '\n'
         return result
 
+    def debug_heatness(self, heat):
+        result = '\n'
+        for i in range(8,0,-1):
+            result += '|'
+            wh = ''
+            for j in range(97,105):
+                loc = chr(j)+str(i)
+                if loc in heat:
+                    wh += 'x'
+                else:
+                    wh += ' '
+                wh += '|'
+                
+            result += wh + '\n'
+        return result
+
 
     def export(self):
         return { k: str(v) if v else '  ' for (k,v) in self.state.items() }
@@ -175,6 +191,7 @@ class Board():
                     self.black_king = self.state[square]
         self.update_incheck('w')
         self.update_incheck('b')
+        self.recapture_heat()
 
     def add_piece(self, color, type_=None, location=None):
         if isinstance(color, Piece):
@@ -269,7 +286,7 @@ class Board():
 
     def naive_moves(self, piece):
         results = []
-        preliminary = piece.raw_moves
+        preliminary = piece.lookup_moves()
 
         # moving to empty square
         try:
@@ -366,8 +383,19 @@ class Board():
         # common routine of the exec_move and undo_move
         for act in actions:
             getattr(self, act[0])(*act[1])
-        self.heat = {'w': [], 'b': []}
-        for piece in self.all:
+
+    def recapture_heat(self, by_color=None):
+        if by_color == 'w':
+            self.heat['w'] = []
+            target_pieces = self.white
+        elif by_color == 'b':
+            self.heat['b'] = []
+            target_pieces = self.black
+        else:
+            self.heat = {'w': [], 'b': []}
+            target_pieces = self.all
+
+        for piece in target_pieces:
             self.heat[piece.color].extend(piece.heat())
 
     undo_actions = process_actions
@@ -376,10 +404,12 @@ class Board():
         # the function that applies actions to the piece set (and thus the board)
         actions, undo = move.actions()
         self.process_actions(actions)
-        if not self.validate_move(move):
-            self.process_actions(undo)
-            return None
-        # --- end of invalidation ---
+        self.recapture_heat()
+
+        # if not self.validate_move(move):
+        #     self.process_actions(undo)
+        #     return None
+        # # --- end of invalidation ---
 
         undo.append(('reset_incheck', [self.white_checked, self.black_checked]))
         self.update_incheck(move.piece.color)
@@ -395,7 +425,50 @@ class Board():
         else:
             self.white_checked = self.is_in_check(self.white_king.location, 'b')
 
-    def validate_move(self, move):
+    def prevalidate_move(self, move):
+        # assumes the move in question is executed onto board state, but values of attributes like 'self.white_checked' reflect the state prior the move
+        if move.piece.color == 'w':
+            opposite_color = 'b'
+            castle_row = '1'
+            turns_king_location = self.white_king.location
+            opponent_pieces = self.black
+        else:
+            opposite_color = 'w'
+            castle_row = '8'
+            turns_king_location = self.black_king.location
+            opponent_pieces = self.white
+
+        if move.piece.type_ == 'k':
+            # king's landing
+            is_in_check = self.is_in_check(move.destination, opposite_color)
+            if move.type_ == 'c':
+                # king's origin
+                is_in_check = is_in_check or self.is_in_check(move.origin, opposite_color)
+                if move.notation.count('O') == 2:
+                    jump_over = 'f' + castle_row
+                else:
+                    jump_over = 'd' + castle_row
+                # jump over
+                is_in_check = is_in_check or self.is_in_check(jump_over, opposite_color)
+            return not is_in_check   # False == invalid move
+        else:   # not moving the king
+            consideration_heat = []
+            for piece in opponent_pieces:
+                if move.destination != piece.location:
+                    piece.unblock(move.origin)
+                    piece.block(move.destination)
+                    consideration_heat.extend(piece.heat())
+                    piece.block(move.origin)
+                    piece.unblock(move.destination)
+                # else:
+                #     print('hitter is captured')
+
+                if turns_king_location in consideration_heat:
+                    # print('move', move, 'K loc', turns_king_location, 'hitter loc', piece.location, self.debug_heatness(consideration_heat))
+                    return False
+            return True
+
+    def old_validate_move(self, move):
         # assumes the move in question is executed onto board state, but values of attributes like 'self.white_checked' reflect the state prior the move
         if move.piece.color == 'w':
             opposite_color = 'b'

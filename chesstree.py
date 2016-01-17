@@ -1,4 +1,4 @@
-from pympler import asizeof
+# from pympler import asizeof
 import cProfile
 from game import Game
 
@@ -115,7 +115,7 @@ class AI:
                 # print('score_cache KB sz', asizeof.asizeof(self.score_cache)//1024)
             root_node.subnodes = [optimal_node]
 
-            print('final root node size (KB)', asizeof.asizeof(root_node)//1024)
+            # print('final root node size (KB)', asizeof.asizeof(root_node)//1024)
             return optimum
 
     def evaluate(self, node, cutoff_depth, upper_level_optimum=None):  # cutoff_depth absolute count of (semi-)turns

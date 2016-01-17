@@ -191,3 +191,5 @@ To avoid another cycle, the updated data should be passed into heatmap
 Added embeded inner ifs for un/block methods in Path.
 Moved heat accumulation to single separate cycle in the end of process_actions
 Added sorting of subnodes in chesstree to ensure consistency of move considerations for the cProfile tests
+
+Using piece.raw_moves is a bug, because that is not updated after change in piece.location

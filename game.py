@@ -123,12 +123,13 @@ class Game():
     def valid_moves_of_piece_at(self, location):
         # the argument could be piece, but with location it's easier to construct assertions in the unit tests
         result = []
-        for move in self.board.naive_moves(self.board.state[location]):
+        naives = self.board.naive_moves(self.board.state[location])
+        # for move in self.board.naive_moves(self.board.state[location]):
+        for move in naives:
             if self.validate_special_moves(move):
-                undo = self.board.execute_move(move)
-                if undo:
+                if self.board.prevalidate_move(move):
                     result.append(move)
-                    self.board.undo_actions(undo)
+
         return result
 
     def undo_last(self):
@@ -173,6 +174,7 @@ class Game():
                 self.state = valid_input
             else:
                 undo = self.board.execute_move(valid_input)
+
                 self.record_history(valid_input)   # also records backtrack
                 self.undo_stack.append(undo)
                 self.whites_player.is_in_check = self.board.white_checked

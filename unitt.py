@@ -240,6 +240,8 @@ class BoardTest(unittest.TestCase):
         self.assertFalse(test_board.discover_check('e8', 'd7', 'w'))
         self.assertFalse(test_board.discover_check('e1', 'e4', 'b'))
         test_board.remove_piece('e4')
+        # because `.remove_piece('e4')` is called directly, `.process_ctions` is never called to gen the heat map (same with initial spawn)
+        test_board.recapture_heat('b')
 
         self.assertTrue(test_board.discover_check('e1', 'e4', 'b'))
         # |br|  |  |  |bk|  |  |  |
@@ -293,9 +295,12 @@ class BoardTest(unittest.TestCase):
         capture_move = [ z for z in e4_moves if z.type_ == 't' ][0]
         self.assertIsInstance(test_board.state['c3'], Piece)
         self.assertEqual('bn@c3', repr(test_board.state['c3']))
-        undo = test_board.execute_move(capture_move)
-        # move fails
-        self.assertIsNone(undo)
+        # undo = test_board.execute_move(capture_move)
+        # # move fails
+        # self.assertIsNone(undo)
+        # ### `execute_move` no longer validates - it assumes the move is prevalidated, thus:
+        self.assertFalse(test_board.prevalidate_move(capture_move))
+
         self.assertEqual('bn@c3', repr(test_board.state['c3']))
         self.assertEqual('wn@e4', repr(test_board.state['e4']))
 
@@ -346,6 +351,8 @@ class GameTest(unittest.TestCase):
         # |  |  |  |  |  |  |  |  |
         # |wr|wn|wb|wq|wk|wb|  |wr|
 
+        # print(test_game.board.heatness())
+
         # the knight at e4, will have the expansion list reduced to []
         self.assertEqual([], test_game.valid_moves_of_piece_at('e4'))
         #bishop at d7 previously had [('m', 'f5', 'Bf5'),('m', 'g4', 'Bg4'),('m', 'e6', 'Be6'),('t', 'b5', 'Bxb5'),('m', 'c6', 'Bc6'),('m', 'h3', 'Bh3')], but now
@@ -373,6 +380,7 @@ class GameTest(unittest.TestCase):
     def test_validations_of_covering_moves(self):
         test_game = Game(board_position=TEST_POSITION3)
         test_game.board.remove_piece('e4')
+        test_game.board.recapture_heat()
         # |br|  |  |  |bk|  |  |  |
         # |  |wr|  |bb|  |  |  |  |
         # |  |  |  |  |  |  |  |  |

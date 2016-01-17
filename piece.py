@@ -78,7 +78,7 @@ class Path():
         if square in self.squares:
             self.values[square] = True
             if square in self.walk:
-                self.walk = self.walk[:self.walk.index(square)]
+                self.walk = self.walk[:self.walk.index(square)+1]
 
     def unblock(self, square):
         if square in self.squares:
@@ -100,7 +100,7 @@ class Piece():
             self.hashtype = type_.lower()
         self.designation = color + type_
         self.location = location
-        self.raw_moves = {}
+        # self.raw_moves = {}
         if self.type_ == 'p':
             self.key_type = self.color + 'p'
         else:
@@ -116,11 +116,11 @@ class Piece():
         else:
             return self.type_.upper()
 
-    # def lookup_moves(self):
-    #     try:
-    #         return ACT_MAP[self.location][self.key_type]
-    #     except KeyError:
-    #         return {}
+    def lookup_moves(self):
+        try:
+            return ACT_MAP[self.location][self.key_type]
+        except KeyError:
+            return {}
 
     def init_moves(self):
         self.paths = []
