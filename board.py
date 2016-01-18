@@ -427,11 +427,13 @@ class Board():
             castle_row = '1'
             turns_king_location = self.white_king.location
             opponent_pieces = self.black
+            turns_king_in_check = self.white_checked
         else:
             opposite_color = 'w'
             castle_row = '8'
             turns_king_location = self.black_king.location
             opponent_pieces = self.white
+            turns_king_in_check = self.black_checked
 
         if move.piece.type_ == 'k':
             # king's landing
@@ -451,10 +453,12 @@ class Board():
             for piece in opponent_pieces:
                 if move.destination != piece.location:
                     piece.unblock(move.origin) # discovery
-                    piece.block(move.destination) # covering
+                    if turns_king_in_check:
+                        piece.block(move.destination) # covering
                     consideration_heat = piece.heat(consideration_heat)
                     piece.block(move.origin)
-                    piece.unblock(move.destination)
+                    if turns_king_in_check:
+                        piece.unblock(move.destination)
                 # else:
                 #     print('hitter is captured')
 
