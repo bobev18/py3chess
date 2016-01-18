@@ -101,6 +101,17 @@ class MoveException(Exception):
         # *args is used to get a list of the parameters passed
         self.args = [a for a in args]
 
+class Pin():
+    def __init__(self, pinner, pinnee, king_location, direction):
+        self.pinner = pinner
+        self.pinnee = pinnee
+        self.color = pinnee.color
+        self.king_location = king_location
+        self.direction = direction
+
+    def __repr__(self):
+        return self.pinner.location + '-' + self.pinnee.location + '-' + self.king_location
+
 
 class Board():
     def __init__(self, construction_state={}):
@@ -453,12 +464,14 @@ class Board():
             for piece in opponent_pieces:
                 if move.destination != piece.location:
                     piece.unblock(move.origin) # discovery
-                    if turns_king_in_check:
-                        piece.block(move.destination) # covering
+                    # if turns_king_in_check:                                                      <------------ temporary to compose checker'n'pinners tests
+                    #     piece.block(move.destination) # covering
+                    piece.block(move.destination) # covering
                     consideration_heat = piece.heat(consideration_heat)
                     piece.block(move.origin)
-                    if turns_king_in_check:
-                        piece.unblock(move.destination)
+                    # if turns_king_in_check:
+                    #     piece.unblock(move.destination)
+                    piece.unblock(move.destination)
                 # else:
                 #     print('hitter is captured')
 
@@ -502,6 +515,95 @@ class Board():
 
     def is_in_check(self, location, by_color):
         return location in self.heat[by_color]
+
+
+    def find_checkers(self, location, by_color):
+        checkers = []
+        for hitter in INVERSE_HIT_MAP[location]['knight']:
+            if self.state[hitter] and self.state[hitter].designation == by_color+'n':
+                checkers.append(self.state[hitter])
+                break
+
+        if by_color == 'w':
+            for hitter in INVERSE_HIT_MAP[location]['wpawn']:
+                if self.state[hitter] and self.state[hitter].designation == 'wp':
+                    checkers.append(self.state[hitter])
+                    break
+        else:
+            for hitter in INVERSE_HIT_MAP[location]['bpawn']:
+                if self.state[hitter] and self.state[hitter].designation == 'bp':
+                    checkers.append(self.state[hitter])
+                    break
+
+        for hitter in INVERSE_HIT_MAP[location]['king']:
+            if self.state[hitter] and self.state[hitter].designation == by_color+'k':
+                checkers.append(self.state[hitter])
+                break
+
+        for d in ['N','E','S','W']:
+            for i in range(len(INVERSE_HIT_MAP[location][d])):
+                hitter = INVERSE_HIT_MAP[location][d][i]
+                if self.state[hitter]:
+                    if self.state[hitter].designation == by_color+'q' or self.state[hitter].designation == by_color+'r':
+                        checkers.append(self.state[hitter])
+                        break
+                    break  # the direction is blocked if an enemy piece doesnt operate in that direction or own piece
+
+        for d in ['NE','SE','SW','NW']:
+            for i in range(len(INVERSE_HIT_MAP[location][d])):
+                hitter = INVERSE_HIT_MAP[location][d][i]
+                if self.state[hitter]:
+                    if self.state[hitter].designation == by_color+'q' or self.state[hitter].designation == by_color+'b':
+                        checkers.append(self.state[hitter])
+                        break
+                    break  # the direction is blocked if an enemy piece doesnt operate in that direction or own piece
+
+        return checkers
+
+    def find_pinners(self, location, by_color):
+        if by_color == 'w':
+            own_color = 'b'
+        else:
+            own_color = 'w'
+        pinners = []
+
+        for d in ['N','E','S','W']:
+            own_in_path_flag = None
+            for i in range(len(INVERSE_HIT_MAP[location][d])):
+                hitter = INVERSE_HIT_MAP[location][d][i]
+                if self.state[hitter]:
+                    if own_in_path_flag:
+                        if self.state[hitter].designation == by_color+'q' or self.state[hitter].designation == by_color+'r':
+                            pinners.append(Pin(self.state[hitter], own_in_path_flag, location, d))
+                        break       # pin captured
+                    else:
+                        if self.state[hitter].designation[0] == own_color:
+                            own_in_path_flag = self.state[hitter]
+                        else:
+                            break   # opponent piece encountered first
+
+        for d in ['NE','SE','SW','NW']:
+            own_in_path_flag = None
+            for i in range(len(INVERSE_HIT_MAP[location][d])):
+                hitter = INVERSE_HIT_MAP[location][d][i]
+                if self.state[hitter]:
+                    # print('hitter', self.state[hitter], '      ;   flag:', own_in_path_flag)
+                    if own_in_path_flag:
+                        if self.state[hitter].designation == by_color+'q' or self.state[hitter].designation == by_color+'b':
+                            pinners.append(Pin(self.state[hitter], own_in_path_flag, location, d))
+                        break       # pin captured
+                    else:
+                        if self.state[hitter].designation[0] == own_color:
+                            own_in_path_flag = self.state[hitter]
+                        else:
+                            break   # opponent piece encountered first
+                    # print('post hitter flag:', own_in_path_flag)
+
+
+        return pinners
+
+
+
 
     def old_is_in_check(self, location, by_color):
         for hitter in INVERSE_HIT_MAP[location]['knight']:

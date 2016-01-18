@@ -196,3 +196,6 @@ Using piece.raw_moves is a bug, because that is not updated after change in piec
 BUG: currently  `others` relies on `raw_moves` -- should add test
 Maybe not a bug - added test, and it passes without changes to the use of raw_moves
 Well, turns out that board.relocate calls piece.init_moves(), which updates raw_moves
+
+BUG: using conditioned block for the consideration calls to un/block in the last commit fails to allow moves alongside pinned line
+

@@ -244,20 +244,108 @@ class BoardTest(unittest.TestCase):
         test_board.recapture_heat('b')
 
         self.assertTrue(test_board.discover_check('e1', 'e4', 'b'))
-        # |br|  |  |  |bk|  |  |  |
+        # |br|  |bb|bq|bk|bb|bn|  |
         # |  |wr|  |bb|  |  |  |  |
         # |  |  |  |  |  |  |  |  |
         # |  |wb|  |  |bq|  |  |  |
         # |  |  |  |  |  |  |  |  |
         # |  |  |bn|  |  |  |  |  |
         # |  |  |  |  |  |  |  |  |
-        # |wr|  |  |  |wk|  |  |wr|
+        # |wr|wn|wb|wq|wk|wb|  |wr|
 
         self.assertTrue(test_board.is_in_check('e1','b'))
         self.assertTrue(test_board.is_in_check('e2','b'))
         self.assertFalse(test_board.is_in_check('f2','b'))
         self.assertFalse(test_board.is_in_check('d2','b'))
+        test_board.recapture_heat('w')
         self.assertTrue(test_board.is_in_check('h8','w'))
+
+    def test_find_checkers(self):
+        test_board = Board(TEST_POSITION2)
+        self.assertEqual([], test_board.find_checkers('e1', 'b'))
+
+        black_queen = test_board.state['e5']
+        backup_ne4 = test_board.state['e4']
+        test_board.remove_piece('e4')
+        test_board.recapture_heat()
+        # |br|  |bb|bq|bk|bb|bn|  |
+        # |  |wr|  |bb|  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |wb|  |  |bq|  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |bn|  |  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |wr|wn|wb|wq|wk|wb|  |wr|
+        self.assertTrue(test_board.discover_check('e1', 'e4', 'b'))
+        self.assertEqual([black_queen], test_board.find_checkers('e1', 'b'))
+
+        test_board.relocate_piece('c3', 'e3')
+        test_board.recapture_heat()
+        # |br|  |bb|bq|bk|bb|bn|  |
+        # |  |wr|  |bb|  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |wb|  |  |bq|  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |  |  |bn|  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |wr|wn|wb|wq|wk|wb|  |wr|
+        self.assertEqual([], test_board.find_checkers('e1', 'b'))
+
+        test_board.relocate_piece('e3', 'c2')
+        test_board.recapture_heat()
+        black_knight = test_board.state['c2']
+        # |br|  |bb|bq|bk|bb|bn|  |
+        # |  |wr|  |bb|  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |wb|  |  |bq|  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |bn|  |  |  |  |  |
+        # |wr|wn|wb|wq|wk|wb|  |wr|
+        self.assertEqual(set([black_queen, black_knight]), set(test_board.find_checkers('e1', 'b')) )
+
+        test_board.relocate_piece('a8', 'g1')
+        test_board.remove_piece('f1')
+        test_board.recapture_heat()
+        black_rook = test_board.state['g1']
+        # |  |  |bb|bq|bk|bb|bn|  |
+        # |  |wr|  |bb|  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |wb|  |  |bq|  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |bn|  |  |  |  |  |
+        # |wr|wn|wb|wq|wk|  |br|wr|
+        self.assertEqual(set([black_queen, black_knight, black_rook]), set(test_board.find_checkers('e1', 'b')) )
+        self.assertEqual(set(['bq@e5', 'bq@d8', 'br@g1']), set([ str(z) for z in test_board.find_checkers('g5', 'b') ]) )
+        self.assertEqual(set(['bq@e5', 'bq@d8', 'bn@g8']), set([ str(z) for z in test_board.find_checkers('f6', 'b') ]) )
+
+    def test_find_pinners(self):
+        test_board = Board(TEST_POSITION2)
+        # |br|  |bb|bq|bk|bb|bn|  |
+        # |  |wr|  |bb|  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |wb|  |  |bq|  |  |  |
+        # |  |  |  |  |wn|  |  |  |
+        # |  |  |bn|  |  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |wr|wn|wb|wq|wk|wb|  |wr|
+
+        self.assertEqual(set(['b5-d7-e8']), set([ str(z) for z in test_board.find_pinners('e8', 'w') ]))
+        self.assertEqual(set(['e5-e4-e1']), set([ str(z) for z in test_board.find_pinners('e1', 'b') ]))
+        test_board.relocate_piece('c3', 'e2')
+        # test_board.recapture_heat()
+        self.assertEqual(set([]), set([ str(z) for z in test_board.find_pinners('e1', 'b') ]))
+        test_board.relocate_piece('e2', 'c3')
+
+        test_board.relocate_piece('c8', 'b4')
+        self.assertEqual(set(['e5-e4-e1']), set([ str(z) for z in test_board.find_pinners('e1', 'b') ]))
+        test_board.relocate_piece('c3', 'a2')
+        test_board.relocate_piece('b1', 'c3')
+        self.assertEqual(set(['e5-e4-e1', 'b4-c3-e1']), set([ str(z) for z in test_board.find_pinners('e1', 'b') ]))
+
+        test_board.relocate_piece('a8', 'g1')
+        self.assertEqual(set(['e5-e4-e1', 'b4-c3-e1', 'g1-f1-e1']), set([ str(z) for z in test_board.find_pinners('e1', 'b') ]))
 
     def test_execute_move(self):
         test_board = Board(TEST_POSITION1)
@@ -332,6 +420,8 @@ class BoardTest(unittest.TestCase):
         self.assertEqual('bn@c3', repr(test_board.state['c3']))
         self.assertEqual(16, len(test_board.white))
         self.assertEqual(14, len(test_board.black))
+
+
 
 class GameTest(unittest.TestCase):
 
