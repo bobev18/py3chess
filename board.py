@@ -200,9 +200,11 @@ class Board():
                     self.white_king = self.state[square]
                 if init_state[square] == 'bk':
                     self.black_king = self.state[square]
+        self.recapture_heat()
+        # recapture heat needs to be prior to update_incheck, because update_incheck calls find_checkers/pinners, which rely on heat
         self.update_incheck('w')
         self.update_incheck('b')
-        self.recapture_heat()
+        # ^^^ the update_incheck order is significant because the self.checkers & self.pinners do not hold separate spaces for each color but are overwritten!!!
 
     def add_piece(self, color, type_=None, location=None):
         if isinstance(color, Piece):
@@ -419,6 +421,21 @@ class Board():
 
         undo.append(('reset_incheck', [self.white_checked, self.black_checked]))
         self.update_incheck(move.piece.color)
+
+
+        # if move.piece.color == 'w':
+        #     upcomming_turn_player_color = 'b'
+        #     if self.black_checked:
+        #         self.checkers = self.find_checkers(self.black_king.location, 'w')
+        #     else:
+        #         self.checkers =
+
+        # else:
+        #     upcomming_turn_player_color = 'w'
+        # if
+        # self.checkers
+
+
         return undo
 
     def reset_incheck(self, white_is_in_check, black_is_in_check):
@@ -428,8 +445,18 @@ class Board():
     def update_incheck(self, color):
         if color == 'w':
             self.black_checked = self.is_in_check(self.black_king.location, 'w')
+            if self.black_checked:
+                self.checkers = self.find_checkers(self.black_king.location, 'w')
+            else:
+                self.checkers = []
+            self.pinners = self.find_pinners(self.black_king.location, 'w')
         else:
             self.white_checked = self.is_in_check(self.white_king.location, 'b')
+            if self.white_checked:
+                self.checkers = self.find_checkers(self.white_king.location, 'b')
+            else:
+                self.checkers = []
+            self.pinners = self.find_pinners(self.white_king.location, 'b')
 
     def prevalidate_move(self, move):
         # assumes the move in question is executed onto board state, but values of attributes like 'self.white_checked' reflect the state prior the move
@@ -461,23 +488,25 @@ class Board():
             return not is_in_check   # False == invalid move
         else:   # not moving the king
             consideration_heat = []
-            for piece in opponent_pieces:
+            # print('checkers:', self.checkers, 'pinners:', self.pinners)
+            # consider discovery
+            for piece in [ z.pinner for z in self.pinners ]:
                 if move.destination != piece.location:
-                    piece.unblock(move.origin) # discovery
-                    # if turns_king_in_check:                                                      <------------ temporary to compose checker'n'pinners tests
-                    #     piece.block(move.destination) # covering
-                    piece.block(move.destination) # covering
+                    piece.unblock(move.origin)
+                    piece.block(move.destination) # this is needed to properly threat moves alongside the pinned line
                     consideration_heat = piece.heat(consideration_heat)
                     piece.block(move.origin)
-                    # if turns_king_in_check:
-                    #     piece.unblock(move.destination)
                     piece.unblock(move.destination)
-                # else:
-                #     print('hitter is captured')
+            # consider covering check
+            if turns_king_in_check:
+                for piece in self.checkers:
+                    piece.block(move.destination)
+                    consideration_heat = piece.heat(consideration_heat)
+                    piece.unblock(move.destination)
 
-                if turns_king_location in consideration_heat:
-                    # print('move', move, 'K loc', turns_king_location, 'hitter loc', piece.location, self.debug_heatness(consideration_heat))
-                    return False
+            if turns_king_location in consideration_heat:
+                # print('move', move, 'K loc', turns_king_location, 'hitter loc', piece.location, self.debug_heatness(consideration_heat))
+                return False
             return True
 
     def old_validate_move(self, move):

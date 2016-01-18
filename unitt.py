@@ -442,9 +442,17 @@ class GameTest(unittest.TestCase):
         # |wr|wn|wb|wq|wk|wb|  |wr|
 
         # print(test_game.board.heatness())
+        # self.assertEqual(set(['Rg1', 'Rh2', 'Rh3']))
+
 
         # the knight at e4, will have the expansion list reduced to []
         self.assertEqual([], test_game.valid_moves_of_piece_at('e4'))
+
+        # with checkers & pinners called at the end of execute move, I need to push that to trigger recalculation of the checkers and pinners for the black
+        h1_moves = test_game.valid_moves_of_piece_at('h1')
+        test_game.board.execute_move(h1_moves.pop())
+        # print(test_game.board)
+
         #bishop at d7 previously had [('m', 'f5', 'Bf5'),('m', 'g4', 'Bg4'),('m', 'e6', 'Be6'),('t', 'b5', 'Bxb5'),('m', 'c6', 'Bc6'),('m', 'h3', 'Bh3')], but now
         self.assertEqual(set(['Bxb5', 'Bc6']), set([ z.notation for z in test_game.valid_moves_of_piece_at('d7') ]))
         #king at e1 -- validated the move to e2 as it's hit by the knight at c3
@@ -750,6 +758,9 @@ class TemporaryGameTest(unittest.TestCase):
         test_game.whites_player.simulate(['Kd1', '2.Qd2', 'Qe1',         'Qc2', 'Qc1', 'Qd2', 'Qe1', 'Qe2', 'Qe1', 'exit'])
         test_game.blacks_player.simulate(['Qd5', 'Qh1+', 'undo', 'Qb3+', 'Qb7', 'Qd5', 'Qh1', 'Qh5', 'Qh1', 'Qd5', 'exit'])
         self.assertEqual('player w left the game', test_game.start(verbose=False))
+
+
+
 
 
 
