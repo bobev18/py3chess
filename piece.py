@@ -131,7 +131,21 @@ class Piece():
                 if move_type in ['NE','SE','SW','NW','N','E','S','W']:
                     self.paths.append(Path(move_type, self.raw_moves[move_type]))
                 else:
-                    self.others[move_type] = self.raw_moves[move_type]
+                    # self.others[move_type] = self.raw_moves[move_type]
+                    self.others = []
+                    try:
+                        self.others += self.raw_moves['t']
+                    except KeyError:
+                        pass
+                    try:
+                        self.others += self.raw_moves['e']
+                    except KeyError:
+                        pass
+                    try:
+                        self.others += self.raw_moves['+']
+                    except KeyError:
+                        pass
+
         except KeyError:
             pass
 
@@ -143,23 +157,12 @@ class Piece():
         for path in self.paths:
             path.unblock(square)
 
-    def heat(self):
-        results = []
-        try:
-            results.extend(self.others['t'])
-        except KeyError:
-            pass
-        try:
-            results.extend(self.others['e'])
-        except KeyError:
-            pass
-        try:
-            results.extend(self.others['+'])
-        except KeyError:
-            pass
+    def heat(self, accumulator):
+        # results = []
+        accumulator += self.others
         for path in self.paths:
-            results.extend(path.walk)
-        return results
+            accumulator += path.walk
+        return accumulator
 
     def old_heat(self):
         results = []

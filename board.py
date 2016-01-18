@@ -215,8 +215,6 @@ class Board():
         for old_piece in self.all:
             new_piece.block(old_piece.location)
             old_piece.block(location)
-        #     self.heat[old_piece.color].extend(old_piece.heat())
-        # self.heat[new_piece.color].extend(new_piece.heat())
 
         self.all.append(new_piece)
         if new_piece.color == 'w':
@@ -241,7 +239,6 @@ class Board():
         self.state[location] = None
         for other_piece in self.all:
             other_piece.unblock(location)
-            # self.heat[other_piece.color].extend(other_piece.heat())
 
         index = BOARD_KEY_INDEX[location]
         self.hashstate = self.hashstate[:index] + ' ' + self.hashstate[index+1:]
@@ -276,8 +273,6 @@ class Board():
                 other_piece.block(to)
                 other_piece.unblock(origin)
                 piece.block(other_piece.location)
-        #         self.heat[other_piece.color].extend(other_piece.heat())
-        # self.heat[piece.color].extend(piece.heat())
 
         index = BOARD_KEY_INDEX[to]
         self.hashstate = self.hashstate[:index] + piece.hashtype + self.hashstate[index+1:]
@@ -396,7 +391,7 @@ class Board():
             target_pieces = self.all
 
         for piece in target_pieces:
-            self.heat[piece.color].extend(piece.heat())
+            self.heat[piece.color] = piece.heat(self.heat[piece.color])
 
     undo_actions = process_actions
 
@@ -455,9 +450,9 @@ class Board():
             consideration_heat = []
             for piece in opponent_pieces:
                 if move.destination != piece.location:
-                    piece.unblock(move.origin)
-                    piece.block(move.destination)
-                    consideration_heat.extend(piece.heat())
+                    piece.unblock(move.origin) # discovery
+                    piece.block(move.destination) # covering
+                    consideration_heat = piece.heat(consideration_heat)
                     piece.block(move.origin)
                     piece.unblock(move.destination)
                 # else:
