@@ -165,7 +165,7 @@ class Board():
                 else:
                     wh += ' '
                 wh += '|'
-                
+
             result += wh + '\n'
         return result
 
@@ -286,7 +286,7 @@ class Board():
 
     def naive_moves(self, piece):
         results = []
-        preliminary = piece.lookup_moves()
+        preliminary = piece.raw_moves
 
         # moving to empty square
         try:

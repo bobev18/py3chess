@@ -100,7 +100,7 @@ class Piece():
             self.hashtype = type_.lower()
         self.designation = color + type_
         self.location = location
-        # self.raw_moves = {}
+        self.raw_moves = {}
         if self.type_ == 'p':
             self.key_type = self.color + 'p'
         else:

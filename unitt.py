@@ -30,10 +30,10 @@ class PieceTest(unittest.TestCase):
 
     def test_lookup_moves_on_empty_board(self):
         another_piece = Piece('w', 'p', 'e2')
-        self.assertEqual({'m': ['e3'], 't': ['d3', 'f3'], 'm2': ['e4']}, another_piece.lookup_moves())
+        self.assertEqual({'m': ['e3'], 't': ['d3', 'f3'], 'm2': ['e4']}, another_piece.raw_moves)
 
         test_piece = Piece('w', 'p', 'e8')
-        self.assertEqual({}, test_piece.lookup_moves())
+        self.assertEqual({}, test_piece.raw_moves)
 
 class MoveTest(unittest.TestCase):
 
@@ -538,6 +538,36 @@ class GameTest(unittest.TestCase):
         test_game.whites_player.simulate(['e4', 'Nf3', 'Bc4', 'b4', 'Kf1', 'Ke1', 'O-O', 'Nc3'])
         test_game.blacks_player.simulate(['a5', 'a4', 'Nc6', 'axb3', 'h6', 'bxa2', 'h5'])
         self.assertRaises(SimulationException, test_game.start, False)
+
+
+    def test_non_directional_heat_update(self):
+        # NOTE: uses only prevalidate_move, and ommits board.naive_moves, thus moves may cause MoveException
+        position = {'h8':'  ', 'h2':'  ', 'h3':'  ', 'h1':'wr', 'h6':'  ', 'h7':'  ', 'h4':'  ', 'h5':'  ', 'd8':'  ', 'a8':'br', 'd6':'  ', 'd7':'bb', 'd4':'  ', 'd5':'  ', 'd2':'  ', 'd3':'  ', 'd1':'  ', 'g7':'  ', 'g6':'  ', 'g5':'  ', 'g4':'  ', 'g3':'  ', 'g2':'  ', 'g1':'  ', 'g8':'  ', 'c8':'  ', 'c3':'bn', 'c2':'  ', 'c1':'  ', 'c7':'  ', 'c6':'  ', 'c5':'  ', 'c4':'  ', 'f1':'  ', 'f2':'  ', 'f3':'  ', 'f4':'  ', 'f5':'  ', 'f6':'  ', 'f7':'  ', 'f8':'  ', 'b4':'  ', 'b5':'wb', 'b6':'  ', 'b7':'wr', 'b1':'  ', 'b2':'  ', 'b3':'  ', 'b8':'  ', 'a1':'wr', 'a3':'  ', 'a2':'  ', 'a5':'  ', 'e8':'bk', 'a7':'  ', 'a6':'  ', 'e5':'  ', 'e4':'  ', 'e7':'  ', 'e6':'  ', 'e1':'wk', 'e3':'  ', 'e2':'wn', 'a4':'  '}
+        test_game = Game(board_position=position)
+        # |br|  |  |  |bk|  |  |  |
+        # |  |wr|  |bb|  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |wb|  |  |bq|  |  |  |
+        # |  |  |  |  |wn|  |  |  |
+        # |  |  |bn|  |  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |wr|  |  |  |wk|  |  |wr|
+        black_knight = test_game.board.state['c3']
+
+        decoded_move = test_game.whites_player.decode_move('Ke2')
+        self.assertFalse(test_game.board.prevalidate_move(decoded_move))
+
+        some_other_white_move = test_game.whites_player.decode_move('Nd4')
+        self.assertTrue(test_game.board.prevalidate_move(some_other_white_move))
+        test_game.board.execute_move(some_other_white_move)
+
+        knight_away_move = test_game.blacks_player.decode_move('Nxb5')
+        self.assertTrue(test_game.board.prevalidate_move(knight_away_move))
+        test_game.board.execute_move(knight_away_move)
+
+        decoded_move = test_game.whites_player.decode_move('Ke2')
+        self.assertTrue(test_game.board.prevalidate_move(decoded_move))
+        test_game.board.execute_move(decoded_move)
 
 
 class TemporaryGameTest(unittest.TestCase):

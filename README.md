@@ -188,8 +188,11 @@ To avoid another cycle, the updated data should be passed into heatmap
 --- initial naive_moves for a piece need to be processed via the current naive_moves method
 !!! also for newly created pieces (pawn promos), the initial state also needs to be done via the current method !!!
 
-Added embeded inner ifs for un/block methods in Path.
+Added embedded inner ifs for un/block methods in Path.
 Moved heat accumulation to single separate cycle in the end of process_actions
 Added sorting of subnodes in chesstree to ensure consistency of move considerations for the cProfile tests
 
 Using piece.raw_moves is a bug, because that is not updated after change in piece.location
+BUG: currently  `others` relies on `raw_moves` -- should add test
+Maybe not a bug - added test, and it passes without changes to the use of raw_moves
+Well, turns out that board.relocate calls piece.init_moves(), which updates raw_moves
