@@ -213,6 +213,47 @@ BUG: the AI has deteriorated:
 
       optimal move with score 0 and move path: ||Nd6|Kd7|Nxb7,
 
-because the checker'n'pinners fails to accommodate case where checker is captured by another piece
+because the checkers'n'pinners fails to accommodate case where checker is captured by another piece
 FIXED by adding `if move.destination != piece.location:` in the checkers loop
 
+
+
+
+
+
+
+----------------- from office local notes -----------------
+apart form the direct contributions of the piece being moved, there are often discovery/block contributions; to determine the set of pieces affected by those,
+ we need to run the directional portion of the find_checkers and match for piece_type & direction combo, regardless of color. Matches should be passed through heat recapture
+!!! there are couple of approaches of incorporating the new heat:
+ a) make full recapture of heat to the piece; Subtract old piece heat from heatmap, then add the new heat
+ b) try to work out only the heat difference -- find only relevant locations along unblocked path
+    |br|  |  |bq|bk|bb|bn|  |
+    |  |wr|  |bb|  |  |  |  |
+    |  |  |  |  |  |  |  |  |
+    |  |wb|  |  |bq|  |  |  |
+    |  |bb|  |  |wn|  |  |  |
+    |  |  |__|  |  |  |  |  |
+    |bn|  |  | +|  |  |  |  |
+    |wr|wn|wb|wq|w+|wb|  |wr|
+    moving Nc3 to Na2
+    via the directional approach of find checkers, we have established that bq@e5 heat output is affected
+    the partial recapturing of heat for bq@e5 should produce ['b2', 'a1']
+
+    it could be negative:
+    |br|  |bb|bq|bk|bb|bn|  |
+    |  |wr|  |bb|  |  |  |  |
+    |  |  |  |  |  |  |  |  |
+    |  |wb|  |  |bq|  |  |  |
+    |  |  |  |  |wn|  | -|  |
+    |  |  |__|  |  | -|  |  |
+    |  |  |  |  |bn|  |  |  |
+    |wr|wn|wb|wq|wk|wb|  |wr|
+    moving Nc3 to Ne2:
+    via directional approach of find_checkers we establish that wq@d1 is affected
+    the partial recapturing if heat for wq@d1 should produce [-'f3', -'g4']
+
+
+Whichever approach is chosen, the first step will be to convert the heatmap to incremental heat; Actually we have list of "addresses", and we do have repetitions - that is the increment of the heating.
+When subtracting the heat, there is no need to remove specific one of the repeated addresses - just remove one occurrence = if there are other hitters for the same spot,
+ they will have another copy of the address in the list
