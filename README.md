@@ -195,7 +195,24 @@ Added sorting of subnodes in chesstree to ensure consistency of move considerati
 Using piece.raw_moves is a bug, because that is not updated after change in piece.location
 BUG: currently  `others` relies on `raw_moves` -- should add test
 Maybe not a bug - added test, and it passes without changes to the use of raw_moves
-Well, turns out that board.relocate calls piece.init_moves(), which updates raw_moves
+Well, turns out that board.relocate calls piece.init_moves(), which updates raw_moves == FIXED
 
 BUG: using conditioned block for the consideration calls to un/block in the last commit fails to allow moves alongside pinned line
+FIXED in pinners cycle
+
+BUG: the AI has deteriorated:
+
+      |br|  |  |  |bk|  |  |br|
+      |bb|bp|bp|  |  |bp|bp|bp|
+      |bp|  |  |  |  |  |  |  |
+      |wp|  |  |  |  |  |  |  |
+      |  |bq|  |bp|wn|  |  |  |
+      |  |  |  |wp|  |wp|  |wp|
+      |  |  |wp|  |  |wp|  |  |
+      |wr|  |  |wq|  |wr|wk|  |
+
+      optimal move with score 0 and move path: ||Nd6|Kd7|Nxb7,
+
+because the checker'n'pinners fails to accommodate case where checker is captured by another piece
+FIXED by adding `if move.destination != piece.location:` in the checkers loop
 

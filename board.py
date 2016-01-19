@@ -6,16 +6,16 @@ CAPTURE_SIGN = 'x'
 ORDERED_BOARD_KEYS = ['a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8', 'b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'd1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'e1', 'e2', 'e3', 'e4', 'e5', 'e6', 'e7', 'e8', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'g7', 'g8', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'h8']
 BOARD_KEY_INDEX = {'a1': 0, 'a2': 1, 'a3': 2, 'a4': 3, 'a5': 4, 'a6': 5, 'a7': 6, 'a8': 7, 'b1': 8, 'b2': 9, 'b3': 10, 'b4': 11, 'b5': 12, 'b6': 13, 'b7': 14, 'b8': 15, 'c1': 16, 'c2': 17, 'c3': 18, 'c4': 19, 'c5': 20, 'c6': 21, 'c7': 22, 'c8': 23, 'd1': 24, 'd2': 25, 'd3': 26, 'd4': 27, 'd5': 28, 'd6': 29, 'd7': 30, 'd8': 31, 'e1': 32, 'e2': 33, 'e3': 34, 'e4': 35, 'e5': 36, 'e6': 37, 'e7': 38, 'e8': 39, 'f1': 40, 'f2': 41, 'f3': 42, 'f4': 43, 'f5': 44, 'f6': 45, 'f7': 46, 'f8': 47, 'g1': 48, 'g2': 49, 'g3': 50, 'g4': 51, 'g5': 52, 'g6': 53, 'g7': 54, 'g8': 55, 'h1': 56, 'h2': 57, 'h3': 58, 'h4': 59, 'h5': 60, 'h6': 61, 'h7': 62, 'h8': 63}
 
-SQUARE2COORDS = {
-        'a1':(1,1),'a2':(1,2),'a3':(1,3),'a4':(1,4),'a5':(1,5),'a6':(1,6),'a7':(1,7),'a8':(1,8),
-        'b1':(2,1),'b2':(2,2),'b3':(2,3),'b4':(2,4),'b5':(2,5),'b6':(2,6),'b7':(2,7),'b8':(2,8),
-        'c1':(3,1),'c2':(3,2),'c3':(3,3),'c4':(3,4),'c5':(3,5),'c6':(3,6),'c7':(3,7),'c8':(3,8),
-        'd1':(4,1),'d2':(4,2),'d3':(4,3),'d4':(4,4),'d5':(4,5),'d6':(4,6),'d7':(4,7),'d8':(4,8),
-        'e1':(5,1),'e2':(5,2),'e3':(5,3),'e4':(5,4),'e5':(5,5),'e6':(5,6),'e7':(5,7),'e8':(5,8),
-        'f1':(6,1),'f2':(6,2),'f3':(6,3),'f4':(6,4),'f5':(6,5),'f6':(6,6),'f7':(6,7),'f8':(6,8),
-        'g1':(7,1),'g2':(7,2),'g3':(7,3),'g4':(7,4),'g5':(7,5),'g6':(7,6),'g7':(7,7),'g8':(7,8),
-        'h1':(8,1),'h2':(8,2),'h3':(8,3),'h4':(8,4),'h5':(8,5),'h6':(8,6),'h7':(8,7),'h8':(8,8),
-        }
+# SQUARE2COORDS = {
+#         'a1':(1,1),'a2':(1,2),'a3':(1,3),'a4':(1,4),'a5':(1,5),'a6':(1,6),'a7':(1,7),'a8':(1,8),
+#         'b1':(2,1),'b2':(2,2),'b3':(2,3),'b4':(2,4),'b5':(2,5),'b6':(2,6),'b7':(2,7),'b8':(2,8),
+#         'c1':(3,1),'c2':(3,2),'c3':(3,3),'c4':(3,4),'c5':(3,5),'c6':(3,6),'c7':(3,7),'c8':(3,8),
+#         'd1':(4,1),'d2':(4,2),'d3':(4,3),'d4':(4,4),'d5':(4,5),'d6':(4,6),'d7':(4,7),'d8':(4,8),
+#         'e1':(5,1),'e2':(5,2),'e3':(5,3),'e4':(5,4),'e5':(5,5),'e6':(5,6),'e7':(5,7),'e8':(5,8),
+#         'f1':(6,1),'f2':(6,2),'f3':(6,3),'f4':(6,4),'f5':(6,5),'f6':(6,6),'f7':(6,7),'f8':(6,8),
+#         'g1':(7,1),'g2':(7,2),'g3':(7,3),'g4':(7,4),'g5':(7,5),'g6':(7,6),'g7':(7,7),'g8':(7,8),
+#         'h1':(8,1),'h2':(8,2),'h3':(8,3),'h4':(8,4),'h5':(8,5),'h6':(8,6),'h7':(8,7),'h8':(8,8),
+#         }
 
 EMPTYBOARD = {
               'a8':None, 'b8':None, 'c8':None, 'd8':None, 'e8':None, 'f8':None, 'g8':None, 'h8':None,
@@ -500,9 +500,10 @@ class Board():
             # consider covering check
             if turns_king_in_check:
                 for piece in self.checkers:
-                    piece.block(move.destination)
-                    consideration_heat = piece.heat(consideration_heat)
-                    piece.unblock(move.destination)
+                    if move.destination != piece.location:
+                        piece.block(move.destination)
+                        consideration_heat = piece.heat(consideration_heat)
+                        piece.unblock(move.destination)
 
             if turns_king_location in consideration_heat:
                 # print('move', move, 'K loc', turns_king_location, 'hitter loc', piece.location, self.debug_heatness(consideration_heat))
@@ -670,7 +671,7 @@ class Board():
 
         return False
 
-    def discover_check(self, king_location, move_origin, by_color):
+    def old_discover_check(self, king_location, move_origin, by_color):
         origin_x, origin_y = SQUARE2COORDS[king_location]
         destination_x, destination_y = SQUARE2COORDS[move_origin]
         dx = origin_x - destination_x

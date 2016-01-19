@@ -236,14 +236,9 @@ class BoardTest(unittest.TestCase):
 
     def test_determining_checks(self):
         test_board = Board(TEST_POSITION2)
-
-        self.assertFalse(test_board.discover_check('e8', 'd7', 'w'))
-        self.assertFalse(test_board.discover_check('e1', 'e4', 'b'))
         test_board.remove_piece('e4')
         # because `.remove_piece('e4')` is called directly, `.process_ctions` is never called to gen the heat map (same with initial spawn)
         test_board.recapture_heat('b')
-
-        self.assertTrue(test_board.discover_check('e1', 'e4', 'b'))
         # |br|  |bb|bq|bk|bb|bn|  |
         # |  |wr|  |bb|  |  |  |  |
         # |  |  |  |  |  |  |  |  |
@@ -276,7 +271,6 @@ class BoardTest(unittest.TestCase):
         # |  |  |bn|  |  |  |  |  |
         # |  |  |  |  |  |  |  |  |
         # |wr|wn|wb|wq|wk|wb|  |wr|
-        self.assertTrue(test_board.discover_check('e1', 'e4', 'b'))
         self.assertEqual([black_queen], test_board.find_checkers('e1', 'b'))
 
         test_board.relocate_piece('c3', 'e3')
