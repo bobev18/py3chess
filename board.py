@@ -152,11 +152,11 @@ class Board():
             for j in range(97,105):
                 loc = chr(j)+str(i)
                 if loc in self.heat['w']:
-                    wh += 'x'
+                    wh += str(self.heat['w'].count(loc))
                 else:
                     wh += ' '
                 if loc in self.heat['b']:
-                    bh += 'x'
+                    bh += str(self.heat['b'].count(loc))
                 else:
                     bh += ' '
                 wh += '|'
@@ -194,13 +194,13 @@ class Board():
         # 'state' here should be the input of the constructor, which should be dict of string values!
         for square in init_state.keys():
             if init_state[square] != '  ':
-                self.heat = {'w': [], 'b': []}
                 self.add_piece(init_state[square][0], init_state[square][1], square)
                 if init_state[square] == 'wk':
                     self.white_king = self.state[square]
                 if init_state[square] == 'bk':
                     self.black_king = self.state[square]
-        self.recapture_heat()
+        self.heat = {'w': [], 'b': []}
+        self.generate_heat()
         # recapture heat needs to be prior to update_incheck, because update_incheck calls find_checkers/pinners, which rely on heat
         self.update_incheck('w')
         self.update_incheck('b')
@@ -225,7 +225,10 @@ class Board():
             new_piece = Piece(color, type_, location)
 
         self.state[location] = new_piece
-        for old_piece in self.all:
+        affected = self.find_blockers(location)           # note that determining affected pieces should be after making chage to the self.state !!!
+        print('add', location, 'affected', affected)
+        
+        for old_piece in affected:
             new_piece.block(old_piece.location)
             old_piece.block(location)
 
@@ -236,6 +239,7 @@ class Board():
             self.black.append(new_piece)
         index = BOARD_KEY_INDEX[location]
         self.hashstate = self.hashstate[:index] + new_piece.hashtype + self.hashstate[index+1:]
+        return affected.append(new_piece)
 
     def remove_piece(self, location_):
         if isinstance(location_, Piece):
@@ -250,7 +254,9 @@ class Board():
             raise MoveException(message)
 
         self.state[location] = None
-        for other_piece in self.all:
+        affected = self.find_blockers(location)
+        print('rem', location, 'affected', affected)
+        for other_piece in affected:
             other_piece.unblock(location)
 
         index = BOARD_KEY_INDEX[location]
@@ -260,6 +266,19 @@ class Board():
             self.white.remove(piece)
         else:
             self.black.remove(piece)
+        print(affected, type(affected), 'item 0', type(affected[0]), piece, type(piece))
+        # tmp = affected.copy()
+        # print(tmp)
+        # tmp[1] = 'as'
+        # print(tmp)
+        # tmp = set(tmp)
+        # print(tmp)
+        # tt = tmp.union(set([piece]))
+        # print(tt)
+
+        test = set(affected).union(set([piece]))
+        print(test)
+        return test
 
     def relocate_piece(self, from_, to):
         if isinstance(from_, Piece):
@@ -281,7 +300,14 @@ class Board():
         self.state[to] = piece
         self.state[origin] = None
         piece.init_moves()
-        for other_piece in self.all:
+        affected = self.find_blockers(origin)
+        print('from', origin, 'affected', affected)
+        # affected += self.find_blockers(to)
+        to_affected = self.find_blockers(to)
+        print('to', to, 'affected', to_affected)
+        affected += to_affected
+        
+        for other_piece in affected:
             if piece != other_piece:
                 other_piece.block(to)
                 other_piece.unblock(origin)
@@ -291,6 +317,7 @@ class Board():
         self.hashstate = self.hashstate[:index] + piece.hashtype + self.hashstate[index+1:]
         index = BOARD_KEY_INDEX[origin]
         self.hashstate = self.hashstate[:index] + ' ' + self.hashstate[index+1:]
+        return affected
 
     def naive_moves(self, piece):
         results = []
@@ -390,29 +417,29 @@ class Board():
     def process_actions(self, actions):
         # common routine of the exec_move and undo_move
         for act in actions:
-            getattr(self, act[0])(*act[1])
+            affected_set = set()
+            affected = getattr(self, act[0])(*act[1])
+            print(affected)
+            affected_set = affected_set.union(set(affected))
+        return affected_set
 
-    def recapture_heat(self, by_color=None):
-        if by_color == 'w':
-            self.heat['w'] = []
-            target_pieces = self.white
-        elif by_color == 'b':
-            self.heat['b'] = []
-            target_pieces = self.black
-        else:
-            self.heat = {'w': [], 'b': []}
-            target_pieces = self.all
-
-        for piece in target_pieces:
+    def generate_heat(self):
+        for piece in self.all:
             self.heat[piece.color] = piece.heat(self.heat[piece.color])
+
+    def update_heat(self, affected):
+        for piece in affected:
+            # print(piece)
+            self.heat[piece.color] = piece.update_heat(self.heat[piece.color])
+            # print(self.heatness())
 
     undo_actions = process_actions
 
     def execute_move(self, move):
         # the function that applies actions to the piece set (and thus the board)
         actions, undo = move.actions()
-        self.process_actions(actions)
-        self.recapture_heat()
+        self.update_heat(self.process_actions(actions))
+        print(self.heatness())
 
         # if not self.validate_move(move):
         #     self.process_actions(undo)
@@ -546,6 +573,24 @@ class Board():
     def is_in_check(self, location, by_color):
         return location in self.heat[by_color]
 
+
+    def find_blockers(self, location):
+        blockers = []
+        for d in ['N','E','S','W']:
+            for i in range(len(INVERSE_HIT_MAP[location][d])):
+                hitter = INVERSE_HIT_MAP[location][d][i]
+                if self.state[hitter]:
+                    blockers.append(self.state[hitter])
+                    break
+
+        for d in ['NE','SE','SW','NW']:
+            for i in range(len(INVERSE_HIT_MAP[location][d])):
+                hitter = INVERSE_HIT_MAP[location][d][i]
+                if self.state[hitter]:
+                    blockers.append(self.state[hitter])
+                    break
+
+        return blockers
 
     def find_checkers(self, location, by_color):
         checkers = []

@@ -257,3 +257,7 @@ apart form the direct contributions of the piece being moved, there are often di
 Whichever approach is chosen, the first step will be to convert the heatmap to incremental heat; Actually we have list of "addresses", and we do have repetitions - that is the increment of the heating.
 When subtracting the heat, there is no need to remove specific one of the repeated addresses - just remove one occurrence = if there are other hitters for the same spot,
  they will have another copy of the address in the list
+
+OK there is conceptual issue with 'affected' approach:
+ in case of remove, it fails to update the heat that should disapear with the captured piece and terminates at board edge, and not at another piece.
+ Actually we dont have concept for reduction of heat due to captured piece, because until now there was full heat reset, and recalculation was based on self.all, which no longer had the removed piece

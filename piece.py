@@ -221,6 +221,7 @@ SQ2PATH ={
     ('g3', 'h4'): 'NE', ('g7', 'g4'): 'S', ('d8', 'd2'): 'S', ('b1', 'c2'): 'NE', ('e2', 'd2'): 'W', ('b2', 'a3'): 'NW', ('g1', 'h1'): 'E', ('a4', 'a3'): 'S', ('h7', 'g8'): 'NW', ('h6', 'e3'): 'SW',
 }
 
+SQ2PATHKEYS = SQ2PATH.keys()
 
 class Path():
 
@@ -263,6 +264,7 @@ class Piece():
         else:
             self.key_type = 'a' + self.type_
         self.init_moves()
+        self.old_heat = []
 
     def __repr__(self):
         return self.designation + '@' + self.location
@@ -281,56 +283,51 @@ class Piece():
 
     def init_moves(self):
         self.paths = {}
-        self.old_heat = []
+        self.directions = []
         self.directional_heat = []
         self.non_directional_heat = []
-        try:
-            self.raw_moves = ACT_MAP[self.location][self.key_type]
-            for move_type in self.raw_moves.keys():
-                if move_type in ['NE','SE','SW','NW','N','E','S','W']:
-                    self.paths[move_type] = Path(move_type, self.raw_moves[move_type])
-                else:
-                    try:
-                        self.non_directional_heat += self.raw_moves['t']
-                    except KeyError:
-                        pass
-                    try:
-                        self.non_directional_heat += self.raw_moves['e']
-                    except KeyError:
-                        pass
-                    try:
-                        self.non_directional_heat += self.raw_moves['+']
-                    except KeyError:
-                        pass
-
-        except KeyError:
-            pass
+        # the subseqent block has to be in try only if we expect calls to ACT_MAP with location, but no valid naives (which are pawns on first & last line)
+        self.raw_moves = ACT_MAP[self.location][self.key_type]
+        for move_type in self.raw_moves.keys():
+            if move_type in ['NE','SE','SW','NW','N','E','S','W']:
+                self.paths[move_type] = Path(move_type, self.raw_moves[move_type])
+                self.directions.append(move_type)
+            elif move_type == 't':
+                self.non_directional_heat += self.raw_moves['t']
+            elif move_type == 'e':
+                self.non_directional_heat += self.raw_moves['e']
+            elif move_type == '+':
+                self.non_directional_heat += self.raw_moves['+']
+            else:
+                pass
 
     def block(self, square):
-        try:
-            self.paths[SQ2PATH[(self.location, square)]].block(square)
-        except KeyError:
-            pass
-        # for path in self.paths:
-        #     path.block(square)
+        if (self.location, square) in SQ2PATHKEYS:
+            direction = SQ2PATH[(self.location, square)]
+            if direction in self.directions:
+                self.paths[direction].block(square)
 
     def unblock(self, square):
-        try:
-            self.paths[SQ2PATH[(self.location, square)]].unblock(square)
-        except KeyError:
-            pass
-        # for path in self.paths:
-        #     path.unblock(square)
+        if (self.location, square) in SQ2PATHKEYS:
+            direction = SQ2PATH[(self.location, square)]
+            if direction in self.directions:
+                self.paths[direction].unblock(square)
 
     def update_heat(self, accumulator):
         # substract old heat form the accumulator
         for hotspot in self.old_heat:
-            acumulator.remove(hotspot)
+            try:
+                accumulator.remove(hotspot)
+            except ValueError:
+                pass
 
         # add nondirectional heat
         accumulator += self.non_directional_heat
 
         # add directional heat
+        self.directional_heat = []
+        for path in self.paths.values():
+            self.directional_heat += path.walk
         accumulator += self.directional_heat
 
         return accumulator
@@ -343,7 +340,7 @@ class Piece():
         accumulator += self.old_heat
         return accumulator
 
-    def old_heat(self):
+    def old_heat_Aaaaa(self):
         results = []
         for move_type, squares in self.non_directional_heat.items():
             if move_type in ['t', 'e', '+']:
