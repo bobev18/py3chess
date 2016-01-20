@@ -313,31 +313,31 @@ class Piece():
             if direction in self.directions:
                 self.paths[direction].unblock(square)
 
-    def update_heat(self, accumulator):
+    def clear_heat(self, accumulator):
         # substract old heat form the accumulator
         for hotspot in self.old_heat:
             try:
                 accumulator.remove(hotspot)
             except ValueError:
                 pass
+        return accumulator
 
-        # add nondirectional heat
-        accumulator += self.non_directional_heat
-
-        # add directional heat
+    def recalculate_heat(self):
         self.directional_heat = []
         for path in self.paths.values():
             self.directional_heat += path.walk
-        accumulator += self.directional_heat
 
+    def update_heat(self, accumulator):
+        # removes old heat, then applys recalculated one
+        self.clear_heat(accumulator)
+        self.recalculate_heat()
+        self.old_heat = self.non_directional_heat + self.directional_heat
+        accumulator += self.old_heat
         return accumulator
 
     def heat(self, accumulator):
-        self.directional_heat = []
-        for path in self.paths.values():
-            self.directional_heat += path.walk
-        self.old_heat = self.non_directional_heat + self.directional_heat
-        accumulator += self.old_heat
+        self.recalculate_heat()
+        accumulator += self.non_directional_heat + self.directional_heat
         return accumulator
 
     def old_heat_Aaaaa(self):

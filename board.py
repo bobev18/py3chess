@@ -226,8 +226,7 @@ class Board():
 
         self.state[location] = new_piece
         affected = self.find_blockers(location)           # note that determining affected pieces should be after making chage to the self.state !!!
-        print('add', location, 'affected', affected)
-        
+
         for old_piece in affected:
             new_piece.block(old_piece.location)
             old_piece.block(location)
@@ -239,7 +238,9 @@ class Board():
             self.black.append(new_piece)
         index = BOARD_KEY_INDEX[location]
         self.hashstate = self.hashstate[:index] + new_piece.hashtype + self.hashstate[index+1:]
-        return affected.append(new_piece)
+        test = set(affected)
+        test = test.union([new_piece])
+        return list(affected)
 
     def remove_piece(self, location_):
         if isinstance(location_, Piece):
@@ -255,7 +256,6 @@ class Board():
 
         self.state[location] = None
         affected = self.find_blockers(location)
-        print('rem', location, 'affected', affected)
         for other_piece in affected:
             other_piece.unblock(location)
 
@@ -266,19 +266,11 @@ class Board():
             self.white.remove(piece)
         else:
             self.black.remove(piece)
-        print(affected, type(affected), 'item 0', type(affected[0]), piece, type(piece))
-        # tmp = affected.copy()
-        # print(tmp)
-        # tmp[1] = 'as'
-        # print(tmp)
-        # tmp = set(tmp)
-        # print(tmp)
-        # tt = tmp.union(set([piece]))
-        # print(tt)
 
-        test = set(affected).union(set([piece]))
-        print(test)
-        return test
+        # cleat the heat from the piece being removed:
+        piece.clear_heat(self.heat[piece.color])
+
+        return affected
 
     def relocate_piece(self, from_, to):
         if isinstance(from_, Piece):
@@ -300,13 +292,10 @@ class Board():
         self.state[to] = piece
         self.state[origin] = None
         piece.init_moves()
-        affected = self.find_blockers(origin)
-        print('from', origin, 'affected', affected)
-        # affected += self.find_blockers(to)
+        from_affected = self.find_blockers(origin)
         to_affected = self.find_blockers(to)
-        print('to', to, 'affected', to_affected)
-        affected += to_affected
-        
+        affected = from_affected + to_affected
+
         for other_piece in affected:
             if piece != other_piece:
                 other_piece.block(to)
@@ -317,7 +306,9 @@ class Board():
         self.hashstate = self.hashstate[:index] + piece.hashtype + self.hashstate[index+1:]
         index = BOARD_KEY_INDEX[origin]
         self.hashstate = self.hashstate[:index] + ' ' + self.hashstate[index+1:]
-        return affected
+        test = set(affected)
+        test = test.union([piece])
+        return list(test)
 
     def naive_moves(self, piece):
         results = []
@@ -419,19 +410,17 @@ class Board():
         for act in actions:
             affected_set = set()
             affected = getattr(self, act[0])(*act[1])
-            print(affected)
-            affected_set = affected_set.union(set(affected))
+            if affected:
+                affected_set = affected_set.union(set(affected))
         return affected_set
 
     def generate_heat(self):
         for piece in self.all:
-            self.heat[piece.color] = piece.heat(self.heat[piece.color])
+            self.heat[piece.color] = piece.update_heat(self.heat[piece.color])
 
     def update_heat(self, affected):
         for piece in affected:
-            # print(piece)
             self.heat[piece.color] = piece.update_heat(self.heat[piece.color])
-            # print(self.heatness())
 
     undo_actions = process_actions
 
@@ -439,7 +428,6 @@ class Board():
         # the function that applies actions to the piece set (and thus the board)
         actions, undo = move.actions()
         self.update_heat(self.process_actions(actions))
-        print(self.heatness())
 
         # if not self.validate_move(move):
         #     self.process_actions(undo)
@@ -515,15 +503,16 @@ class Board():
             return not is_in_check   # False == invalid move
         else:   # not moving the king
             consideration_heat = []
-            # print('checkers:', self.checkers, 'pinners:', self.pinners)
             # consider discovery
             for piece in [ z.pinner for z in self.pinners ]:
                 if move.destination != piece.location:
                     piece.unblock(move.origin)
-                    piece.block(move.destination) # this is needed to properly threat moves alongside the pinned line
+                    if move.type_ != 't' and move.type_ != 'e' and move.type_ != '+':      # if capture, landing is already blocked
+                        piece.block(move.destination)                                      # this is needed to properly threat moves alongside the pinned line
                     consideration_heat = piece.heat(consideration_heat)
                     piece.block(move.origin)
-                    piece.unblock(move.destination)
+                    if move.type_ != 't' and move.type_ != 'e' and move.type_ != '+':
+                        piece.unblock(move.destination)
             # consider covering check
             if turns_king_in_check:
                 for piece in self.checkers:
@@ -533,7 +522,6 @@ class Board():
                         piece.unblock(move.destination)
 
             if turns_king_location in consideration_heat:
-                # print('move', move, 'K loc', turns_king_location, 'hitter loc', piece.location, self.debug_heatness(consideration_heat))
                 return False
             return True
 
