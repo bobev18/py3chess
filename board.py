@@ -1,7 +1,5 @@
 from piece import Piece
-from move import Move
 
-CAPTURE_SIGN = 'x'
 
 ORDERED_BOARD_KEYS = ['a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8', 'b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'd1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'e1', 'e2', 'e3', 'e4', 'e5', 'e6', 'e7', 'e8', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'g7', 'g8', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'h8']
 BOARD_KEY_INDEX = {'a1': 0, 'a2': 1, 'a3': 2, 'a4': 3, 'a5': 4, 'a6': 5, 'a7': 6, 'a8': 7, 'b1': 8, 'b2': 9, 'b3': 10, 'b4': 11, 'b5': 12, 'b6': 13, 'b7': 14, 'b8': 15, 'c1': 16, 'c2': 17, 'c3': 18, 'c4': 19, 'c5': 20, 'c6': 21, 'c7': 22, 'c8': 23, 'd1': 24, 'd2': 25, 'd3': 26, 'd4': 27, 'd5': 28, 'd6': 29, 'd7': 30, 'd8': 31, 'e1': 32, 'e2': 33, 'e3': 34, 'e4': 35, 'e5': 36, 'e6': 37, 'e7': 38, 'e8': 39, 'f1': 40, 'f2': 41, 'f3': 42, 'f4': 43, 'f5': 44, 'f6': 45, 'f7': 46, 'f8': 47, 'g1': 48, 'g2': 49, 'g3': 50, 'g4': 51, 'g5': 52, 'g6': 53, 'g7': 54, 'g8': 55, 'h1': 56, 'h2': 57, 'h3': 58, 'h4': 59, 'h5': 60, 'h6': 61, 'h7': 62, 'h8': 63}
@@ -204,7 +202,7 @@ class Board():
                 message = 'Are you blind - there is another piece at that spot: ' + repr(self.state[location])
                 raise MoveException(message)
 
-            new_piece = Piece(color, type_, location)
+            new_piece = Piece(self, color, type_, location)
 
         self.state[location] = new_piece
         affected = self.find_blockers(location)           # note that determining affected pieces should be after making chage to the self.state !!!
@@ -292,100 +290,7 @@ class Board():
         test = test.union([piece])
         return list(test)
 
-    def naive_moves(self, piece):
-        results = []
-        preliminary = piece.raw_moves
-
-        # moving to empty square
-        try:
-            for destination in preliminary['m']:
-                if not self.state[destination]:
-                    results.append(Move(piece, 'm', destination, destination))
-        except KeyError:
-            pass
-
-        # for pawn jumps over empty square
-        try:
-            for destination in preliminary['m2']:
-                if not self.state[destination] and ((piece.color == 'w' and not self.state[destination[0]+'3']) or (piece.color == 'b' and not self.state[destination[0]+'6'])):
-                    results.append(Move(piece, 'm2', destination, destination))
-        except KeyError:
-            pass
-
-        # moving K to empty square
-        try:
-            for destination in preliminary['mk']:
-                if not self.state[destination]:
-                    results.append(Move(piece, 'mk', destination, piece.notation() + destination))
-        except KeyError:
-            pass
-
-        # taking non empty square
-        try:
-            for destination in preliminary['t']:
-                if self.state[destination] and self.state[destination].color != piece.color:
-                    results.append(Move(piece, 't', destination, piece.notation() + CAPTURE_SIGN + destination, self.state[destination]))
-        except KeyError:
-            pass
-
-        # promote on empty
-        try:
-            for destination in preliminary['p']:
-                if not self.state[destination]:
-                    for option in ['N', 'B', 'R', 'Q']:
-                        results.append(Move(piece, 'p', destination, destination + option, option))
-        except KeyError:
-            pass
-
-        # capture-promote (on non empty)
-        try:
-            for destination in preliminary['+']:
-                if self.state[destination] and self.state[destination].color != piece.color:
-                    for option in ['N', 'B', 'R', 'Q']:
-                        results.append(Move(piece, '+', destination, piece.notation() + CAPTURE_SIGN + destination + option, [option, self.state[destination]]))
-        except KeyError:
-            pass
-
-        # en passant - destination empty, side non empty of opposite color
-        try:
-            for destination in preliminary['e']:
-                opponent = self.state[destination[0] + piece.location[1]]
-                if opponent and opponent.color != piece.color and opponent.type_ == 'p' and not self.state[destination]:
-                    results.append(Move(piece, 'e', destination, piece.notation() + CAPTURE_SIGN + destination, opponent))
-        except KeyError:
-            pass
-
-        # castle - all
-        try:
-            for destination in preliminary['c']:
-                if not self.state[destination]:
-                    if piece.color == 'w':
-                        if destination[0] == 'g' and self.state['h1'] and self.state['h1'].designation == 'wr' and not self.state['f1']:
-                            results.append(Move(piece, 'c', destination, 'O-O', self.state['h1']))
-                        if destination[0] == 'c' and self.state['a1'] and self.state['a1'].designation == 'wr' and not self.state['d1'] and not self.state['b1']:
-                            results.append(Move(piece, 'c', destination, 'O-O-O', self.state['a1']))
-                    else:
-                        if destination[0] == 'g' and self.state['h8'] and self.state['h8'].designation == 'br' and not self.state['f8']:
-                            results.append(Move(piece, 'c', destination, 'O-O', self.state['h8']))
-                        if destination[0] == 'c' and self.state['a8'] and self.state['a8'].designation == 'br' and not self.state['d8'] and not self.state['b8']:
-                            results.append(Move(piece, 'c', destination, 'O-O-O', self.state['a8']))
-        except KeyError:
-            pass
-
-        # directional
-        for direction in ['NE','SE','SW','NW','N','E','S','W']:
-            try:
-                for destination in preliminary[direction]:
-                    if not self.state[destination]:
-                        results.append(Move(piece, 'm', destination, piece.notation() + destination))
-                    else:
-                        if self.state[destination].color != piece.color:
-                            results.append(Move(piece, 't', destination, piece.notation() + CAPTURE_SIGN + destination, self.state[destination]))
-                        break
-            except KeyError:
-                pass
-
-        return results
+    
 
     def process_actions(self, actions):
         # common routine of the exec_move and undo_move
@@ -408,10 +313,13 @@ class Board():
 
     def execute_move(self, move):
         # the function that applies actions to the piece set (and thus the board)
+        print('executing move', move)
         actions, undo = move.actions()
         self.update_affected_heat(self.process_actions(actions))
         undo.append(('set_incheck', [self.white_checked, self.black_checked]))
         self.update_incheck(move.piece.color)
+        print(self)
+        print(self.heatness())
         return undo
 
     def set_incheck(self, white_is_in_check, black_is_in_check):
@@ -448,6 +356,8 @@ class Board():
             opponent_pieces = self.white
             turns_king_in_check = self.black_checked
 
+        move_is_capture = move.type_ != 't' and move.type_ != 'e' and move.type_ != '+'
+
         if move.piece.type_ == 'k':
             # king's landing
             is_in_check = self.is_in_check(move.destination, opposite_color)
@@ -467,11 +377,11 @@ class Board():
             for piece in [ z.pinner for z in self.pinners ]:
                 if move.destination != piece.location:
                     piece.unblock(move.origin)
-                    if move.type_ != 't' and move.type_ != 'e' and move.type_ != '+':      # if capture, landing is already blocked
+                    if move_is_capture:                                                    # if capture, landing is already blocked
                         piece.block(move.destination)                                      # this is needed to properly threat moves alongside the pinned line
                     consideration_heat = piece.get_heat(consideration_heat)
                     piece.block(move.origin)
-                    if move.type_ != 't' and move.type_ != 'e' and move.type_ != '+':
+                    if move_is_capture:
                         piece.unblock(move.destination)
             # consider covering check
             if turns_king_in_check:

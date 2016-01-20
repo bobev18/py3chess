@@ -2,7 +2,6 @@ from board import Board
 from piece import Piece
 from player import Player
 
-
 INITIAL_POSITION = {
     'a8':'br', 'b8':'bn', 'c8':'bb', 'd8':'bq', 'e8':'bk', 'f8':'bb', 'g8':'bn', 'h8':'br',
     'a7':'bp', 'b7':'bp', 'c7':'bp', 'd7':'bp', 'e7':'bp', 'f7':'bp', 'g7':'bp', 'h7':'bp',
@@ -126,7 +125,8 @@ class Game():
 
     def valid_moves_of_piece(self, piece):
         valid_moves = []
-        for move in self.board.naive_moves(piece):
+        # for move in self.board.naive_moves(piece):
+        for move in piece.naive_moves():
             if self.validate_special_moves(move):
                 if self.board.prevalidate_move(move):
                     valid_moves.append(move)

@@ -261,3 +261,54 @@ When subtracting the heat, there is no need to remove specific one of the repeat
 OK there is conceptual issue with 'affected' approach:
  in case of remove, it fails to update the heat that should disapear with the captured piece and terminates at board edge, and not at another piece.
  Actually we dont have concept for reduction of heat due to captured piece, because until now there was full heat reset, and recalculation was based on self.all, which no longer had the removed piece
+
+Conceptual issue with directional portion of 'naive_moves' to be based off path.walks
+once a piece is moved it should allow walk only up to the next block, however the blocks are only applied for affected pieces, instead of to self.all, thus the unblock allows the entire direction, and disregards blockers that might have been hidden
+ --- to remedy: process dynamic unblocks - seak the new blockers with find_blockers
+Perviously this was covered by 'naive_moves' relying on board.state instead of path.walk, but is the above influencing heat?
+There are heating issues, apart from the expected one: in the sequence blow Ba7 to b6 causes a5 to heat from 1 to 3, while it should be only up to 2
+e3 should also be heat 1, and not 2; c3 should be 2, not 3
+
+|br|  |  |  |bk|  |  |br|
+|bb|bp|bp|  |  |bp|bp|bp|
+|bp|  |  |  |  |  |  |  |
+|wp|  |  |  |  |  |  |  |
+|  |bq|  |bp|wn|  |  |  |
+|  |  |  |wp|  |wp|  |wp|
+|  |  |wp|wq|  |wp|  |  |
+|wr|  |  |  |  |wr|wk|  |
+
+
+| | | | | | | | |          | |2|1|2|2|3|1| |
+| | | | | | | | |          |1|1| |1|2|1| |1|
+| |2| |1| |1| |1|          |1|3|1|2|1|1|2|1|
+|1| |1| | | |2| |          |1|2|2| | | | | |
+|1|1|1| |2|1|2| |          |1| |1|2| | | | |
+|1|1|2|2|2| |2| |          |1|1|3| |2| | | |
+|1| |1|1|1|4|1|1|          | |1| |1| | | | |
+|1|2|3|3|3|2|2|1|          | |1| | | | | | |
+
+executing move Bb6
+
+|br|  |  |  |bk|  |  |br|
+|  |bp|bp|  |  |bp|bp|bp|
+|bp|bb|  |  |  |  |  |  |
+|wp|  |  |  |  |  |  |  |
+|  |bq|  |bp|wn|  |  |  |
+|  |  |  |wp|  |wp|  |wp|
+|  |  |wp|wq|  |wp|  |  |
+|wr|  |  |  |  |wr|wk|  |
+
+
+| | | | | | | | |          | |1|1|2|2|3|1| |
+| | | | | | | | |          |2| |1|1|2|1| |1|
+| |2| |1| |1| |1|          |2|2|1|2|1|1|2|1|
+|1| |1| | | |2| |          |3|2|2| | | | | |
+|1|1|1| |2|1|2| |          |1| |1|2| | | | |
+|1|1|2|2|2| |2| |          |1|1|3| |2| | | |
+|1| |1|1|1|4|1|1|          | |1| |1| | | | |
+|1|2|3|3|3|2|2|1|          | |1| | | | | | |
+
+
+
+
