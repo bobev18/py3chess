@@ -235,7 +235,7 @@ class BoardTest(unittest.TestCase):
         test_board = Board(TEST_POSITION2)
         test_board.remove_piece('e4')
         # because `.remove_piece('e4')` is called directly, `.process_ctions` is never called to gen the heat map (same with initial spawn)
-        test_board.generate_heat()
+        test_board.update_all_heat()
         # |br|  |bb|bq|bk|bb|bn|  |
         # |  |wr|  |bb|  |  |  |  |
         # |  |  |  |  |  |  |  |  |
@@ -258,7 +258,7 @@ class BoardTest(unittest.TestCase):
         black_queen = test_board.state['e5']
         backup_ne4 = test_board.state['e4']
         test_board.remove_piece('e4')
-        test_board.generate_heat()
+        test_board.update_all_heat()
         # |br|  |bb|bq|bk|bb|bn|  |
         # |  |wr|  |bb|  |  |  |  |
         # |  |  |  |  |  |  |  |  |
@@ -270,7 +270,7 @@ class BoardTest(unittest.TestCase):
         self.assertEqual([black_queen], test_board.find_checkers('e1', 'b'))
 
         test_board.relocate_piece('c3', 'e3')
-        test_board.generate_heat()
+        test_board.update_all_heat()
         # |br|  |bb|bq|bk|bb|bn|  |
         # |  |wr|  |bb|  |  |  |  |
         # |  |  |  |  |  |  |  |  |
@@ -282,7 +282,7 @@ class BoardTest(unittest.TestCase):
         self.assertEqual([], test_board.find_checkers('e1', 'b'))
 
         test_board.relocate_piece('e3', 'c2')
-        test_board.generate_heat()
+        test_board.update_all_heat()
         black_knight = test_board.state['c2']
         # |br|  |bb|bq|bk|bb|bn|  |
         # |  |wr|  |bb|  |  |  |  |
@@ -296,7 +296,7 @@ class BoardTest(unittest.TestCase):
 
         test_board.relocate_piece('a8', 'g1')
         test_board.remove_piece('f1')
-        test_board.generate_heat()
+        test_board.update_all_heat()
         black_rook = test_board.state['g1']
         # |  |  |bb|bq|bk|bb|bn|  |
         # |  |wr|  |bb|  |  |  |  |
@@ -468,7 +468,7 @@ class GameTest(unittest.TestCase):
     def test_validations_of_covering_moves(self):
         test_game = Game(board_position=TEST_POSITION3)
         test_game.board.remove_piece('e4')
-        test_game.board.generate_heat()
+        test_game.board.update_all_heat()
         # |br|  |  |  |bk|  |  |  |
         # |  |wr|  |bb|  |  |  |  |
         # |  |  |  |  |  |  |  |  |

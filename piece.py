@@ -335,17 +335,7 @@ class Piece():
         accumulator += self.old_heat
         return accumulator
 
-    def heat(self, accumulator):
+    def get_heat(self, accumulator):
         self.recalculate_heat()
         accumulator += self.non_directional_heat + self.directional_heat
         return accumulator
-
-    def old_heat_Aaaaa(self):
-        results = []
-        for move_type, squares in self.non_directional_heat.items():
-            if move_type in ['t', 'e', '+']:
-                results.extend(squares)
-        for path in self.paths:
-            results.extend(path.walk(self.color))
-        return results
-

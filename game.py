@@ -76,13 +76,13 @@ class Game():
                 return 'stalemate'
 
         # reduced ability to move
-        result = []
+        valid_moves = []
         turning_pieceset = self.board.pieces_of_color(self.turnning_player.color).copy()   # copy because `valid_moves_of_piece_at` may alter it
         for piece in turning_pieceset:
-            temporary_result = self.valid_moves_of_piece_at(piece.location)
-            result.extend(temporary_result)
+            piece_valid_moves = self.valid_moves_of_piece(piece)
+            valid_moves.extend(piece_valid_moves)
 
-        if len(result) == 0:
+        if len(valid_moves) == 0:
             if self.turnning_player.is_in_check:
                 return 'mate'
             else:
@@ -92,7 +92,7 @@ class Game():
             if len(self.backtrack) > 0 and self.backtrack.count(self.backtrack[-1]) >= 3:
                 return 'stalemate'
 
-        return result
+        return valid_moves
 
     def record_history(self, move):
         history_dependant_move_state = [ self.special_moves[-1][0] or move.origin in ['a8', 'e8'],
@@ -121,16 +121,17 @@ class Game():
         return True
 
     def valid_moves_of_piece_at(self, location):
-        # the argument could be piece, but with location it's easier to construct assertions in the unit tests
-        result = []
-        naives = self.board.naive_moves(self.board.state[location])
-        # for move in self.board.naive_moves(self.board.state[location]):
-        for move in naives:
+        # used only to ease construction of assertions in the unit tests
+        return self.valid_moves_of_piece(self.board.state[location])
+
+    def valid_moves_of_piece(self, piece):
+        valid_moves = []
+        for move in self.board.naive_moves(piece):
             if self.validate_special_moves(move):
                 if self.board.prevalidate_move(move):
-                    result.append(move)
+                    valid_moves.append(move)
 
-        return result
+        return valid_moves
 
     def undo_last(self):
         # undo opponent move
