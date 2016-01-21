@@ -2,7 +2,6 @@ from board import Board
 from piece import Piece
 from player import Player
 
-
 INITIAL_POSITION = {
     'a8':'br', 'b8':'bn', 'c8':'bb', 'd8':'bq', 'e8':'bk', 'f8':'bb', 'g8':'bn', 'h8':'br',
     'a7':'bp', 'b7':'bp', 'c7':'bp', 'd7':'bp', 'e7':'bp', 'f7':'bp', 'g7':'bp', 'h7':'bp',
@@ -76,13 +75,13 @@ class Game():
                 return 'stalemate'
 
         # reduced ability to move
-        result = []
+        valid_moves = []
         turning_pieceset = self.board.pieces_of_color(self.turnning_player.color).copy()   # copy because `valid_moves_of_piece_at` may alter it
         for piece in turning_pieceset:
-            temporary_result = self.valid_moves_of_piece_at(piece.location)
-            result.extend(temporary_result)
+            piece_valid_moves = self.valid_moves_of_piece(piece)
+            valid_moves.extend(piece_valid_moves)
 
-        if len(result) == 0:
+        if len(valid_moves) == 0:
             if self.turnning_player.is_in_check:
                 return 'mate'
             else:
@@ -92,7 +91,7 @@ class Game():
             if len(self.backtrack) > 0 and self.backtrack.count(self.backtrack[-1]) >= 3:
                 return 'stalemate'
 
-        return result
+        return valid_moves
 
     def record_history(self, move):
         history_dependant_move_state = [ self.special_moves[-1][0] or move.origin in ['a8', 'e8'],
@@ -121,15 +120,18 @@ class Game():
         return True
 
     def valid_moves_of_piece_at(self, location):
-        # the argument could be piece, but with location it's easier to construct assertions in the unit tests
-        result = []
-        for move in self.board.naive_moves(self.board.state[location]):
+        # used only to ease construction of assertions in the unit tests
+        return self.valid_moves_of_piece(self.board.state[location])
+
+    def valid_moves_of_piece(self, piece):
+        valid_moves = []
+        # for move in self.board.naive_moves(piece):
+        for move in piece.naive_moves():
             if self.validate_special_moves(move):
-                undo = self.board.execute_move(move)
-                if undo:
-                    result.append(move)
-                    self.board.undo_actions(undo)
-        return result
+                if self.board.prevalidate_move(move):
+                    valid_moves.append(move)
+
+        return valid_moves
 
     def undo_last(self):
         # undo opponent move
@@ -173,6 +175,7 @@ class Game():
                 self.state = valid_input
             else:
                 undo = self.board.execute_move(valid_input)
+
                 self.record_history(valid_input)   # also records backtrack
                 self.undo_stack.append(undo)
                 self.whites_player.is_in_check = self.board.white_checked

@@ -77,6 +77,7 @@ class AI:
     def expand_node(self, node):
         # this method is called for nodes that are already executed onto the game object
         game_state = self.game.determine_game_state()   # returns 'mate', 'stalemate', or list of all valid expansions
+        # print('node', node, 'gamestate', game_state)
         if isinstance(game_state, list):
             node.subnodes = sorted([ Node(node.path, node.depth_level + 1, not node.color, z) for z in game_state ], key=lambda x: x.path)
             return None
@@ -109,17 +110,12 @@ class AI:
                     optimal_node = sub_node
                     print('new optimum', optimum.value, optimum.optimal_cutoff_path)
 
-                # print('optimal_node KB size', asizeof.asizeof(optimal_node)//1024)
-                # print('sub_node KB size', asizeof.asizeof(sub_node)//1024)
-                # print('game      KB size', asizeof.asizeof(self.game)//1024)
-                # print('score_cache KB sz', asizeof.asizeof(self.score_cache)//1024)
             root_node.subnodes = [optimal_node]
-
-            # print('final root node size (KB)', asizeof.asizeof(root_node)//1024)
             return optimum
 
     def evaluate(self, node, cutoff_depth, upper_level_optimum=None):  # cutoff_depth absolute count of (semi-)turns
-        # print('evaluate with arguments:', node, cutoff_depth, upper_level_optimum.value)
+        # print('evaluate with arguments:', node, cutoff_depth)
+        # if upper_level_optimum: print('upper_level_optimum.value', upper_level_optimum.value)
         if node.depth_level == cutoff_depth:
             # print('cutoff node:::', node.notation, node.path, node.score.value)
             # print('cutoff node    ', asizeof.asizeof(node))
@@ -171,6 +167,14 @@ class AI:
 
 
 position = {'e2':'  ','c8':'  ','e1':'  ','b6':'  ','e8':'bk','e7':'  ','g5':'  ','b1':'  ','a2':'  ','g6':'  ','e6':'  ','f6':'  ','h4':'  ','h7':'bp','g1':'wk','a5':'wp','b2':'  ','d3':'wp','c1':'  ','e3':'  ','c4':'  ','a6':'bp','a4':'  ','d8':'  ','f3':'wp','a8':'br','d2':'  ','c6':'  ','c7':'bp','g8':'  ','d1':'wq','f2':'wp','f1':'wr','g3':'  ','g2':'  ','b8':'  ','c2':'wp','f8':'  ','b4':'bq','b7':'bp','f5':'  ','f4':'  ','d4':'bp','h3':'wp','a3':'  ','c3':'  ','b3':'  ','d7':'  ','b5':'  ','e4':'wn','h6':'  ','d5':'  ','h2':'  ','h8':'br','a1':'wr','h1':'  ','g4':'  ','g7':'bp','h5':'  ','c5':'  ','a7':'bb','f7':'bp','e5':'  ','d6':'  '}
+# |br|  |  |  |bk|  |  |br|
+# |bb|bp|bp|  |  |bp|bp|bp|
+# |bp|  |  |  |  |  |  |  |
+# |wp|  |  |  |  |  |  |  |
+# |  |bq|  |bp|wn|  |  |  |
+# |  |  |  |wp|  |wp|  |wp|
+# |  |  |wp|  |  |wp|  |  |
+# |wr|  |  |wq|  |wr|wk|  |
 # b_loose_q_position = {'e2':'  ','c8':'  ','e1':'  ','b6':'  ','e8':'bk','e7':'  ','g5':'  ','b1':'wr','a2':'  ','g6':'  ','e6':'  ','f6':'  ','h4':'  ','h7':'bp','g1':'wk','a5':'wp','b2':'  ','d3':'wp','c1':'  ','e3':'  ','c4':'  ','a6':'bp','a4':'  ','d8':'  ','f3':'wp','a8':'br','d2':'  ','c6':'  ','c7':'bp','g8':'  ','d1':'wq','f2':'wp','f1':'wr','g3':'  ','g2':'  ','b8':'  ','c2':'wp','f8':'  ','b4':'bq','b7':'bp','f5':'  ','f4':'  ','d4':'bp','h3':'wp','a3':'  ','c3':'  ','b3':'  ','d7':'  ','b5':'  ','e4':'wn','h6':'  ','d5':'  ','h2':'  ','h8':'br','a1':'  ','h1':'  ','g4':'  ','g7':'bp','h5':'  ','c5':'  ','a7':'bb','f7':'bp','e5':'  ','d6':'  '}
 # test_game = Game()
 test_game = Game(board_position=position)

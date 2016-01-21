@@ -136,13 +136,7 @@ I could probably reduce the tree, by keeping only the best candidate depth 1 bra
 On deeper branches we cannot cut oponent branches, but on any own branches we can apply the same strategy. No, because the optimum will change due to deeper lvl evaluataions.
 
 
-The timing of the results indicate about 200sec out of 800sec are in `board.is_in_check`. Instead of checking potential hitters, a heat map could be used. The heated nodes are the destinations in the non capturing naive expansions;
-  Moving one piece can influence the naive expansions of another piece that is not involved in the move. This will require recalculating all naives for all pieces. This is actually part of gamestate check which makes valid moves, which in order are based on naive moves. However it's done in order of pieces: piece.naives -> piece.valids -> execute -> validate for discover_/is_in_ check -> undo ===> next piece
-  Finding all naives for a position before proceeding to validation process will require two separate cycles through pieces:
-    cycle opponent pieces and pull naives to gen the heat map
-    cycle through own pieces and pass the validation where is_in_check reads the heat map instead of INVERSE_HIT_MAP
-^^^^
-the above is structural change to many modules/classes, and needs to be carried in new branch stemming from master!!!!
+##### Concept to discard Move obj, and replace it with a list ===
 
 The way undo_actions get the 'data' for the w_in_check/b_in_check position, the same should be added to the move_actions before undo is processed. This should allow conditioning the calls to `update_incheck_variable_state` which relies on `is_in_check`, to avoid the call id the 'data' is present in the move_actions
 MMM the first execution is done based on result from move.actions while the 2nd is from move.flat_actions so values from the 1st cannot be transfered in the 2nd. To make it work we'll need global use of flat actions and retaining them from the gamestate moves to the <expand> moves
@@ -152,11 +146,13 @@ the plan is to:
 2. revert the chessboard to use non-flat moves === Move objects
 3. make a flat branch and implement only the flat moves
 4. make direct comparison between flat and non flat mem usage
-results are -- storing Move obj is better than a flat list !!!!!!!
 
-heat map works twice slower than the current is_in_check!
+**Results are: storing Move obj is better than a flat list !!!!!!!**
 
-tottime - is time spend in the method minus the sub calls
+*Note: tottime - is time spend in the method minus the sub calls*
+
+##### Concept to merge directional cycles
+
 Have to find another way to optimize is_in_check:
    ncalls  tottime  percall  cumtime  percall filename:lineno(function)
    571117   11.666    0.000   12.110    0.000 board.py:388(is_in_check)
@@ -164,14 +160,112 @@ Have to find another way to optimize is_in_check:
 merged directional cycles
    549840   15.223    0.000   16.116    0.000 board.py:388(is_in_check)
 
-There is no point of altering the cycles -- the number of comparisons between hitters and board state cannot be reduced
+**Result: There is no point of altering the cycles -- the number of comparisons between hitters and board state cannot be reduced**
+
+
+##### Heat Concept
+
+The timing of the results indicate about 200sec out of 800sec are in `board.is_in_check`. Instead of checking potential hitters, a heat map could be used. The heated nodes are the destinations in the naive expansions up to a blockage;
+  Moving one piece can influence the naive expansions of another piece that is not involved in the move. This will require recalculating all naives for all pieces. This work (naives for each piece) is actually done in the non-heat implementation. The difference is in the order. The non-heat order is:
+    loop pieces in `detemine_agmaestate` -> for each piece call `valid_moves_at`, which `board.naive_moves` i.e **recalculates** the naive moves for the piece -> loops over moves and for each move does -> execute -> validate for discover_/is_in_ check -> undo ===> next move ===> next piece
+  Finding all naives for a position before proceeding to validation process will require two separate cycles through pieces:
+    cycle opponent pieces and call `board.naive_moves` to generate the heat map
+    cycle through own pieces and pass the validation where is_in_check reads the heat map instead of INVERSE_HIT_MAP
+^^^^
+the above is structural change to many modules/classes, and needs to be carried in new branch stemming from master!!!!
+
+**Preliminary Result: heat map works twice slower than the current is_in_check!**
+(This preliminary had a bug, see further down for the ?final? result)
 
 To avoid the verifying all potential hitter positions is to keep track of these during the move executions. That information cannot be the validated moves but it should work for naive moves
 This is more core change than the heat map
 
 High level concept is like this:
-keep Piece's equivalent of ACT_MAP and update it dynamically based on move executions
+keep Piece's own equivalent of ACT_MAP and update it dynamically based on move executions
 let's have a method "update_naives"; for non directional moves, that will be an if check, but for directional ones it will be a cutoff for the direction sequence
 so after move execution we cycle through pieces, and call update_naives with the Move (or destination, etc)
 To avoid another cycle, the updated data should be passed into heatmap
 --- initial naive_moves for a piece need to be processed via the current naive_moves method
+!!! also for newly created pieces (pawn promos), the initial state also needs to be done via the current method !!!
+
+Added embedded inner ifs for un/block methods in Path.
+Moved heat accumulation to single separate cycle in the end of process_actions
+Added sorting of subnodes in chesstree to ensure consistency of move considerations for the cProfile tests
+
+Using piece.raw_moves is a bug, because that is not updated after change in piece.location
+BUG: currently  `others` relies on `raw_moves` -- should add test
+Maybe not a bug - added test, and it passes without changes to the use of raw_moves
+Well, turns out that board.relocate calls piece.init_moves(), which updates raw_moves == FIXED
+
+BUG: using conditioned block for the consideration calls to un/block in the last commit fails to allow moves alongside pinned line
+FIXED in pinners cycle
+
+BUG: the AI has deteriorated:
+
+      |br|  |  |  |bk|  |  |br|
+      |bb|bp|bp|  |  |bp|bp|bp|
+      |bp|  |  |  |  |  |  |  |
+      |wp|  |  |  |  |  |  |  |
+      |  |bq|  |bp|wn|  |  |  |
+      |  |  |  |wp|  |wp|  |wp|
+      |  |  |wp|  |  |wp|  |  |
+      |wr|  |  |wq|  |wr|wk|  |
+
+      optimal move with score 0 and move path: ||Nd6|Kd7|Nxb7,
+
+because the checkers'n'pinners fails to accommodate case where checker is captured by another piece
+FIXED by adding `if move.destination != piece.location:` in the checkers loop
+
+
+
+
+
+
+
+----------------- from office local notes -----------------
+apart form the direct contributions of the piece being moved, there are often discovery/block contributions; to determine the set of pieces affected by those,
+ we need to run the directional portion of the find_checkers and match for piece_type & direction combo, regardless of color. Matches should be passed through heat recapture
+!!! there are couple of approaches of incorporating the new heat:
+ a) make full recapture of heat to the piece; Subtract old piece heat from heatmap, then add the new heat
+ b) try to work out only the heat difference -- find only relevant locations along unblocked path
+    |br|  |  |bq|bk|bb|bn|  |
+    |  |wr|  |bb|  |  |  |  |
+    |  |  |  |  |  |  |  |  |
+    |  |wb|  |  |bq|  |  |  |
+    |  |bb|  |  |wn|  |  |  |
+    |  |  |__|  |  |  |  |  |
+    |bn|  |  | +|  |  |  |  |
+    |wr|wn|wb|wq|w+|wb|  |wr|
+    moving Nc3 to Na2
+    via the directional approach of find checkers, we have established that bq@e5 heat output is affected
+    the partial recapturing of heat for bq@e5 should produce ['b2', 'a1']
+
+    it could be negative:
+    |br|  |bb|bq|bk|bb|bn|  |
+    |  |wr|  |bb|  |  |  |  |
+    |  |  |  |  |  |  |  |  |
+    |  |wb|  |  |bq|  |  |  |
+    |  |  |  |  |wn|  | -|  |
+    |  |  |__|  |  | -|  |  |
+    |  |  |  |  |bn|  |  |  |
+    |wr|wn|wb|wq|wk|wb|  |wr|
+    moving Nc3 to Ne2:
+    via directional approach of find_checkers we establish that wq@d1 is affected
+    the partial recapturing if heat for wq@d1 should produce [-'f3', -'g4']
+
+
+Whichever approach is chosen, the first step will be to convert the heatmap to incremental heat; Actually we have list of "addresses", and we do have repetitions - that is the increment of the heating.
+When subtracting the heat, there is no need to remove specific one of the repeated addresses - just remove one occurrence = if there are other hitters for the same spot,
+ they will have another copy of the address in the list
+
+OK there is conceptual issue with 'affected' approach:
+ in case of remove, it fails to update the heat that should disappear with the captured piece and terminates at board edge, and not at another piece.
+ Actually we don't have concept for reduction of heat due to captured piece, because until now there was full heat reset, and recalculation was based on self.all, which no longer had the removed piece
+
+Conceptual issue with directional portion of 'naive_moves' to be based off path.walks
+once a piece is moved it should allow walk only up to the next block, however the blocks are only applied for affected pieces, instead of to self.all, thus the unblock allows the entire direction, and disregards blockers that might have been hidden. (Previously this was covered by 'naive_moves' relying on board.state instead of path.walk)
+FIXED - process dynamic unblocks - seek the new blockers via find_blockers
+
+There's still an issue with heat -- seems like pawn's heat output somehow doubles
+FIXED - it was occurring for pawns at positions capable of en passant -- turns out I need just 't' for the non-directional heat accumulation
+

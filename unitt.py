@@ -25,26 +25,23 @@ TWO_KINGS_POSITION = {'h5':'  ', 'g2':'  ', 'f8':'  ', 'g5':'  ', 'd8':'  ', 'd4
 class PieceTest(unittest.TestCase):
 
     def test_piece_initialization(self):
-        test_piece = Piece('w', 'p', 'e2')
+        test_piece = Piece(None, 'w', 'p', 'e2')
         self.assertEqual('wp@e2',repr(test_piece))
 
     def test_lookup_moves_on_empty_board(self):
-        another_piece = Piece('w', 'p', 'e2')
-        self.assertEqual({'m': ['e3'], 't': ['d3', 'f3'], 'm2': ['e4']}, another_piece.lookup_moves())
-
-        test_piece = Piece('w', 'p', 'e8')
-        self.assertEqual({}, test_piece.lookup_moves())
+        another_piece = Piece(None, 'w', 'p', 'e2')
+        self.assertEqual({'m': ['e3'], 't': ['d3', 'f3'], 'm2': ['e4']}, another_piece.raw_moves)
 
 class MoveTest(unittest.TestCase):
 
     def test_move_initialization(self):
-        test_piece = Piece('w', 'p', 'e2')
+        test_piece = Piece(None, 'w', 'p', 'e2')
         test_move = Move(test_piece, 'm2', 'e4', 'e4')
         self.assertEqual('e4', repr(test_move))
 
     def test_move_action_generation(self):
-        test_piece = Piece('w', 'n', 'e4')
-        taken_piece = Piece('b', 'n', 'c3')
+        test_piece = Piece(None, 'w', 'n', 'e4')
+        taken_piece = Piece(None, 'b', 'n', 'c3')
         test_move = Move(test_piece, 't', 'c3', 'Nxc3', taken_piece)
         self.assertEqual('Nxc3', repr(test_move))
         self.assertEqual(taken_piece, test_move.taken)
@@ -53,8 +50,8 @@ class MoveTest(unittest.TestCase):
         self.assertEqual([('relocate_piece', ['c3', 'e4']), ('add_piece', [taken_piece])], undo_actions)
 
     def test_enpassant_move_initialization(self):
-        test_piece = Piece('w', 'p', 'g5')
-        taken_piece = Piece('b', 'p', 'f5')
+        test_piece = Piece(None, 'w', 'p', 'g5')
+        taken_piece = Piece(None, 'b', 'p', 'f5')
         enpasant_move = Move(test_piece, 'e', 'f6', 'gxf6', taken_piece)
         def attribute_lister(object_, attributes):
             return [ getattr(object_, z) for z in attributes ]
@@ -81,7 +78,7 @@ class BoardTest(unittest.TestCase):
         test_board.add_piece('bn@c3')
         self.assertEqual('bn@c3', repr(test_board.state['c3']))
 
-        new_piece = Piece('w', 'n', 'b1')
+        new_piece = Piece(test_board, 'w', 'n', 'b1')
         self.assertIsNone(test_board.state['b1'])
         test_board.add_piece(new_piece)
         self.assertEqual('wn@b1', repr(test_board.state['b1']))
@@ -120,27 +117,27 @@ class BoardTest(unittest.TestCase):
         # |wr|wn|wb|wq|wk|wb|  |wr|
 
         #pawn capture right
-        b2_moves = test_board.naive_moves(test_board.state['b2'])
+        b2_moves = test_board.state['b2'].naive_moves()
         for move in b2_moves:
             self.assertIsInstance(move, Move)
         self.assertEqual(set(['b3', 'b4', 'bxc3']), set([ z.notation for z in b2_moves ]))
         #pawn capture left
-        self.assertEqual(set(['d4', 'd3', 'dxc3']), set([ z.notation for z in test_board.naive_moves(test_board.state['d2']) ]))
+        self.assertEqual(set(['d4', 'd3', 'dxc3']), set([ z.notation for z in test_board.state['d2'].naive_moves() ]))
         #blocked pawn
-        self.assertEqual([], test_board.naive_moves(test_board.state['c2']))
-        e2_moves = test_board.naive_moves(test_board.state['e2'])
+        self.assertEqual([], test_board.state['c2'].naive_moves())
+        e2_moves = test_board.state['e2'].naive_moves()
         self.assertEqual(1, len(e2_moves))
         e2_move = e2_moves[0]
         self.assertEqual('e3', e2_move.notation)
         #en passant without consideration of last move
-        self.assertIn('gxf6', [ z.notation for z in test_board.naive_moves(test_board.state['g5']) ])
+        self.assertIn('gxf6', [ z.notation for z in test_board.state['g5'].naive_moves() ])
         #promote pawn h7
-        self.assertEqual(set(['h8R', 'h8N', 'h8B', 'h8Q', 'hxg8R', 'hxg8N', 'hxg8B', 'hxg8Q']), set([ z.notation for z in test_board.naive_moves(test_board.state['h7']) ]))
+        self.assertEqual(set(['h8R', 'h8N', 'h8B', 'h8Q', 'hxg8R', 'hxg8N', 'hxg8B', 'hxg8Q']), set([ z.notation for z in test_board.state['h7'].naive_moves() ]))
 
         #knight at e4
-        self.assertEqual(set(['Nf6', 'Ng3', 'Nxc3', 'Nc5', 'Nd6']), set([ z.notation for z in test_board.naive_moves(test_board.state['e4'])]))
+        self.assertEqual(set(['Nf6', 'Ng3', 'Nxc3', 'Nc5', 'Nd6']), set([ z.notation for z in test_board.state['e4'].naive_moves()]))
         #knight at c3
-        self.assertEqual(set(['Nxd1', 'Nxa2', 'Nxe2', 'Nb5', 'Na4', 'Nxb1', 'Nd5', 'Nxe4']), set([ z.notation for z in test_board.naive_moves(test_board.state['c3']) ]))
+        self.assertEqual(set(['Nxd1', 'Nxa2', 'Nxe2', 'Nb5', 'Na4', 'Nxb1', 'Nd5', 'Nxe4']), set([ z.notation for z in test_board.state['c3'].naive_moves() ]))
 
     def test_naive_moves_for_bishops(self):
         test_board = Board(TEST_POSITION2)
@@ -154,16 +151,16 @@ class BoardTest(unittest.TestCase):
         # |wr|wn|wb|wq|wk|wb|  |wr|
 
         #white bishop at b5
-        self.assertEqual(set(['Ba4', 'Ba6', 'Bc6', 'Bxd7', 'Bc4', 'Bd3', 'Be2']), set([ z.notation for z in test_board.naive_moves(test_board.state['b5']) ]))
+        self.assertEqual(set(['Ba4', 'Ba6', 'Bc6', 'Bxd7', 'Bc4', 'Bd3', 'Be2']), set([ z.notation for z in test_board.state['b5'].naive_moves() ]))
         #bishop at c8
-        Bc8_moves = test_board.naive_moves(test_board.state['c8'])
+        Bc8_moves = test_board.state['c8'].naive_moves()
         self.assertEqual(1, len(Bc8_moves))
         self.assertEqual(['t', 'c8', 'b7', 'Bxb7'], [Bc8_moves[0].type_, Bc8_moves[0].origin, Bc8_moves[0].destination, Bc8_moves[0].notation])
 
         #bishop at d7
-        self.assertEqual(set(['Bf5', 'Bg4', 'Be6', 'Bxb5', 'Bc6', 'Bh3']), set([ z.notation for z in test_board.naive_moves(test_board.state['d7']) ]))
+        self.assertEqual(set(['Bf5', 'Bg4', 'Be6', 'Bxb5', 'Bc6', 'Bh3']), set([ z.notation for z in test_board.state['d7'].naive_moves() ]))
         #bishop at c1
-        self.assertIn('Be3', [ z.notation for z in test_board.naive_moves(test_board.state['c1']) ])
+        self.assertIn('Be3', [ z.notation for z in test_board.state['c1'].naive_moves() ])
 
     def test_naive_moves_for_rooks(self):
         test_board = Board(TEST_POSITION2)
@@ -176,9 +173,9 @@ class BoardTest(unittest.TestCase):
         # |  |  |  |  |  |  |  |  |
         # |wr|wn|wb|wq|wk|wb|  |wr|
         #rook at a8
-        self.assertEqual(set(['Rxa1', 'Ra2', 'Ra3', 'Ra4', 'Ra5', 'Ra6', 'Ra7', 'Rb8']), set([ z.notation for z in test_board.naive_moves(test_board.state['a8']) ]))
+        self.assertEqual(set(['Rxa1', 'Ra2', 'Ra3', 'Ra4', 'Ra5', 'Ra6', 'Ra7', 'Rb8']), set([ z.notation for z in test_board.state['a8'].naive_moves() ]))
         #rook at b7
-        self.assertIn('Rxd7', [ z.notation for z in test_board.naive_moves(test_board.state['b7']) ])
+        self.assertIn('Rxd7', [ z.notation for z in test_board.state['b7'].naive_moves() ])
 
     def test_naive_moves_for_queens(self):
         test_board = Board(TEST_POSITION2)
@@ -193,9 +190,9 @@ class BoardTest(unittest.TestCase):
 
         #queen at e5
         self.assertEqual(set(['Qe7', 'Qe6', 'Qf6', 'Qg7', 'Qh8', 'Qf5', 'Qg5', 'Qh5', 'Qf4', 'Qg3', 'Qh2', 'Qxe4', 'Qd4', 'Qd5', 'Qc5', 'Qxb5', 'Qd6', 'Qc7', 'Qb8',]),
-            set([ z.notation for z in test_board.naive_moves(test_board.state['e5']) ]))
+            set([ z.notation for z in test_board.state['e5'].naive_moves() ]))
         #queen at d1
-        self.assertIn('Qg4', [ z.notation for z in test_board.naive_moves(test_board.state['d1']) ])
+        self.assertIn('Qg4', [ z.notation for z in test_board.state['d1'].naive_moves() ])
 
     def test_naive_moves_for_kings(self):
         test_board = Board(TEST_POSITION2)
@@ -209,14 +206,14 @@ class BoardTest(unittest.TestCase):
         # |wr|wn|wb|wq|wk|wb|  |wr|
 
         #king at e8
-        self.assertEqual(2, len(test_board.naive_moves(test_board.state['e8'])))
-        self.assertIn('Ke7', [ z.notation for z in test_board.naive_moves(test_board.state['e8']) ])
-        self.assertIn('Kf7', [ z.notation for z in test_board.naive_moves(test_board.state['e8']) ])
+        self.assertEqual(2, len(test_board.state['e8'].naive_moves()))
+        self.assertIn('Ke7', [ z.notation for z in test_board.state['e8'].naive_moves() ])
+        self.assertIn('Kf7', [ z.notation for z in test_board.state['e8'].naive_moves() ])
         #king at e1
-        self.assertIn('Ke2', [ z.notation for z in test_board.naive_moves(test_board.state['e1']) ])
+        self.assertIn('Ke2', [ z.notation for z in test_board.state['e1'].naive_moves() ])
 
         #castling without check validation
-        self.assertNotIn('O-O-O', [ z.notation for z in test_board.naive_moves(test_board.state['e8']) ])
+        self.assertNotIn('O-O-O', [ z.notation for z in test_board.state['e8'].naive_moves() ])
         test_board = Board(TEST_POSITION3)
         # |br|  |  |  |bk|  |  |  |
         # |  |wr|  |bb|  |  |  |  |
@@ -227,33 +224,118 @@ class BoardTest(unittest.TestCase):
         # |  |  |  |  |  |  |  |  |
         # |wr|  |  |  |wk|  |  |wr|
         #king at e8
-        self.assertIn('O-O-O', [ z.notation for z in test_board.naive_moves(test_board.state['e8']) ])
-        self.assertNotIn('O-O', [ z.notation for z in test_board.naive_moves(test_board.state['e8']) ])
+        self.assertIn('O-O-O', [ z.notation for z in test_board.state['e8'].naive_moves() ])
+        self.assertNotIn('O-O', [ z.notation for z in test_board.state['e8'].naive_moves() ])
 
         #king at e1
-        self.assertIn('O-O', [ z.notation for z in test_board.naive_moves(test_board.state['e1']) ])
-        self.assertIn('O-O-O', [ z.notation for z in test_board.naive_moves(test_board.state['e1']) ])
+        self.assertIn('O-O', [ z.notation for z in test_board.state['e1'].naive_moves() ])
+        self.assertIn('O-O-O', [ z.notation for z in test_board.state['e1'].naive_moves() ])
 
     def test_determining_checks(self):
         test_board = Board(TEST_POSITION2)
-        self.assertFalse(test_board.discover_check('e8', 'd7', 'w'))
-        self.assertFalse(test_board.discover_check('e1', 'e4', 'b'))
         test_board.remove_piece('e4')
-        self.assertTrue(test_board.discover_check('e1', 'e4', 'b'))
-        # |br|  |  |  |bk|  |  |  |
+        # because `.remove_piece('e4')` is called directly, `.process_ctions` is never called to gen the heat map (same with initial spawn)
+        test_board.update_all_heat()
+        # |br|  |bb|bq|bk|bb|bn|  |
         # |  |wr|  |bb|  |  |  |  |
         # |  |  |  |  |  |  |  |  |
         # |  |wb|  |  |bq|  |  |  |
         # |  |  |  |  |  |  |  |  |
         # |  |  |bn|  |  |  |  |  |
         # |  |  |  |  |  |  |  |  |
-        # |wr|  |  |  |wk|  |  |wr|
+        # |wr|wn|wb|wq|wk|wb|  |wr|
 
         self.assertTrue(test_board.is_in_check('e1','b'))
         self.assertTrue(test_board.is_in_check('e2','b'))
         self.assertFalse(test_board.is_in_check('f2','b'))
         self.assertFalse(test_board.is_in_check('d2','b'))
         self.assertTrue(test_board.is_in_check('h8','w'))
+
+    def test_find_checkers(self):
+        test_board = Board(TEST_POSITION2)
+        self.assertEqual([], test_board.find_checkers('e1', 'b'))
+
+        black_queen = test_board.state['e5']
+        backup_ne4 = test_board.state['e4']
+        test_board.remove_piece('e4')
+        test_board.update_all_heat()
+        # |br|  |bb|bq|bk|bb|bn|  |
+        # |  |wr|  |bb|  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |wb|  |  |bq|  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |bn|  |  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |wr|wn|wb|wq|wk|wb|  |wr|
+        self.assertEqual([black_queen], test_board.find_checkers('e1', 'b'))
+
+        test_board.relocate_piece('c3', 'e3')
+        test_board.update_all_heat()
+        # |br|  |bb|bq|bk|bb|bn|  |
+        # |  |wr|  |bb|  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |wb|  |  |bq|  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |  |  |bn|  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |wr|wn|wb|wq|wk|wb|  |wr|
+        self.assertEqual([], test_board.find_checkers('e1', 'b'))
+
+        test_board.relocate_piece('e3', 'c2')
+        test_board.update_all_heat()
+        black_knight = test_board.state['c2']
+        # |br|  |bb|bq|bk|bb|bn|  |
+        # |  |wr|  |bb|  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |wb|  |  |bq|  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |bn|  |  |  |  |  |
+        # |wr|wn|wb|wq|wk|wb|  |wr|
+        self.assertEqual(set([black_queen, black_knight]), set(test_board.find_checkers('e1', 'b')) )
+
+        test_board.relocate_piece('a8', 'g1')
+        test_board.remove_piece('f1')
+        test_board.update_all_heat()
+        black_rook = test_board.state['g1']
+        # |  |  |bb|bq|bk|bb|bn|  |
+        # |  |wr|  |bb|  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |wb|  |  |bq|  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |bn|  |  |  |  |  |
+        # |wr|wn|wb|wq|wk|  |br|wr|
+        self.assertEqual(set([black_queen, black_knight, black_rook]), set(test_board.find_checkers('e1', 'b')) )
+        self.assertEqual(set(['bq@e5', 'bq@d8', 'br@g1']), set([ str(z) for z in test_board.find_checkers('g5', 'b') ]) )
+        self.assertEqual(set(['bq@e5', 'bq@d8', 'bn@g8']), set([ str(z) for z in test_board.find_checkers('f6', 'b') ]) )
+
+    def test_find_pinners(self):
+        test_board = Board(TEST_POSITION2)
+        # |br|  |bb|bq|bk|bb|bn|  |
+        # |  |wr|  |bb|  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |wb|  |  |bq|  |  |  |
+        # |  |  |  |  |wn|  |  |  |
+        # |  |  |bn|  |  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |wr|wn|wb|wq|wk|wb|  |wr|
+
+        self.assertEqual(set(['b5-d7-e8']), set([ str(z) for z in test_board.find_pinners('e8', 'w') ]))
+        self.assertEqual(set(['e5-e4-e1']), set([ str(z) for z in test_board.find_pinners('e1', 'b') ]))
+        test_board.relocate_piece('c3', 'e2')
+        # test_board.generate_heat()
+        self.assertEqual(set([]), set([ str(z) for z in test_board.find_pinners('e1', 'b') ]))
+        test_board.relocate_piece('e2', 'c3')
+
+        test_board.relocate_piece('c8', 'b4')
+        self.assertEqual(set(['e5-e4-e1']), set([ str(z) for z in test_board.find_pinners('e1', 'b') ]))
+        test_board.relocate_piece('c3', 'a2')
+        test_board.relocate_piece('b1', 'c3')
+        self.assertEqual(set(['e5-e4-e1', 'b4-c3-e1']), set([ str(z) for z in test_board.find_pinners('e1', 'b') ]))
+
+        test_board.relocate_piece('a8', 'g1')
+        self.assertEqual(set(['e5-e4-e1', 'b4-c3-e1', 'g1-f1-e1']), set([ str(z) for z in test_board.find_pinners('e1', 'b') ]))
 
     def test_execute_move(self):
         test_board = Board(TEST_POSITION1)
@@ -266,7 +348,7 @@ class BoardTest(unittest.TestCase):
         # |wp|wp|wp|wp|wp|wp|  |  |
         # |wr|wn|wb|wq|wk|wb|  |wr|
 
-        b1_moves = test_board.naive_moves(test_board.state['b1'])
+        b1_moves = test_board.state['b1'].naive_moves()
         capture_move = [ z for z in b1_moves if z.type_ == 't' ][0]
         self.assertIsInstance(test_board.state['c3'], Piece)
         self.assertEqual('bn@c3', repr(test_board.state['c3']))
@@ -287,13 +369,16 @@ class BoardTest(unittest.TestCase):
         # |  |  |  |  |  |  |  |  |
         # |wr|  |  |  |wk|  |  |wr|
 
-        e4_moves = test_board.naive_moves(test_board.state['e4'])
+        e4_moves = test_board.state['e4'].naive_moves()
         capture_move = [ z for z in e4_moves if z.type_ == 't' ][0]
         self.assertIsInstance(test_board.state['c3'], Piece)
         self.assertEqual('bn@c3', repr(test_board.state['c3']))
-        undo = test_board.execute_move(capture_move)
-        # move fails
-        self.assertIsNone(undo)
+        # undo = test_board.execute_move(capture_move)
+        # # move fails
+        # self.assertIsNone(undo)
+        # ### `execute_move` no longer validates - it assumes the move is prevalidated, thus:
+        self.assertFalse(test_board.prevalidate_move(capture_move))
+
         self.assertEqual('bn@c3', repr(test_board.state['c3']))
         self.assertEqual('wn@e4', repr(test_board.state['e4']))
 
@@ -308,7 +393,7 @@ class BoardTest(unittest.TestCase):
         # |wp|wp|wp|wp|wp|wp|  |  |
         # |wr|wn|wb|wq|wk|wb|  |wr|
 
-        b1_moves = test_board.naive_moves(test_board.state['b1'])
+        b1_moves = test_board.state['b1'].naive_moves()
         capture_move = [ z for z in b1_moves if z.type_ == 't' ][0]
         self.assertIsInstance(test_board.state['c3'], Piece)
         self.assertEqual('bn@c3', repr(test_board.state['c3']))
@@ -325,6 +410,8 @@ class BoardTest(unittest.TestCase):
         self.assertEqual('bn@c3', repr(test_board.state['c3']))
         self.assertEqual(16, len(test_board.white))
         self.assertEqual(14, len(test_board.black))
+
+
 
 class GameTest(unittest.TestCase):
 
@@ -344,8 +431,18 @@ class GameTest(unittest.TestCase):
         # |  |  |  |  |  |  |  |  |
         # |wr|wn|wb|wq|wk|wb|  |wr|
 
+        # print(test_game.board.heatness())
+        # self.assertEqual(set(['Rg1', 'Rh2', 'Rh3']))
+
+
         # the knight at e4, will have the expansion list reduced to []
         self.assertEqual([], test_game.valid_moves_of_piece_at('e4'))
+
+        # with checkers & pinners called at the end of execute move, I need to push that to trigger recalculation of the checkers and pinners for the black
+        h1_moves = test_game.valid_moves_of_piece_at('h1')
+        test_game.board.execute_move(h1_moves.pop())
+        # print(test_game.board)
+
         #bishop at d7 previously had [('m', 'f5', 'Bf5'),('m', 'g4', 'Bg4'),('m', 'e6', 'Be6'),('t', 'b5', 'Bxb5'),('m', 'c6', 'Bc6'),('m', 'h3', 'Bh3')], but now
         self.assertEqual(set(['Bxb5', 'Bc6']), set([ z.notation for z in test_game.valid_moves_of_piece_at('d7') ]))
         #king at e1 -- validated the move to e2 as it's hit by the knight at c3
@@ -362,7 +459,7 @@ class GameTest(unittest.TestCase):
         # |wr|  |  |  |wk|  |  |wr|
 
         #king at e1 should not expand queen side castle due to N@c3 hitting d1
-        naive_moves = set([ z.notation for z in test_game.board.naive_moves(test_game.board.state['e1']) ])
+        naive_moves = set([ z.notation for z in test_game.board.state['e1'].naive_moves() ])
         valid_moves = set([ z.notation for z in test_game.valid_moves_of_piece_at('e1') ])
         self.assertTrue(set(['O-O-O']), naive_moves - valid_moves)
 
@@ -371,6 +468,7 @@ class GameTest(unittest.TestCase):
     def test_validations_of_covering_moves(self):
         test_game = Game(board_position=TEST_POSITION3)
         test_game.board.remove_piece('e4')
+        test_game.board.update_all_heat()
         # |br|  |  |  |bk|  |  |  |
         # |  |wr|  |bb|  |  |  |  |
         # |  |  |  |  |  |  |  |  |
@@ -385,7 +483,6 @@ class GameTest(unittest.TestCase):
         for piece in test_game.board.pieces_of_color('w'):
             temporary_result = test_game.valid_moves_of_piece_at(piece.location)
             whites_possible_moves.extend(temporary_result)
-
         self.assertEqual(set(['Kd2', 'Kf2', 'Kf1', 'Be2']), set([ z.notation for z in whites_possible_moves ]))
 
     def test_decode_move(self):
@@ -444,12 +541,12 @@ class GameTest(unittest.TestCase):
         # |wr|wn|wb|wq|wk|wb|  |wr|
 
         no_promo_move_attributes = ['piece', 'origin', 'type_', 'destination', 'notation', 'taken', 'catsling_rook',]
-        new_black_queen = Piece('b', 'q', 'h8')
+        new_black_queen = Piece(test_game.board, 'b', 'q', 'h8')
         expected_move = Move(test_game.board.state['h7'], 'p', 'h8', 'h8Q', new_black_queen)
         decoded_move = test_game.whites_player.decode_move('h8Q')
         self.assertEqual(attribute_lister(expected_move, no_promo_move_attributes) , attribute_lister(decoded_move, no_promo_move_attributes))
 
-        new_black_knight = Piece('b', 'n', 'g8')
+        new_black_knight = Piece(test_game.board, 'b', 'n', 'g8')
         expected_move = Move(test_game.board.state['h7'], '+', 'g8', 'hxg8N', [new_black_knight, test_game.board.state['g8']])
         decoded_move = test_game.whites_player.decode_move('hxg8N')
         self.assertEqual(attribute_lister(expected_move, no_promo_move_attributes) , attribute_lister(decoded_move, no_promo_move_attributes))
@@ -529,6 +626,76 @@ class GameTest(unittest.TestCase):
         test_game.blacks_player.simulate(['a5', 'a4', 'Nc6', 'axb3', 'h6', 'bxa2', 'h5'])
         self.assertRaises(SimulationException, test_game.start, False)
 
+    def test_affected_heat_update(self):
+        position = {'e2':'  ','c8':'  ','e1':'  ','b6':'  ','e8':'bk','e7':'  ','g5':'  ','b1':'  ','a2':'  ','g6':'  ','e6':'  ','f6':'  ','h4':'  ','h7':'bp','g1':'wk','a5':'wp','b2':'  ','d3':'wp','c1':'  ','e3':'  ','c4':'  ','a6':'bp','a4':'  ','d8':'  ','f3':'wp','a8':'br','d2':'  ','c6':'  ','c7':'bp','g8':'  ','d1':'wq','f2':'wp','f1':'wr','g3':'  ','g2':'  ','b8':'  ','c2':'wp','f8':'  ','b4':'bq','b7':'bp','f5':'  ','f4':'  ','d4':'bp','h3':'wp','a3':'  ','c3':'  ','b3':'  ','d7':'  ','b5':'  ','e4':'wn','h6':'  ','d5':'  ','h2':'  ','h8':'br','a1':'wr','h1':'  ','g4':'  ','g7':'bp','h5':'  ','c5':'  ','a7':'bb','f7':'bp','e5':'  ','d6':'  '}
+        # |br|  |  |  |bk|  |  |br|
+        # |bb|bp|bp|  |  |bp|bp|bp|
+        # |bp|  |  |  |  |  |  |  |
+        # |wp|  |  |  |  |  |  |  |
+        # |  |bq|  |bp|wn|  |  |  |
+        # |  |  |  |wp|  |wp|  |wp|
+        # |  |  |wp|  |  |wp|  |  |
+        # |wr|  |  |wq|  |wr|wk|  |
+        test_game = Game(board_position=position)
+        test_game.whites_player.simulate(['Qd2', 'Rf1'])
+        test_game.blacks_player.simulate(['Bb6', 'Ba7'])
+        self.assertRaises(DecodeException, test_game.start, False)
+
+    def test_non_directional_heat_update(self):
+        # NOTE: uses only prevalidate_move, and ommits board.naive_moves, thus moves may cause MoveException
+        position = {'h8':'  ', 'h2':'  ', 'h3':'  ', 'h1':'wr', 'h6':'  ', 'h7':'  ', 'h4':'  ', 'h5':'  ', 'd8':'  ', 'a8':'br', 'd6':'  ', 'd7':'bb', 'd4':'  ', 'd5':'  ', 'd2':'  ', 'd3':'  ', 'd1':'  ', 'g7':'  ', 'g6':'  ', 'g5':'  ', 'g4':'  ', 'g3':'  ', 'g2':'  ', 'g1':'  ', 'g8':'  ', 'c8':'  ', 'c3':'bn', 'c2':'  ', 'c1':'  ', 'c7':'  ', 'c6':'  ', 'c5':'  ', 'c4':'  ', 'f1':'  ', 'f2':'  ', 'f3':'  ', 'f4':'  ', 'f5':'  ', 'f6':'  ', 'f7':'  ', 'f8':'  ', 'b4':'  ', 'b5':'wb', 'b6':'  ', 'b7':'wr', 'b1':'  ', 'b2':'  ', 'b3':'  ', 'b8':'  ', 'a1':'wr', 'a3':'  ', 'a2':'  ', 'a5':'  ', 'e8':'bk', 'a7':'  ', 'a6':'  ', 'e5':'  ', 'e4':'  ', 'e7':'  ', 'e6':'  ', 'e1':'wk', 'e3':'  ', 'e2':'wn', 'a4':'  '}
+        test_game = Game(board_position=position)
+        # |br|  |  |  |bk|  |  |  |
+        # |  |wr|  |bb|  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |wb|  |  |  |  |  |  |
+        # |  |  |  |  |  |  |  |  |
+        # |  |  |bn|  |  |  |  |  |
+        # |  |  |  |  |wn|  |  |  |
+        # |wr|  |  |  |wk|  |  |wr|
+
+        decoded_move = test_game.whites_player.decode_move('Ke2')
+        self.assertFalse(test_game.board.prevalidate_move(decoded_move))
+
+        some_other_white_move = test_game.whites_player.decode_move('Nd4')
+        self.assertTrue(test_game.board.prevalidate_move(some_other_white_move))
+        test_game.board.execute_move(some_other_white_move)
+
+        knight_away_move = test_game.blacks_player.decode_move('Nxb5')
+        self.assertTrue(test_game.board.prevalidate_move(knight_away_move))
+        test_game.board.execute_move(knight_away_move)
+
+        decoded_move = test_game.whites_player.decode_move('Ke2')
+        self.assertTrue(test_game.board.prevalidate_move(decoded_move))
+        test_game.board.execute_move(decoded_move)
+
+    def test_heat(self):
+        position = {'e2':'  ','c8':'  ','e1':'  ','b6':'  ','e8':'bk','e7':'  ','g5':'  ','b1':'  ','a2':'  ','g6':'  ','e6':'  ','f6':'  ','h4':'  ','h7':'bp','g1':'wk','a5':'wp','b2':'  ','d3':'wp','c1':'  ','e3':'  ','c4':'  ','a6':'bp','a4':'  ','d8':'  ','f3':'wp','a8':'br','d2':'  ','c6':'  ','c7':'bp','g8':'  ','d1':'wq','f2':'wp','f1':'wr','g3':'  ','g2':'  ','b8':'  ','c2':'wp','f8':'  ','b4':'bq','b7':'bp','f5':'  ','f4':'  ','d4':'bp','h3':'wp','a3':'  ','c3':'  ','b3':'  ','d7':'  ','b5':'  ','e4':'wn','h6':'  ','d5':'  ','h2':'  ','h8':'br','a1':'wr','h1':'  ','g4':'  ','g7':'bp','h5':'  ','c5':'  ','a7':'bb','f7':'bp','e5':'  ','d6':'  '}
+        test_game = Game(board_position=position)
+        # |br|  |  |  |bk|  |  |br|
+        # |bb|bp|bp|  |  |bp|bp|bp|
+        # |bp|  |  |  |  |  |  |  |
+        # |wp|  |  |  |  |  |  |  |
+        # |  |bq|  |bp|wn|  |  |  |
+        # |  |  |  |wp|  |wp|  |wp|
+        # |  |  |wp|  |  |wp|  |  |
+        # |wr|  |  |wq|  |wr|wk|  |
+        # print(test_game.board)
+        # print(test_game.board.heatness())
+        expected_heat ="""
+| | | | | | | | |          | |2|1|2|2|3|1| |
+| | | | | | | | |          |1|1| |1|2|1| |1|
+| |1| |1| |1| | |          |1|3|1|2|1|1|2|1|
+|1| |1| | | |1| |          |1|2|2| | | | | |
+|1| |1| |2| |2| |          |1| |1|2| | | | |
+|1|1|1|2|1|1|2| |          |1|1|2| |1| | | |
+|1| |1|2|1|3|1|1|          | |1| |1| | | | |
+|1|2|2|2|2|2|1|1|          | |1| | |1| | | |
+"""
+        # print(expected_heat)
+        self.assertEqual(expected_heat, test_game.board.heatness())
+
+
 
 class TemporaryGameTest(unittest.TestCase):
 
@@ -583,7 +750,7 @@ class TemporaryGameTest(unittest.TestCase):
 
         moves_for_black = []
         for candidate_piece in test_game.board.black:
-            expansions = [ z.notation for z in test_game.board.naive_moves(candidate_piece) ]
+            expansions = [ z.notation for z in candidate_piece.naive_moves() ]
             moves_for_black.extend(expansions)
 
         self.assertEqual(len(set(moves_for_black)), len(moves_for_black)) # true if all generated notations are unique
@@ -620,6 +787,9 @@ class TemporaryGameTest(unittest.TestCase):
         test_game.whites_player.simulate(['Kd1', '2.Qd2', 'Qe1',         'Qc2', 'Qc1', 'Qd2', 'Qe1', 'Qe2', 'Qe1', 'exit'])
         test_game.blacks_player.simulate(['Qd5', 'Qh1+', 'undo', 'Qb3+', 'Qb7', 'Qd5', 'Qh1', 'Qh5', 'Qh1', 'Qd5', 'exit'])
         self.assertEqual('player w left the game', test_game.start(verbose=False))
+
+
+
 
 
 

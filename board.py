@@ -1,21 +1,8 @@
 from piece import Piece
-from move import Move
 
-CAPTURE_SIGN = 'x'
 
 ORDERED_BOARD_KEYS = ['a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8', 'b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'd1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'e1', 'e2', 'e3', 'e4', 'e5', 'e6', 'e7', 'e8', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'g7', 'g8', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'h8']
 BOARD_KEY_INDEX = {'a1': 0, 'a2': 1, 'a3': 2, 'a4': 3, 'a5': 4, 'a6': 5, 'a7': 6, 'a8': 7, 'b1': 8, 'b2': 9, 'b3': 10, 'b4': 11, 'b5': 12, 'b6': 13, 'b7': 14, 'b8': 15, 'c1': 16, 'c2': 17, 'c3': 18, 'c4': 19, 'c5': 20, 'c6': 21, 'c7': 22, 'c8': 23, 'd1': 24, 'd2': 25, 'd3': 26, 'd4': 27, 'd5': 28, 'd6': 29, 'd7': 30, 'd8': 31, 'e1': 32, 'e2': 33, 'e3': 34, 'e4': 35, 'e5': 36, 'e6': 37, 'e7': 38, 'e8': 39, 'f1': 40, 'f2': 41, 'f3': 42, 'f4': 43, 'f5': 44, 'f6': 45, 'f7': 46, 'f8': 47, 'g1': 48, 'g2': 49, 'g3': 50, 'g4': 51, 'g5': 52, 'g6': 53, 'g7': 54, 'g8': 55, 'h1': 56, 'h2': 57, 'h3': 58, 'h4': 59, 'h5': 60, 'h6': 61, 'h7': 62, 'h8': 63}
-
-SQUARE2COORDS = {
-        'a1':(1,1),'a2':(1,2),'a3':(1,3),'a4':(1,4),'a5':(1,5),'a6':(1,6),'a7':(1,7),'a8':(1,8),
-        'b1':(2,1),'b2':(2,2),'b3':(2,3),'b4':(2,4),'b5':(2,5),'b6':(2,6),'b7':(2,7),'b8':(2,8),
-        'c1':(3,1),'c2':(3,2),'c3':(3,3),'c4':(3,4),'c5':(3,5),'c6':(3,6),'c7':(3,7),'c8':(3,8),
-        'd1':(4,1),'d2':(4,2),'d3':(4,3),'d4':(4,4),'d5':(4,5),'d6':(4,6),'d7':(4,7),'d8':(4,8),
-        'e1':(5,1),'e2':(5,2),'e3':(5,3),'e4':(5,4),'e5':(5,5),'e6':(5,6),'e7':(5,7),'e8':(5,8),
-        'f1':(6,1),'f2':(6,2),'f3':(6,3),'f4':(6,4),'f5':(6,5),'f6':(6,6),'f7':(6,7),'f8':(6,8),
-        'g1':(7,1),'g2':(7,2),'g3':(7,3),'g4':(7,4),'g5':(7,5),'g6':(7,6),'g7':(7,7),'g8':(7,8),
-        'h1':(8,1),'h2':(8,2),'h3':(8,3),'h4':(8,4),'h5':(8,5),'h6':(8,6),'h7':(8,7),'h8':(8,8),
-        }
 
 EMPTYBOARD = {
               'a8':None, 'b8':None, 'c8':None, 'd8':None, 'e8':None, 'f8':None, 'g8':None, 'h8':None,
@@ -101,11 +88,24 @@ class MoveException(Exception):
         # *args is used to get a list of the parameters passed
         self.args = [a for a in args]
 
+class Pin():
+    def __init__(self, pinner, pinnee, king_location, direction):
+        self.pinner = pinner
+        self.pinnee = pinnee
+        self.color = pinnee.color
+        self.king_location = king_location
+        self.direction = direction
+
+    def __repr__(self):
+        return self.pinner.location + '-' + self.pinnee.location + '-' + self.king_location
+
 
 class Board():
     def __init__(self, construction_state={}):
         self.white = []
         self.black = []
+        self.all = []
+        self.heat = {'w': [], 'b': []}
         self.state = EMPTYBOARD.copy()
         self.hashstate = ' '*64
         if construction_state == {}:
@@ -130,6 +130,27 @@ class Board():
             result += '\n'
         return result
 
+    def heatness(self):
+        result = '\n'
+        for i in range(8,0,-1):
+            result += '|'
+            wh = ''
+            bh = ''
+            for j in range(97,105):
+                loc = chr(j)+str(i)
+                if loc in self.heat['w']:
+                    wh += str(self.heat['w'].count(loc))
+                else:
+                    wh += ' '
+                if loc in self.heat['b']:
+                    bh += str(self.heat['b'].count(loc))
+                else:
+                    bh += ' '
+                wh += '|'
+                bh += '|'
+            result += wh + '          |' + bh + '\n'
+        return result
+
     def export(self):
         return { k: str(v) if v else '  ' for (k,v) in self.state.items() }
 
@@ -148,7 +169,11 @@ class Board():
                     self.white_king = self.state[square]
                 if init_state[square] == 'bk':
                     self.black_king = self.state[square]
-        self.update_incheck()
+        self.heat = {'w': [], 'b': []}
+        self.update_all_heat()           # recapture heat needs to be prior to update_incheck, because update_incheck calls find_checkers/pinners, which rely on heat
+        self.update_incheck('w')
+        self.update_incheck('b')
+        # ^^^ the update_incheck order is significant because the self.checkers & self.pinners do not hold separate spaces for each color but are overwritten!!!
 
     def add_piece(self, color, type_=None, location=None):
         if isinstance(color, Piece):
@@ -166,17 +191,25 @@ class Board():
                 message = 'Are you blind - there is another piece at that spot: ' + repr(self.state[location])
                 raise MoveException(message)
 
-            new_piece = Piece(color, type_, location)
+            new_piece = Piece(self, color, type_, location)
 
+        self.state[location] = new_piece
+        affected = self.find_blockers(location)           # note that determining affected pieces should be after making chage to the self.state !!!
+
+        for old_piece in affected:
+            new_piece.block(old_piece.location)
+            old_piece.block(location)
+
+        self.all.append(new_piece)
         if new_piece.color == 'w':
             self.white.append(new_piece)
         else:
             self.black.append(new_piece)
-
-        self.state[location] = new_piece
-        # index = 8*(ord(location[0])-97) + int(location[1])
         index = BOARD_KEY_INDEX[location]
         self.hashstate = self.hashstate[:index] + new_piece.hashtype + self.hashstate[index+1:]
+        test = set(affected)
+        test = test.union([new_piece])
+        return list(affected)
 
     def remove_piece(self, location_):
         if isinstance(location_, Piece):
@@ -191,13 +224,22 @@ class Board():
             raise MoveException(message)
 
         self.state[location] = None
-        # index = 8*(ord(location[0])-97) + int(location[1])
+        affected = self.find_blockers(location)
+        for other_piece in affected:
+            other_piece.unblock(location)
+
         index = BOARD_KEY_INDEX[location]
         self.hashstate = self.hashstate[:index] + ' ' + self.hashstate[index+1:]
+        self.all.remove(piece)
         if piece.color == 'w':
             self.white.remove(piece)
         else:
             self.black.remove(piece)
+
+        # cleat the heat from the piece being removed:
+        piece.clear_heat(self.heat[piece.color])
+
+        return affected
 
     def relocate_piece(self, from_, to):
         if isinstance(from_, Piece):
@@ -217,154 +259,91 @@ class Board():
 
         piece.location = to
         self.state[to] = piece
-        # index = 8*(ord(to[0])-97) + int(to[1])
+        self.state[origin] = None
+        piece.init_moves()
+        from_affected = self.find_blockers(origin)
+        to_affected = self.find_blockers(to)
+        affected = from_affected + to_affected
+
+        for other_piece in affected:
+            if piece != other_piece:
+                other_piece.block(to)
+                other_piece.unblock(origin)
+                piece.block(other_piece.location)
+
         index = BOARD_KEY_INDEX[to]
         self.hashstate = self.hashstate[:index] + piece.hashtype + self.hashstate[index+1:]
-        self.state[origin] = None
-        # index = 8*(ord(origin[0])-97) + int(origin[1])
         index = BOARD_KEY_INDEX[origin]
         self.hashstate = self.hashstate[:index] + ' ' + self.hashstate[index+1:]
-
-    def naive_moves(self, piece):
-        results = []
-        preliminary = piece.lookup_moves()
-
-        # moving to empty square
-        try:
-            for destination in preliminary['m']:
-                if not self.state[destination]:
-                    results.append(Move(piece, 'm', destination, destination))
-        except KeyError:
-            pass
-
-        # for pawn jumps over empty square
-        try:
-            for destination in preliminary['m2']:
-                if not self.state[destination] and ((piece.color == 'w' and not self.state[destination[0]+'3']) or (piece.color == 'b' and not self.state[destination[0]+'6'])):
-                    results.append(Move(piece, 'm2', destination, destination))
-        except KeyError:
-            pass
-
-        # moving K to empty square
-        try:
-            for destination in preliminary['mk']:
-                if not self.state[destination]:
-                    results.append(Move(piece, 'mk', destination, piece.notation() + destination))
-        except KeyError:
-            pass
-
-        # taking non empty square
-        try:
-            for destination in preliminary['t']:
-                if self.state[destination] and self.state[destination].color != piece.color:
-                    results.append(Move(piece, 't', destination, piece.notation() + CAPTURE_SIGN + destination, self.state[destination]))
-        except KeyError:
-            pass
-
-        # promote on empty
-        try:
-            for destination in preliminary['p']:
-                if not self.state[destination]:
-                    for option in ['N', 'B', 'R', 'Q']:
-                        results.append(Move(piece, 'p', destination, destination + option, option))
-        except KeyError:
-            pass
-
-        # capture-promote (on non empty)
-        try:
-            for destination in preliminary['+']:
-                if self.state[destination] and self.state[destination].color != piece.color:
-                    for option in ['N', 'B', 'R', 'Q']:
-                        results.append(Move(piece, '+', destination, piece.notation() + CAPTURE_SIGN + destination + option, [option, self.state[destination]]))
-        except KeyError:
-            pass
-
-        # en passant - destination empty, side non empty of opposite color
-        try:
-            for destination in preliminary['e']:
-                opponent = self.state[destination[0] + piece.location[1]]
-                if opponent and opponent.color != piece.color and opponent.type_ == 'p' and not self.state[destination]:
-                    results.append(Move(piece, 'e', destination, piece.notation() + CAPTURE_SIGN + destination, opponent))
-        except KeyError:
-            pass
-
-        # castle - all
-        try:
-            for destination in preliminary['c']:
-                if not self.state[destination]:
-                    if piece.color == 'w':
-                        if destination[0] == 'g' and self.state['h1'] and self.state['h1'].designation == 'wr' and not self.state['f1']:
-                            results.append(Move(piece, 'c', destination, 'O-O', self.state['h1']))
-                        if destination[0] == 'c' and self.state['a1'] and self.state['a1'].designation == 'wr' and not self.state['d1'] and not self.state['b1']:
-                            results.append(Move(piece, 'c', destination, 'O-O-O', self.state['a1']))
-                    else:
-                        if destination[0] == 'g' and self.state['h8'] and self.state['h8'].designation == 'br' and not self.state['f8']:
-                            results.append(Move(piece, 'c', destination, 'O-O', self.state['h8']))
-                        if destination[0] == 'c' and self.state['a8'] and self.state['a8'].designation == 'br' and not self.state['d8'] and not self.state['b8']:
-                            results.append(Move(piece, 'c', destination, 'O-O-O', self.state['a8']))
-        except KeyError:
-            pass
-
-        # directional
-        for direction in ['NE','SE','SW','NW','N','E','S','W']:
-            try:
-                for destination in preliminary[direction]:
-                    if not self.state[destination]:
-                        results.append(Move(piece, 'm', destination, piece.notation() + destination))
-                    else:
-                        if self.state[destination].color != piece.color:
-                            results.append(Move(piece, 't', destination, piece.notation() + CAPTURE_SIGN + destination, self.state[destination]))
-                        break
-            except KeyError:
-                pass
-
-        return results
+        test = set(affected)
+        test = test.union([piece])
+        return list(test)
 
     def process_actions(self, actions):
         # common routine of the exec_move and undo_move
         for act in actions:
-            getattr(self, act[0])(*act[1])
+            affected_set = set()
+            affected = getattr(self, act[0])(*act[1])
+            if affected:
+                affected_set = affected_set.union(set(affected))
+        return affected_set
+
+    def update_all_heat(self):
+        for piece in self.all:
+            self.heat[piece.color] = piece.update_heat(self.heat[piece.color])
+
+    def update_affected_blockage_n_heat(self, affected):
+        for piece in affected:
+            for blocker in self.find_blockers(piece.location):
+                piece.block(blocker.location)
+
+            self.heat[piece.color] = piece.update_heat(self.heat[piece.color])
 
     undo_actions = process_actions
 
     def execute_move(self, move):
         # the function that applies actions to the piece set (and thus the board)
         actions, undo = move.actions()
-        self.process_actions(actions)
-        if not self.validate_move(move):
-            self.process_actions(undo)
-            return None
-        # --- end of invalidation ---
-
-        undo.append(('reset_incheck', [self.white_checked, self.black_checked]))
+        self.update_affected_blockage_n_heat(self.process_actions(actions))
+        undo.append(('set_incheck', [self.white_checked, self.black_checked]))
         self.update_incheck(move.piece.color)
         return undo
 
-    def reset_incheck(self, white_is_in_check, black_is_in_check):
+    def set_incheck(self, white_is_in_check, black_is_in_check):
         self.white_checked = white_is_in_check
         self.black_checked = black_is_in_check
 
-    def update_incheck(self, color=None):
+    def update_incheck(self, color):
         if color == 'w':
             self.black_checked = self.is_in_check(self.black_king.location, 'w')
-        elif color == 'b':
-            self.white_checked = self.is_in_check(self.white_king.location, 'b')
+            if self.black_checked:
+                self.checkers = self.find_checkers(self.black_king.location, 'w')
+            else:
+                self.checkers = []
+            self.pinners = self.find_pinners(self.black_king.location, 'w')
         else:
-            self.black_checked = self.is_in_check(self.black_king.location, 'w')
             self.white_checked = self.is_in_check(self.white_king.location, 'b')
+            if self.white_checked:
+                self.checkers = self.find_checkers(self.white_king.location, 'b')
+            else:
+                self.checkers = []
+            self.pinners = self.find_pinners(self.white_king.location, 'b')
 
-    def validate_move(self, move):
-        # assumes the move in question is executed onto board state, but values of attributes like 'self.white_checked' reflect the state prior the move
+    def prevalidate_move(self, move):
         if move.piece.color == 'w':
             opposite_color = 'b'
             castle_row = '1'
             turns_king_location = self.white_king.location
+            opponent_pieces = self.black
+            turns_king_in_check = self.white_checked
         else:
             opposite_color = 'w'
             castle_row = '8'
             turns_king_location = self.black_king.location
+            opponent_pieces = self.white
+            turns_king_in_check = self.black_checked
 
-        # is_in_check & discover_check will not work properly unless all effects of a move are applied to board.state
+        move_is_capture = move.type_ != 't' and move.type_ != 'e' and move.type_ != '+'
 
         if move.piece.type_ == 'k':
             # king's landing
@@ -378,38 +357,82 @@ class Board():
                     jump_over = 'd' + castle_row
                 # jump over
                 is_in_check = is_in_check or self.is_in_check(jump_over, opposite_color)
-
             return not is_in_check   # False == invalid move
         else:   # not moving the king
-            if self.white_checked or self.black_checked:
-                return not self.is_in_check(turns_king_location, opposite_color)  # returns true if covering check that existed in state prior to the move
-            else:
-                return not self.discover_check(turns_king_location, move.origin, opposite_color)  # returns true if does not discover check
+            consideration_heat = []
+            # consider discovery
+            for piece in [ z.pinner for z in self.pinners ]:
+                if move.destination != piece.location:
+                    piece.unblock(move.origin)
+                    if move_is_capture:                                                    # if capture, landing is already blocked
+                        piece.block(move.destination)                                      # this is needed to properly threat moves alongside the pinned line
+                    consideration_heat = piece.get_heat(consideration_heat)
+                    piece.block(move.origin)
+                    if move_is_capture:
+                        piece.unblock(move.destination)
+            # consider covering check
+            if turns_king_in_check:
+                for piece in self.checkers:
+                    if move.destination != piece.location:
+                        piece.block(move.destination)
+                        consideration_heat = piece.get_heat(consideration_heat)
+                        piece.unblock(move.destination)
+
+            if turns_king_location in consideration_heat:
+                return False
+            return True
 
     def is_in_check(self, location, by_color):
+        return location in self.heat[by_color]
+
+    def find_blockers(self, location):
+        blockers = []
+        for d in ['N','E','S','W']:
+            for i in range(len(INVERSE_HIT_MAP[location][d])):
+                hitter = INVERSE_HIT_MAP[location][d][i]
+                if self.state[hitter]:
+                    blockers.append(self.state[hitter])
+                    break
+
+        for d in ['NE','SE','SW','NW']:
+            for i in range(len(INVERSE_HIT_MAP[location][d])):
+                hitter = INVERSE_HIT_MAP[location][d][i]
+                if self.state[hitter]:
+                    blockers.append(self.state[hitter])
+                    break
+
+        return blockers
+
+    def find_checkers(self, location, by_color):
+        checkers = []
         for hitter in INVERSE_HIT_MAP[location]['knight']:
             if self.state[hitter] and self.state[hitter].designation == by_color+'n':
-                return True
+                checkers.append(self.state[hitter])
+                break
 
         if by_color == 'w':
             for hitter in INVERSE_HIT_MAP[location]['wpawn']:
                 if self.state[hitter] and self.state[hitter].designation == 'wp':
-                    return True
+                    checkers.append(self.state[hitter])
+                    break
         else:
             for hitter in INVERSE_HIT_MAP[location]['bpawn']:
                 if self.state[hitter] and self.state[hitter].designation == 'bp':
-                    return True
+                    checkers.append(self.state[hitter])
+                    break
 
         for hitter in INVERSE_HIT_MAP[location]['king']:
             if self.state[hitter] and self.state[hitter].designation == by_color+'k':
-                return True
+                checkers.append(self.state[hitter])
+                break
 
         for d in ['N','E','S','W']:
             for i in range(len(INVERSE_HIT_MAP[location][d])):
                 hitter = INVERSE_HIT_MAP[location][d][i]
                 if self.state[hitter]:
                     if self.state[hitter].designation == by_color+'q' or self.state[hitter].designation == by_color+'r':
-                        return True
+                        checkers.append(self.state[hitter])
+                        break
                     break  # the direction is blocked if an enemy piece doesnt operate in that direction or own piece
 
         for d in ['NE','SE','SW','NW']:
@@ -417,51 +440,46 @@ class Board():
                 hitter = INVERSE_HIT_MAP[location][d][i]
                 if self.state[hitter]:
                     if self.state[hitter].designation == by_color+'q' or self.state[hitter].designation == by_color+'b':
-                        return True
+                        checkers.append(self.state[hitter])
+                        break
                     break  # the direction is blocked if an enemy piece doesnt operate in that direction or own piece
 
-        return False
+        return checkers
 
-    def discover_check(self, king_location, move_origin, by_color):
-        origin_x, origin_y = SQUARE2COORDS[king_location]
-        destination_x, destination_y = SQUARE2COORDS[move_origin]
-        dx = origin_x - destination_x
-        dy = origin_y - destination_y
-        direction = ''
-        if dx == 0:
-            if dy > 0:
-                direction = 'S'
-            else:
-                direction = 'N'
-        if dy == 0:
-            if dx > 0:
-                direction = 'W'
-            else:
-                direction = 'E'
-        if dx == dy:
-            if dx > 0:
-                direction = 'SW'
-            else:
-                direction = 'NE'
-        if dx == -dy:
-            if dx > 0:
-                direction = 'NW'
-            else:
-                direction = 'SE'
-
-        if direction == '':
-            return False
-
-        if len(direction) == 1:  # i.e. direction in ['N','E','S','W']
-            actuators = ['q', 'r']
+    def find_pinners(self, location, by_color):
+        if by_color == 'w':
+            own_color = 'b'
         else:
-            actuators = ['q', 'b']
+            own_color = 'w'
+        pinners = []
 
-        for i in range(len(INVERSE_HIT_MAP[king_location][direction])):
-            hitter = INVERSE_HIT_MAP[king_location][direction][i]
-            if self.state[hitter]:
-                if self.state[hitter].color == by_color and self.state[hitter].type_ in actuators:
-                    return True
-                break  # the direction is blocked if an enemy piece doesnt operate in that direction or own piece
+        for d in ['N','E','S','W']:
+            own_in_path_flag = None
+            for i in range(len(INVERSE_HIT_MAP[location][d])):
+                hitter = INVERSE_HIT_MAP[location][d][i]
+                if self.state[hitter]:
+                    if own_in_path_flag:
+                        if self.state[hitter].designation == by_color+'q' or self.state[hitter].designation == by_color+'r':
+                            pinners.append(Pin(self.state[hitter], own_in_path_flag, location, d))
+                        break       # pin captured
+                    else:
+                        if self.state[hitter].designation[0] == own_color:
+                            own_in_path_flag = self.state[hitter]
+                        else:
+                            break   # opponent piece encountered first
 
-        return False
+        for d in ['NE','SE','SW','NW']:
+            own_in_path_flag = None
+            for i in range(len(INVERSE_HIT_MAP[location][d])):
+                hitter = INVERSE_HIT_MAP[location][d][i]
+                if self.state[hitter]:
+                    if own_in_path_flag:
+                        if self.state[hitter].designation == by_color+'q' or self.state[hitter].designation == by_color+'b':
+                            pinners.append(Pin(self.state[hitter], own_in_path_flag, location, d))
+                        break       # pin captured
+                    else:
+                        if self.state[hitter].designation[0] == own_color:
+                            own_in_path_flag = self.state[hitter]
+                        else:
+                            break   # opponent piece encountered first
+        return pinners
