@@ -19,7 +19,9 @@ POSITION1_VIEW = """
 |wr|wn|wb|wq|wk|wb|  |wr|
 """
 TEST_POSITION2 = {'h8':'  ', 'h2':'  ', 'h3':'  ', 'h1':'wr', 'h6':'  ', 'h7':'  ', 'h4':'  ', 'h5':'  ', 'd8':'bq', 'a8':'br', 'd6':'  ', 'd7':'bb', 'd4':'  ', 'd5':'  ', 'd2':'  ', 'd3':'  ', 'd1':'wq', 'g7':'  ', 'g6':'  ', 'g5':'  ', 'g4':'  ', 'g3':'  ', 'g2':'  ', 'g1':'  ', 'g8':'bn', 'c8':'bb', 'c3':'bn', 'c2':'  ', 'c1':'wb', 'c7':'  ', 'c6':'  ', 'c5':'  ', 'c4':'  ', 'f1':'wb', 'f2':'  ', 'f3':'  ', 'f4':'  ', 'f5':'  ', 'f6':'  ', 'f7':'  ', 'f8':'bb', 'b4':'  ', 'b5':'wb', 'b6':'  ', 'b7':'wr', 'b1':'wn', 'b2':'  ', 'b3':'  ', 'b8':'  ', 'a1':'wr', 'a3':'  ', 'a2':'  ', 'a5':'  ', 'e8':'bk', 'a7':'  ', 'a6':'  ', 'e5':'bq', 'e4':'wn', 'e7':'  ', 'e6':'  ', 'e1':'wk', 'e3':'  ', 'e2':'  ', 'a4':'  '}
+TEST_POSITION2_NOE4 = {'h8':'  ', 'h2':'  ', 'h3':'  ', 'h1':'wr', 'h6':'  ', 'h7':'  ', 'h4':'  ', 'h5':'  ', 'd8':'bq', 'a8':'br', 'd6':'  ', 'd7':'bb', 'd4':'  ', 'd5':'  ', 'd2':'  ', 'd3':'  ', 'd1':'wq', 'g7':'  ', 'g6':'  ', 'g5':'  ', 'g4':'  ', 'g3':'  ', 'g2':'  ', 'g1':'  ', 'g8':'bn', 'c8':'bb', 'c3':'bn', 'c2':'  ', 'c1':'wb', 'c7':'  ', 'c6':'  ', 'c5':'  ', 'c4':'  ', 'f1':'wb', 'f2':'  ', 'f3':'  ', 'f4':'  ', 'f5':'  ', 'f6':'  ', 'f7':'  ', 'f8':'bb', 'b4':'  ', 'b5':'wb', 'b6':'  ', 'b7':'wr', 'b1':'wn', 'b2':'  ', 'b3':'  ', 'b8':'  ', 'a1':'wr', 'a3':'  ', 'a2':'  ', 'a5':'  ', 'e8':'bk', 'a7':'  ', 'a6':'  ', 'e5':'bq', 'e4':'  ', 'e7':'  ', 'e6':'  ', 'e1':'wk', 'e3':'  ', 'e2':'  ', 'a4':'  '}
 TEST_POSITION3 = {'h5':'  ', 'g2':'  ', 'f8':'  ', 'g5':'  ', 'd8':'  ', 'd4':'  ', 'c6':'  ', 'e2':'  ', 'b6':'  ', 'd3':'  ', 'b3':'  ', 'f1':'  ', 'a8':'br', 'a7':'  ', 'b1':'  ', 'f3':'  ', 'a6':'  ', 'a2':'  ', 'b2':'  ', 'h6':'  ', 'e3':'  ', 'f6':'  ', 'b7':'wr', 'd5':'  ', 'e4':'wn', 'd6':'  ', 'g7':'  ', 'e6':'  ', 'f2':'  ', 'g6':'  ', 'h7':'  ', 'c1':'  ', 'f4':'  ', 'd2':'  ', 'g1':'  ', 'a1':'wr', 'e8':'bk', 'c8':'  ', 'e5':'bq', 'e7':'  ', 'a4':'  ', 'h4':'  ', 'b5':'wb', 'c3':'bn', 'b4':'  ', 'g3':'  ', 'f7':'  ', 'c7':'  ', 'h1':'wr', 'h8':'  ', 'g8':'  ', 'a3':'  ', 'a5':'  ', 'f5':'  ', 'c4':'  ', 'e1':'wk', 'd7':'bb', 'g4':'  ', 'b8':'  ', 'h2':'  ', 'd1':'  ', 'h3':'  ', 'c5':'  ', 'c2':'  '}
+TEST_POSITION3_NOE4 = {'h5':'  ', 'g2':'  ', 'f8':'  ', 'g5':'  ', 'd8':'  ', 'd4':'  ', 'c6':'  ', 'e2':'  ', 'b6':'  ', 'd3':'  ', 'b3':'  ', 'f1':'  ', 'a8':'br', 'a7':'  ', 'b1':'  ', 'f3':'  ', 'a6':'  ', 'a2':'  ', 'b2':'  ', 'h6':'  ', 'e3':'  ', 'f6':'  ', 'b7':'wr', 'd5':'  ', 'e4':'  ', 'd6':'  ', 'g7':'  ', 'e6':'  ', 'f2':'  ', 'g6':'  ', 'h7':'  ', 'c1':'  ', 'f4':'  ', 'd2':'  ', 'g1':'  ', 'a1':'wr', 'e8':'bk', 'c8':'  ', 'e5':'bq', 'e7':'  ', 'a4':'  ', 'h4':'  ', 'b5':'wb', 'c3':'bn', 'b4':'  ', 'g3':'  ', 'f7':'  ', 'c7':'  ', 'h1':'wr', 'h8':'  ', 'g8':'  ', 'a3':'  ', 'a5':'  ', 'f5':'  ', 'c4':'  ', 'e1':'wk', 'd7':'bb', 'g4':'  ', 'b8':'  ', 'h2':'  ', 'd1':'  ', 'h3':'  ', 'c5':'  ', 'c2':'  '}
 TWO_KINGS_POSITION = {'h5':'  ', 'g2':'  ', 'f8':'  ', 'g5':'  ', 'd8':'  ', 'd4':'  ', 'c6':'  ', 'e2':'  ', 'b6':'  ', 'd3':'  ', 'b3':'  ', 'f1':'  ', 'a8':'  ', 'a7':'  ', 'b1':'  ', 'f3':'  ', 'a6':'  ', 'a2':'  ', 'b2':'  ', 'h6':'  ', 'e3':'  ', 'f6':'  ', 'b7':'  ', 'd5':'  ', 'e4':'  ', 'd6':'  ', 'g7':'  ', 'e6':'  ', 'f2':'  ', 'g6':'  ', 'h7':'  ', 'c1':'  ', 'f4':'  ', 'd2':'  ', 'g1':'  ', 'a1':'  ', 'e8':'  ', 'c8':'  ', 'e5':'wk', 'e7':'  ', 'a4':'  ', 'h4':'  ', 'b5':'  ', 'c3':'  ', 'b4':'  ', 'g3':'  ', 'f7':'  ', 'c7':'  ', 'h1':'  ', 'h8':'bk', 'g8':'  ', 'a3':'  ', 'a5':'  ', 'f5':'  ', 'c4':'  ', 'e1':'  ', 'd7':'  ', 'g4':'  ', 'b8':'  ', 'h2':'  ', 'd1':'  ', 'h3':'  ', 'c5':'  ', 'c2':'  '}
 
 class PieceTest(unittest.TestCase):
@@ -232,10 +234,7 @@ class BoardTest(unittest.TestCase):
         self.assertIn('O-O-O', [ z.notation for z in test_board.state['e1'].naive_moves() ])
 
     def test_determining_checks(self):
-        test_board = Board(TEST_POSITION2)
-        test_board.remove_piece('e4')
-        # because `.remove_piece('e4')` is called directly, `.process_ctions` is never called to gen the heat map (same with initial spawn)
-        test_board.update_all_heat()
+        test_board = Board(TEST_POSITION2_NOE4)
         # |br|  |bb|bq|bk|bb|bn|  |
         # |  |wr|  |bb|  |  |  |  |
         # |  |  |  |  |  |  |  |  |
@@ -254,55 +253,60 @@ class BoardTest(unittest.TestCase):
     def test_find_checkers(self):
         test_board = Board(TEST_POSITION2)
         self.assertEqual([], test_board.find_checkers('e1', 'b'))
-
         black_queen = test_board.state['e5']
-        backup_ne4 = test_board.state['e4']
-        test_board.remove_piece('e4')
-        test_board.update_all_heat()
+        white_knight = test_board.state['e4']
+        wk_move = Move(white_knight, 'm', 'g5', 'Ng5')
+        test_board.execute_move(wk_move)
         # |br|  |bb|bq|bk|bb|bn|  |
         # |  |wr|  |bb|  |  |  |  |
         # |  |  |  |  |  |  |  |  |
-        # |  |wb|  |  |bq|  |  |  |
+        # |  |wb|  |  |bq|  |wn|  |
         # |  |  |  |  |  |  |  |  |
         # |  |  |bn|  |  |  |  |  |
         # |  |  |  |  |  |  |  |  |
         # |wr|wn|wb|wq|wk|wb|  |wr|
         self.assertEqual([black_queen], test_board.find_checkers('e1', 'b'))
 
-        test_board.relocate_piece('c3', 'e3')
-        test_board.update_all_heat()
+        black_knight = test_board.state['c3']
+        bk_fake_move = Move(black_knight, 'm', 'e3', 'Ne3')
+        test_board.execute_move(bk_fake_move)
         # |br|  |bb|bq|bk|bb|bn|  |
         # |  |wr|  |bb|  |  |  |  |
         # |  |  |  |  |  |  |  |  |
-        # |  |wb|  |  |bq|  |  |  |
+        # |  |wb|  |  |bq|  |wn|  |
         # |  |  |  |  |  |  |  |  |
         # |  |  |  |  |bn|  |  |  |
         # |  |  |  |  |  |  |  |  |
         # |wr|wn|wb|wq|wk|wb|  |wr|
         self.assertEqual([], test_board.find_checkers('e1', 'b'))
 
-        test_board.relocate_piece('e3', 'c2')
-        test_board.update_all_heat()
-        black_knight = test_board.state['c2']
+        # black_knight = test_board.state['c2']
+        bk_move = Move(black_knight, 'm', 'c2', 'Nc2')
+        test_board.execute_move(bk_move)
         # |br|  |bb|bq|bk|bb|bn|  |
         # |  |wr|  |bb|  |  |  |  |
         # |  |  |  |  |  |  |  |  |
-        # |  |wb|  |  |bq|  |  |  |
+        # |  |wb|  |  |bq|  |wn|  |
         # |  |  |  |  |  |  |  |  |
         # |  |  |  |  |  |  |  |  |
         # |  |  |bn|  |  |  |  |  |
         # |wr|wn|wb|wq|wk|wb|  |wr|
         self.assertEqual(set([black_queen, black_knight]), set(test_board.find_checkers('e1', 'b')) )
 
-        test_board.relocate_piece('a8', 'g1')
-        test_board.remove_piece('f1')
-        test_board.update_all_heat()
-        black_rook = test_board.state['g1']
+        white_bishop = test_board.state['f1']
+        wb_move = Move(white_bishop, 'm', 'h3', 'Bh3')
+        test_board.execute_move(wb_move)
+        black_rook = test_board.state['a8']
+        br_move = Move(black_rook, 'm', 'g1', 'Rg1')
+        test_board.execute_move(br_move)
+        # test_board.relocate_piece('a8', 'g1')
+        # test_board.remove_piece('f1')
+        # test_board.update_all_heat()
         # |  |  |bb|bq|bk|bb|bn|  |
         # |  |wr|  |bb|  |  |  |  |
         # |  |  |  |  |  |  |  |  |
-        # |  |wb|  |  |bq|  |  |  |
-        # |  |  |  |  |  |  |  |  |
+        # |  |wb|  |  |bq|  |wn|  |
+        # |  |  |  |  |  |  |  |wb|
         # |  |  |  |  |  |  |  |  |
         # |  |  |bn|  |  |  |  |  |
         # |wr|wn|wb|wq|wk|  |br|wr|
@@ -466,9 +470,7 @@ class GameTest(unittest.TestCase):
         self.assertEqual(set(['Kd2', 'Kf2', 'Kf1', 'O-O']), set([ z.notation for z in test_game.valid_moves_of_piece_at('e1') ]))
 
     def test_validations_of_covering_moves(self):
-        test_game = Game(board_position=TEST_POSITION3)
-        test_game.board.remove_piece('e4')
-        test_game.board.update_all_heat()
+        test_game = Game(board_position=TEST_POSITION3_NOE4)
         # |br|  |  |  |bk|  |  |  |
         # |  |wr|  |bb|  |  |  |  |
         # |  |  |  |  |  |  |  |  |

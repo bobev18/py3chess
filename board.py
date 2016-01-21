@@ -170,7 +170,10 @@ class Board():
                 if init_state[square] == 'bk':
                     self.black_king = self.state[square]
         self.heat = {'w': [], 'b': []}
-        self.update_all_heat()           # recapture heat needs to be prior to update_incheck, because update_incheck calls find_checkers/pinners, which rely on heat
+        # generate heat
+        for piece in self.all:
+            self.heat[piece.color] = piece.update_heat(self.heat[piece.color])
+        # generate heat needs to be prior to update_incheck, because update_incheck calls find_checkers/pinners, which rely on heat
         self.update_incheck('w')
         self.update_incheck('b')
         # ^^^ the update_incheck order is significant because the self.checkers & self.pinners do not hold separate spaces for each color but are overwritten!!!
@@ -207,9 +210,7 @@ class Board():
             self.black.append(new_piece)
         index = BOARD_KEY_INDEX[location]
         self.hashstate = self.hashstate[:index] + new_piece.hashtype + self.hashstate[index+1:]
-        test = set(affected)
-        test = test.union([new_piece])
-        return list(affected)
+        return set(affected).union([new_piece])
 
     def remove_piece(self, location_):
         if isinstance(location_, Piece):
@@ -235,11 +236,9 @@ class Board():
             self.white.remove(piece)
         else:
             self.black.remove(piece)
-
         # cleat the heat from the piece being removed:
         piece.clear_heat(self.heat[piece.color])
-
-        return affected
+        return set(affected)
 
     def relocate_piece(self, from_, to):
         if isinstance(from_, Piece):
@@ -261,9 +260,9 @@ class Board():
         self.state[to] = piece
         self.state[origin] = None
         piece.init_moves()
-        from_affected = self.find_blockers(origin)
+        origin_affected = self.find_blockers(origin)
         to_affected = self.find_blockers(to)
-        affected = from_affected + to_affected
+        affected = origin_affected + to_affected
 
         for other_piece in affected:
             if piece != other_piece:
@@ -275,9 +274,7 @@ class Board():
         self.hashstate = self.hashstate[:index] + piece.hashtype + self.hashstate[index+1:]
         index = BOARD_KEY_INDEX[origin]
         self.hashstate = self.hashstate[:index] + ' ' + self.hashstate[index+1:]
-        test = set(affected)
-        test = test.union([piece])
-        return list(test)
+        return set(affected).union([piece])
 
     def process_actions(self, actions):
         # common routine of the exec_move and undo_move
@@ -285,26 +282,20 @@ class Board():
             affected_set = set()
             affected = getattr(self, act[0])(*act[1])
             if affected:
-                affected_set = affected_set.union(set(affected))
+                affected_set = affected_set.union(affected)
         return affected_set
-
-    def update_all_heat(self):
-        for piece in self.all:
-            self.heat[piece.color] = piece.update_heat(self.heat[piece.color])
-
-    def update_affected_blockage_n_heat(self, affected):
-        for piece in affected:
-            for blocker in self.find_blockers(piece.location):
-                piece.block(blocker.location)
-
-            self.heat[piece.color] = piece.update_heat(self.heat[piece.color])
 
     undo_actions = process_actions
 
     def execute_move(self, move):
         # the function that applies actions to the piece set (and thus the board)
         actions, undo = move.actions()
-        self.update_affected_blockage_n_heat(self.process_actions(actions))
+        # update blockage and heat of the affected pieces
+        for piece in self.process_actions(actions):
+            for blocker in self.find_blockers(piece.location):
+                piece.block(blocker.location)
+            self.heat[piece.color] = piece.update_heat(self.heat[piece.color])
+
         undo.append(('set_incheck', [self.white_checked, self.black_checked]))
         self.update_incheck(move.piece.color)
         return undo
@@ -343,7 +334,7 @@ class Board():
             opponent_pieces = self.white
             turns_king_in_check = self.black_checked
 
-        move_is_capture = move.type_ != 't' and move.type_ != 'e' and move.type_ != '+'
+        move_is_capture = move.type_ == 't' or move.type_ == 'e' or move.type_ == '+'
 
         if move.piece.type_ == 'k':
             # king's landing
@@ -364,11 +355,11 @@ class Board():
             for piece in [ z.pinner for z in self.pinners ]:
                 if move.destination != piece.location:
                     piece.unblock(move.origin)
-                    if move_is_capture:                                                    # if capture, landing is already blocked
+                    if not move_is_capture:                                                    # if capture, landing is already blocked
                         piece.block(move.destination)                                      # this is needed to properly threat moves alongside the pinned line
                     consideration_heat = piece.get_heat(consideration_heat)
                     piece.block(move.origin)
-                    if move_is_capture:
+                    if not move_is_capture:
                         piece.unblock(move.destination)
             # consider covering check
             if turns_king_in_check:

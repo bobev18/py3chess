@@ -164,10 +164,6 @@ class Piece():
         else:
             return self.type_.upper()
 
-    def naive_moves(self):
-        results = []
-        # moving to empty square
-
     def naive_m(self, collector):
         # moving to empty square
         for destination in self.raw_moves['m']:
@@ -268,16 +264,9 @@ class Piece():
             if move_type in ['NE','SE','SW','NW','N','E','S','W']:
                 self.paths[move_type] = Path(move_type, self.raw_moves[move_type])
                 self.directions.append(move_type)
-            elif move_type == 't':
-                self.non_directional_heat += self.raw_moves['t']
-                self.non_dir_move_types.append(move_type)
-            # elif move_type == 'e':
-            #     self.non_directional_heat += self.raw_moves['e']
-            #     self.non_dir_move_types.append(move_type)
-            # elif move_type == 'pr':
-            #     self.non_directional_heat += self.raw_moves['pr']
-            #     self.non_dir_move_types.append(move_type)
             else:
+                if move_type == 't':
+                    self.non_directional_heat += self.raw_moves['t']
                 self.non_dir_move_types.append(move_type)
 
     def block(self, square):
