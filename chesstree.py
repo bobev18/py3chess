@@ -77,7 +77,7 @@ class AI:
     def expand_node(self, node):
         # this method is called for nodes that are already executed onto the game object
         game_state = self.game.determine_game_state()   # returns 'mate', 'stalemate', or list of all valid expansions
-        print('node', node, 'gamestate', game_state)
+        # print('node', node, 'gamestate', game_state)
         if isinstance(game_state, list):
             node.subnodes = sorted([ Node(node.path, node.depth_level + 1, not node.color, z) for z in game_state ], key=lambda x: x.path)
             return None
@@ -110,21 +110,12 @@ class AI:
                     optimal_node = sub_node
                     print('new optimum', optimum.value, optimum.optimal_cutoff_path)
 
-                # print('optimal_node KB size', asizeof.asizeof(optimal_node)//1024)
-                # print('sub_node KB size', asizeof.asizeof(sub_node)//1024)
-                # print('game      KB size', asizeof.asizeof(self.game)//1024)
-                # print('score_cache KB sz', asizeof.asizeof(self.score_cache)//1024)
             root_node.subnodes = [optimal_node]
-
-            # print('final root node size (KB)', asizeof.asizeof(root_node)//1024)
             return optimum
 
     def evaluate(self, node, cutoff_depth, upper_level_optimum=None):  # cutoff_depth absolute count of (semi-)turns
-        if str(node.move) == 'Rf1': 
-            print('move origin:', node.move.origin)
-            print('evaluate with arguments:', node, cutoff_depth)
-            if upper_level_optimum: print('upper_level_optimum.value', upper_level_optimum.value)
-            print(self.game.board)
+        # print('evaluate with arguments:', node, cutoff_depth)
+        # if upper_level_optimum: print('upper_level_optimum.value', upper_level_optimum.value)
         if node.depth_level == cutoff_depth:
             # print('cutoff node:::', node.notation, node.path, node.score.value)
             # print('cutoff node    ', asizeof.asizeof(node))

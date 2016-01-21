@@ -129,10 +129,7 @@ class Path():
 
     def unblock(self, square):
         if square in self.squares:
-            if self.designation == 'E' and square == 'd1':
-                print(' -------------------- East path values (before d1 unblock):', self.values)
             self.values[square] = False
-
             self.walk = []
             for square in self.squares:
                 self.walk.append(square)
@@ -170,7 +167,7 @@ class Piece():
     def naive_moves(self):
         results = []
         # moving to empty square
-    
+
     def naive_m(self, collector):
         # moving to empty square
         for destination in self.raw_moves['m']:
@@ -222,7 +219,7 @@ class Piece():
             if opponent and opponent.color != self.color and opponent.type_ == 'p' and not self.board.state[destination]:
                 collector.append(Move(self, 'e', destination, self.notation() + CAPTURE_SIGN + destination, opponent))
         return collector
-    
+
     def naive_c(self, collector):
         # castle
         for destination in self.raw_moves['c']:
@@ -241,11 +238,7 @@ class Piece():
 
     def naive_d(self, collector):
         # directional -- expects blockage to represent board state
-        if str(self) == 'wr@a1':
-            print('entry collector:', collector)
         for direction in self.directions:
-            if str(self) == 'wr@a1' and direction == 'E':
-                print('walk', self.paths[direction].walk)
             for destination in self.paths[direction].walk[:-1]:
                 collector.append(Move(self, 'm', destination, self.notation() + destination))
             destination = self.paths[direction].walk[-1]
@@ -254,8 +247,6 @@ class Piece():
             else:
                 if self.board.state[destination].color != self.color:
                     collector.append(Move(self, 't', destination, self.notation() + CAPTURE_SIGN + destination, self.board.state[destination]))
-        if str(self) == 'wr@a1':
-            print('exit  collector:', collector)
         return collector
 
     def naive_moves(self):
@@ -296,15 +287,10 @@ class Piece():
                 self.paths[direction].block(square)
 
     def unblock(self, square):
-        if str(self) == 'wr@a1' and square == 'd1':
-            print(' -------------------- wr@a1 E before:', self.paths['E'].walk)
         if (self.location, square) in SQ2PATHKEYS:
             direction = SQ2PATH[(self.location, square)]
             if direction in self.directions:
                 self.paths[direction].unblock(square)
-
-        if str(self) == 'wr@a1' and square == 'd1':
-            print(' -------------------- wr@a1 E after:', self.paths['E'].walk)
 
     def clear_heat(self, accumulator):
         # substract old heat form the accumulator

@@ -290,7 +290,7 @@ class Board():
         test = test.union([piece])
         return list(test)
 
-    
+
 
     def process_actions(self, actions):
         # common routine of the exec_move and undo_move
@@ -305,21 +305,21 @@ class Board():
         for piece in self.all:
             self.heat[piece.color] = piece.update_heat(self.heat[piece.color])
 
-    def update_affected_heat(self, affected):
+    def update_affected_blockage_n_heat(self, affected):
         for piece in affected:
+            for blocker in self.find_blockers(piece.location):
+                piece.block(blocker.location)
+
             self.heat[piece.color] = piece.update_heat(self.heat[piece.color])
 
     undo_actions = process_actions
 
     def execute_move(self, move):
         # the function that applies actions to the piece set (and thus the board)
-        print('executing move', move)
         actions, undo = move.actions()
-        self.update_affected_heat(self.process_actions(actions))
+        self.update_affected_blockage_n_heat(self.process_actions(actions))
         undo.append(('set_incheck', [self.white_checked, self.black_checked]))
         self.update_incheck(move.piece.color)
-        print(self)
-        print(self.heatness())
         return undo
 
     def set_incheck(self, white_is_in_check, black_is_in_check):
