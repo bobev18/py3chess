@@ -265,3 +265,7 @@ OK there is conceptual issue with 'affected' approach:
 Conceptual issue with directional portion of 'naive_moves' to be based off path.walks
 once a piece is moved it should allow walk only up to the next block, however the blocks are only applied for affected pieces, instead of to self.all, thus the unblock allows the entire direction, and disregards blockers that might have been hidden. (Previously this was covered by 'naive_moves' relying on board.state instead of path.walk)
 FIXED - process dynamic unblocks - seek the new blockers via find_blockers
+
+There's still an issue with heat -- seems like pawn's heat output somehow doubles
+FIXED - it was occurring for pawns at positions capable of en passant -- turns out I need just 't' for the non-directional heat accumulation
+

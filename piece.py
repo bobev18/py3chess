@@ -271,12 +271,12 @@ class Piece():
             elif move_type == 't':
                 self.non_directional_heat += self.raw_moves['t']
                 self.non_dir_move_types.append(move_type)
-            elif move_type == 'e':
-                self.non_directional_heat += self.raw_moves['e']
-                self.non_dir_move_types.append(move_type)
-            elif move_type == 'pr':
-                self.non_directional_heat += self.raw_moves['pr']
-                self.non_dir_move_types.append(move_type)
+            # elif move_type == 'e':
+            #     self.non_directional_heat += self.raw_moves['e']
+            #     self.non_dir_move_types.append(move_type)
+            # elif move_type == 'pr':
+            #     self.non_directional_heat += self.raw_moves['pr']
+            #     self.non_dir_move_types.append(move_type)
             else:
                 self.non_dir_move_types.append(move_type)
 
