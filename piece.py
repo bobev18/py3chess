@@ -283,26 +283,24 @@ class Piece():
             if direction in self.directions:
                 self.paths[direction].unblock(square)
 
-    def clear_heat(self, accumulator):
-        # substract old heat form the accumulator
+    def clear_heat(self):
+        # substract old heat form the board.heat
         for hotspot in self.old_heat:
-            accumulator.remove(hotspot)
-        return accumulator
+            self.board.heat[self.color].remove(hotspot)
 
     def recalculate_heat(self):
         self.directional_heat = []
         for path in self.paths.values():
             self.directional_heat += path.walk
 
-    def update_heat(self, accumulator):
+    def update_heat(self):
         # removes old heat, then applys recalculated one
-        self.clear_heat(accumulator)
+        self.clear_heat()
         self.recalculate_heat()
         self.old_heat = self.non_directional_heat + self.directional_heat
-        accumulator += self.old_heat
-        return accumulator
+        self.board.heat[self.color] += self.old_heat
 
-    def get_heat(self, accumulator):
+    def get_heat(self, accumulator):   # this is used for consideration heat in validating, thus should not work on boar.heat
         self.recalculate_heat()
         accumulator += self.non_directional_heat + self.directional_heat
         return accumulator

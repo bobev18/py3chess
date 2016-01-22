@@ -172,7 +172,7 @@ class Board():
         self.heat = {'w': [], 'b': []}
         # generate heat
         for piece in self.all:
-            self.heat[piece.color] = piece.update_heat(self.heat[piece.color])
+            piece.update_heat()
         # generate heat needs to be prior to update_incheck, because update_incheck calls find_checkers/pinners, which rely on heat
         self.update_incheck('w')
         self.update_incheck('b')
@@ -226,7 +226,7 @@ class Board():
             raise MoveException(message)
 
         captured = self.state[location]
-        captured.clear_heat(self.heat[captured.color])
+        captured.clear_heat()
         captured.old_heat = []          # reset the internal heat of the captured piece, because undo will use the same object
         self.state[location] = None
         affected = self.find_blockers(location)
@@ -240,8 +240,6 @@ class Board():
             self.white.remove(piece)
         else:
             self.black.remove(piece)
-        # cleat the heat from the piece being removed:
-        piece.clear_heat(self.heat[piece.color])
         return set(affected)
 
     def relocate_piece(self, from_, to):
@@ -281,7 +279,9 @@ class Board():
         self.hashstate = self.hashstate[:index] + piece.hashtype + self.hashstate[index+1:]
         index = BOARD_KEY_INDEX[origin]
         self.hashstate = self.hashstate[:index] + ' ' + self.hashstate[index+1:]
-        return set(origin_affected).union([piece]) # the actor piece is passed in order to have it's heat recalculated
+        # return set(origin_affected).union([piece]) # the actor piece is passed in order to have it's heat recalculated
+        piece.update_heat()      # the actor piece heat can be updated here
+        return set(origin_affected)
 
     def process_actions(self, actions):
         # common routine of the exec_move and undo_move
@@ -292,21 +292,20 @@ class Board():
                 affected_set = affected_set.union(affected)
         return affected_set
 
-    def undo_move(self, undo_actions):
-        affected = self.process_actions(undo_actions)
+    def process_affected(self, affected):
         for piece in affected:
             for blocker in self.find_blockers(piece.location):
                 piece.block(blocker.location)
-            self.heat[piece.color] = piece.update_heat(self.heat[piece.color])
+            piece.update_heat()
+
+    def undo_move(self, undo_actions):
+        affected = self.process_actions(undo_actions)
+        self.process_affected(affected)
 
     def execute_move(self, move):
-        # the function that applies actions to the piece set (and thus the board)
         actions, undo = move.actions()
-        # update blockage and heat of the affected pieces
-        for piece in self.process_actions(actions):
-            for blocker in self.find_blockers(piece.location):
-                piece.block(blocker.location)
-            self.heat[piece.color] = piece.update_heat(self.heat[piece.color])
+        affected = self.process_actions(actions)
+        self.process_affected(affected)
         undo.append(('set_incheck', [self.white_checked, self.black_checked]))
         self.update_incheck(move.piece.color)
         return undo
