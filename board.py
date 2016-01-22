@@ -210,7 +210,8 @@ class Board():
             self.black.append(new_piece)
         index = BOARD_KEY_INDEX[location]
         self.hashstate = self.hashstate[:index] + new_piece.hashtype + self.hashstate[index+1:]
-        return set(affected).union([new_piece])
+        # return set(affected).union([new_piece])
+        return set()
 
     def remove_piece(self, location_):
         if isinstance(location_, Piece):
@@ -264,17 +265,20 @@ class Board():
         to_affected = self.find_blockers(to)
         affected = origin_affected + to_affected
 
-        for other_piece in affected:
+        for other_piece in origin_affected:
+            if piece != other_piece:
+                other_piece.unblock(origin)
+
+        for other_piece in to_affected:
             if piece != other_piece:
                 other_piece.block(to)
-                other_piece.unblock(origin)
                 piece.block(other_piece.location)
 
         index = BOARD_KEY_INDEX[to]
         self.hashstate = self.hashstate[:index] + piece.hashtype + self.hashstate[index+1:]
         index = BOARD_KEY_INDEX[origin]
         self.hashstate = self.hashstate[:index] + ' ' + self.hashstate[index+1:]
-        return set(affected).union([piece])
+        return set(origin_affected).union([piece]) # the actor piece is passed in order to have it's heat recalculated
 
     def process_actions(self, actions):
         # common routine of the exec_move and undo_move
@@ -428,7 +432,6 @@ class Board():
                 if self.state[hitter]:
                     if self.state[hitter].designation == by_color+'q' or self.state[hitter].designation == by_color+'r':
                         checkers.append(self.state[hitter])
-                        break
                     break  # the direction is blocked if an enemy piece doesnt operate in that direction or own piece
 
         for d in ['NE','SE','SW','NW']:
@@ -437,7 +440,6 @@ class Board():
                 if self.state[hitter]:
                     if self.state[hitter].designation == by_color+'q' or self.state[hitter].designation == by_color+'b':
                         checkers.append(self.state[hitter])
-                        break
                     break  # the direction is blocked if an enemy piece doesnt operate in that direction or own piece
 
         return checkers

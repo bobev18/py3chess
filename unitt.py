@@ -409,7 +409,7 @@ class BoardTest(unittest.TestCase):
         self.assertEqual('wn@c3', repr(test_board.state['c3']))
         self.assertEqual(16, len(test_board.white))
         self.assertEqual(13, len(test_board.black))
-        test_board.undo_actions(undo)
+        test_board.undo_move(undo)
         self.assertIsInstance(test_board.state['c3'], Piece)
         self.assertEqual('bn@c3', repr(test_board.state['c3']))
         self.assertEqual(16, len(test_board.white))

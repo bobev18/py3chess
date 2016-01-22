@@ -136,13 +136,13 @@ class Game():
     def undo_last(self):
         # undo opponent move
         undo = self.undo_stack.pop()
-        self.board.undo_actions(undo)
+        self.board.undo_move(undo)
         temp = self.history.pop()
         temp = self.special_moves.pop()
         self.backtrack.pop()
         # undo last own move
         undo = self.undo_stack.pop()
-        self.board.undo_actions(undo)
+        self.board.undo_move(undo)
         temp = self.history.pop()
         temp = self.special_moves.pop()
         self.backtrack.pop()
