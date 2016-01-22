@@ -71,7 +71,7 @@ class AI:
         if isinstance(game_state, list):
             node.subnodes = sorted([ Node(node.path, node.depth_level + 1, not node.color, z) for z in game_state ], key=lambda x: x.path)
 
-        self.game.board.undo_actions(undo)
+        self.game.board.undo_move(undo)
         return score
 
     def expand_node(self, node):
@@ -114,6 +114,7 @@ class AI:
             return optimum
 
     def evaluate(self, node, cutoff_depth, upper_level_optimum=None):  # cutoff_depth absolute count of (semi-)turns
+        # print('evaluate move', node.move)
         # print('evaluate with arguments:', node, cutoff_depth)
         # if upper_level_optimum: print('upper_level_optimum.value', upper_level_optimum.value)
         if node.depth_level == cutoff_depth:
@@ -151,7 +152,7 @@ class AI:
                         break
 
             # RESTORE GAME TO PREDECESOR NODE
-            self.game.board.undo_actions(undo)
+            self.game.board.undo_move(undo)
             if self.game.turnning_player == self.game.whites_player:
                 self.game.turnning_player = self.game.blacks_player
             else:
@@ -181,6 +182,6 @@ test_game = Game(board_position=position)
 test_ai = AI(3, test_game) # this cutoff value is not used, but the one passed in the evaluate method
 
 # test = test_ai.evaluate_position("w", 3)
-cProfile.run('test = test_ai.evaluate_position("w", 3)')
+cProfile.run('test = test_ai.evaluate_position("w", 4)')
 print(test_game.board)
 print('optimal move with score', test.value, 'and move path:', test.optimal_cutoff_path)

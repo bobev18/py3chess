@@ -269,3 +269,6 @@ FIXED - process dynamic unblocks - seek the new blockers via find_blockers
 There's still an issue with heat -- seems like pawn's heat output somehow doubles
 FIXED - it was occurring for pawns at positions capable of en passant -- turns out I need just 't' for the non-directional heat accumulation
 
+BUG: all considerations along updating blocks after executing moves, fall apart when undo is called, because it directly works with the `process_acctions` method
+BUG: initializing `affected_set` in `process_actions` was in the cycle
+FIXED

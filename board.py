@@ -278,14 +278,19 @@ class Board():
 
     def process_actions(self, actions):
         # common routine of the exec_move and undo_move
+        affected_set = set()
         for act in actions:
-            affected_set = set()
             affected = getattr(self, act[0])(*act[1])
             if affected:
                 affected_set = affected_set.union(affected)
         return affected_set
 
-    undo_actions = process_actions
+    def undo_move(self, undo_actions):
+        affected = self.process_actions(undo_actions)
+        for piece in affected:
+            for blocker in self.find_blockers(piece.location):
+                piece.block(blocker.location)
+            self.heat[piece.color] = piece.update_heat(self.heat[piece.color])
 
     def execute_move(self, move):
         # the function that applies actions to the piece set (and thus the board)
