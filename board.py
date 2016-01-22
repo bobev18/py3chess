@@ -211,7 +211,7 @@ class Board():
         index = BOARD_KEY_INDEX[location]
         self.hashstate = self.hashstate[:index] + new_piece.hashtype + self.hashstate[index+1:]
         # return set(affected).union([new_piece])
-        return set()
+        return set([new_piece]) # ??? to cause heat update?
 
     def remove_piece(self, location_):
         if isinstance(location_, Piece):
@@ -225,6 +225,9 @@ class Board():
             message = 'Trying to move the air at ' + location
             raise MoveException(message)
 
+        captured = self.state[location]
+        captured.clear_heat(self.heat[captured.color])
+        captured.old_heat = []          # reset the internal heat of the captured piece, because undo will use the same object
         self.state[location] = None
         affected = self.find_blockers(location)
         for other_piece in affected:
@@ -304,7 +307,6 @@ class Board():
             for blocker in self.find_blockers(piece.location):
                 piece.block(blocker.location)
             self.heat[piece.color] = piece.update_heat(self.heat[piece.color])
-
         undo.append(('set_incheck', [self.white_checked, self.black_checked]))
         self.update_incheck(move.piece.color)
         return undo

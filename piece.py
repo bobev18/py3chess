@@ -119,7 +119,9 @@ class Path():
         self.squares = squares
         self.values = { z:False for z in squares }
         self.walk = squares
-        # self.walks = [squares]
+
+    # It's true that blocking paths duplicates the functionality of the state, but that is needed to be able to validate moves without execution;
+    #   During validation, we apply the changes of the expected move to the Path.values, to find check results after move gets executed
 
     def block(self, square):
         if square in self.squares:
@@ -284,10 +286,7 @@ class Piece():
     def clear_heat(self, accumulator):
         # substract old heat form the accumulator
         for hotspot in self.old_heat:
-            try:
-                accumulator.remove(hotspot)
-            except ValueError:
-                pass
+            accumulator.remove(hotspot)
         return accumulator
 
     def recalculate_heat(self):

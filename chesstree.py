@@ -77,7 +77,6 @@ class AI:
     def expand_node(self, node):
         # this method is called for nodes that are already executed onto the game object
         game_state = self.game.determine_game_state()   # returns 'mate', 'stalemate', or list of all valid expansions
-        # print('node', node, 'gamestate', game_state)
         if isinstance(game_state, list):
             node.subnodes = sorted([ Node(node.path, node.depth_level + 1, not node.color, z) for z in game_state ], key=lambda x: x.path)
             return None
@@ -119,7 +118,6 @@ class AI:
         # if upper_level_optimum: print('upper_level_optimum.value', upper_level_optimum.value)
         if node.depth_level == cutoff_depth:
             # print('cutoff node:::', node.notation, node.path, node.score.value)
-            # print('cutoff node    ', asizeof.asizeof(node))
             return Score(self.score_node(node), node.path)
         else:
             # PLACE GAME IN THE RELEVANT NODE

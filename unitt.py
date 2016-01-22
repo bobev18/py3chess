@@ -377,14 +377,7 @@ class BoardTest(unittest.TestCase):
         capture_move = [ z for z in e4_moves if z.type_ == 't' ][0]
         self.assertIsInstance(test_board.state['c3'], Piece)
         self.assertEqual('bn@c3', repr(test_board.state['c3']))
-        # undo = test_board.execute_move(capture_move)
-        # # move fails
-        # self.assertIsNone(undo)
-        # ### `execute_move` no longer validates - it assumes the move is prevalidated, thus:
         self.assertFalse(test_board.prevalidate_move(capture_move))
-
-        self.assertEqual('bn@c3', repr(test_board.state['c3']))
-        self.assertEqual('wn@e4', repr(test_board.state['e4']))
 
     def test_undo_move(self):
         test_board = Board(TEST_POSITION1)
@@ -443,14 +436,26 @@ class GameTest(unittest.TestCase):
         self.assertEqual([], test_game.valid_moves_of_piece_at('e4'))
 
         # with checkers & pinners called at the end of execute move, I need to push that to trigger recalculation of the checkers and pinners for the black
-        h1_moves = test_game.valid_moves_of_piece_at('h1')
-        test_game.board.execute_move(h1_moves.pop())
+        Rh2_move = Move(test_game.board.state['h1'], 'm', 'h2', 'Rh2')
+        test_game.board.execute_move(Rh2_move)
         # print(test_game.board)
 
-        #bishop at d7 previously had [('m', 'f5', 'Bf5'),('m', 'g4', 'Bg4'),('m', 'e6', 'Be6'),('t', 'b5', 'Bxb5'),('m', 'c6', 'Bc6'),('m', 'h3', 'Bh3')], but now
+        # naive bishop at d7 has ['Bf5', 'Bg4', 'Be6', 'Bxb5', 'Bc6', 'Bh3']
         self.assertEqual(set(['Bxb5', 'Bc6']), set([ z.notation for z in test_game.valid_moves_of_piece_at('d7') ]))
         #king at e1 -- validated the move to e2 as it's hit by the knight at c3
         self.assertNotIn('Ke2', [ z.notation for z in test_game.valid_moves_of_piece_at('e1') ])
+
+        # move black to switch turn (otherwise white pins are not calculated)
+        test_game.board.execute_move(test_game.board.state['g8'].naive_moves().pop())
+        # confirm e4xc3 fails
+        e4xc3_move = [ z for z in test_game.board.state['e4'].naive_moves() if z.type_ == 't' ][0]
+        self.assertFalse(test_game.board.prevalidate_move(e4xc3_move))
+        # cover the [e5-e4-e1] pin
+        Re2_move = Move(test_game.board.state['h2'], 'm', 'e2', 'Re2')
+        test_game.board.execute_move(Re2_move)
+        # retry e4xc3
+        self.assertTrue(test_game.board.prevalidate_move(e4xc3_move))
+
 
         test_game = Game(board_position=TEST_POSITION3)
         # |br|  |  |  |bk|  |  |  |
