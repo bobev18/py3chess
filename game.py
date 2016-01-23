@@ -44,7 +44,7 @@ class Game():
         self.special_moves = [[False, False, False, False, '']]         # to check past Moves of King or Rooks or enpassant setup
         self.backtrack = []       # past positions - to check for repetition draw
         self.score_cache = {}
-        self.move_cache = {'w': {}, 'b': {}}
+        self.move_cache = {}
         self.state = 'init'
         with open(logfile,'wt') as f:
             self.logfile = f
@@ -130,12 +130,14 @@ class Game():
         # for move in self.board.naive_moves(piece):
         for pre_move in piece.naive_moves():
             # check for the move in cache
-            move_key = (piece.location,) + pre_move
-            if move_key in self.move_cache[self.turnning_player.color].keys():
-                move = self.move_cache[self.turnning_player.color][move_key]
-            else:
+            move_key = (piece.color, piece.location) + pre_move
+            try:
+            # if move_key in self.move_cache.keys():
+                move = self.move_cache[move_key]
+            except KeyError:
+            # else:
                 move = Move(piece, *pre_move)
-                self.move_cache[self.turnning_player.color][move_key] = move
+                self.move_cache[move_key] = move
 
             if self.validate_special_moves(move):
                 if self.board.prevalidate_move(move):
