@@ -82,6 +82,15 @@ INVERSE_HIT_MAP = {
     'h8':{'king': ['h7', 'g7', 'g8'], 'E': [], 'knight': ['f7', 'g6'], 'wpawn': ['g7'], 'NE': [], 'N': [], 'bpawn': [], 'S': ['h7', 'h6', 'h5', 'h4', 'h3', 'h2', 'h1'], 'W': ['g8', 'f8', 'e8', 'd8', 'c8', 'b8', 'a8'], 'SW': ['g7', 'f6', 'e5', 'd4', 'c3', 'b2', 'a1'], 'SE': [], 'NW': []},
 }
 
+def neggate_direction(direction):
+    if direction == 'N': return 'S'
+    if direction == 'S': return 'N'
+    if direction == 'E': return 'W'
+    if direction == 'W': return 'E'
+    if direction == 'NE': return 'SW'
+    if direction == 'SW': return 'NE'
+    if direction == 'SE': return 'NW'
+    if direction == 'NW': return 'SE'
 
 class MoveException(Exception):
     def __init__(self, *args):
@@ -94,11 +103,19 @@ class Pin():
         self.pinnee = pinnee
         self.color = pinnee.color
         self.king_location = king_location
-        self.direction = direction
+        self.direction = neggate_direction(direction)
 
     def __repr__(self):
         return self.pinner.location + '-' + self.pinnee.location + '-' + self.king_location
 
+class Checker():
+    def __init__(self, checker, king_location, direction=None):
+        self.checker = checker
+        self.king_location = king_location
+        if direction:
+            self.direction = neggate_direction(direction)
+        else:
+            self.direction = None
 
 class Board():
     def __init__(self, construction_state={}):
@@ -151,6 +168,23 @@ class Board():
             result += wh + '          |' + bh + '\n'
         return result
 
+    def debug_heatness(self, heat, indent=0):
+        result = '\n'
+        for i in range(8,0,-1):
+            result += ' '*indent + '|'
+            wh = ''
+            bh = ''
+            for j in range(97,105):
+                loc = chr(j)+str(i)
+                if loc in heat:
+                    wh += str(heat.count(loc))
+                else:
+                    wh += ' '
+                wh += '|'
+            result += wh + '\n'
+        return result
+
+
     def export(self):
         return { k: str(v) if v else '  ' for (k,v) in self.state.items() }
 
@@ -164,7 +198,7 @@ class Board():
         # 'state' here should be the input of the constructor, which should be dict of string values!
         for square in init_state.keys():
             if init_state[square] != '  ':
-                self.add_piece(init_state[square][0], init_state[square][1], square)
+                self.add_piece(init_state[square][0], init_state[square][1], square, False)
                 if init_state[square] == 'wk':
                     self.white_king = self.state[square]
                 if init_state[square] == 'bk':
@@ -176,9 +210,9 @@ class Board():
         # generate heat needs to be prior to update_incheck, because update_incheck calls find_checkers/pinners, which rely on heat
         self.update_incheck('w')
         self.update_incheck('b')
-        # ^^^ the update_incheck order is significant because the self.checkers & self.pinners do not hold separate spaces for each color but are overwritten!!!
+        # ^^^ the update_incheck order is significant because the self.checks & self.pinners do not hold separate spaces for each color but are overwritten!!!
 
-    def add_piece(self, color, type_=None, location=None):
+    def add_piece(self, color, type_=None, location=None, not_spawn=True):
         if isinstance(color, Piece):
             new_piece = color
             location = new_piece.location
@@ -199,9 +233,11 @@ class Board():
         self.state[location] = new_piece
         affected = self.find_blockers(location)           # note that determining affected pieces should be after making chage to the self.state !!!
 
-        for old_piece in affected:
-            new_piece.block(old_piece.location)
-            old_piece.block(location)
+        for affectee in affected:
+            new_piece.block(*affectee)
+            self.state[affectee[0]].block(location, neggate_direction(affectee[1]))
+            if not_spawn:
+                self.state[affectee[0]].update_heat()
 
         self.all.append(new_piece)
         if new_piece.color == 'w':
@@ -211,7 +247,9 @@ class Board():
         index = BOARD_KEY_INDEX[location]
         self.hashstate = self.hashstate[:index] + new_piece.hashtype + self.hashstate[index+1:]
         # return set(affected).union([new_piece])
-        return set([new_piece]) # ??? to cause heat update?
+        # return set([new_piece]) # ??? to cause heat update?
+        if not_spawn:
+            new_piece.update_heat()      # the actor piece heat can be updated here
 
     def remove_piece(self, location_):
         if isinstance(location_, Piece):
@@ -229,9 +267,10 @@ class Board():
         captured.clear_heat()
         captured.old_heat = []          # reset the internal heat of the captured piece, because undo will use the same object
         self.state[location] = None
-        affected = self.find_blockers(location)
-        for other_piece in affected:
-            other_piece.unblock(location)
+        affected = self.find_unblockers(location)
+        for affectee in affected.keys():
+            self.state[affectee].unblock(*affected[affectee])
+            self.state[affectee].update_heat()
 
         index = BOARD_KEY_INDEX[location]
         self.hashstate = self.hashstate[:index] + ' ' + self.hashstate[index+1:]
@@ -240,7 +279,7 @@ class Board():
             self.white.remove(piece)
         else:
             self.black.remove(piece)
-        return set(affected)
+        # return set(affected)
 
     def relocate_piece(self, from_, to):
         if isinstance(from_, Piece):
@@ -258,55 +297,37 @@ class Board():
             message = 'Are you blind - there is another piece at that spot: ' + repr(self.state[to])
             raise MoveException(message)
 
-        origin_affected = self.find_blockers(origin)
+        origin_affected = self.find_unblockers(origin)
         piece.location = to
         self.state[to] = piece
         self.state[origin] = None
         piece.init_moves()
         to_affected = self.find_blockers(to)
-        affected = origin_affected + to_affected
+        for affectee in origin_affected.keys():
+            self.state[affectee].unblock(*origin_affected[affectee])
+            self.state[affectee].update_heat()
 
-        for other_piece in origin_affected:
-            if piece != other_piece:
-                other_piece.unblock(origin)
-
-        for other_piece in to_affected:
-            if piece != other_piece:
-                other_piece.block(to)
-                piece.block(other_piece.location)
+        for affectee in to_affected:
+            piece.block(*affectee)
+            self.state[affectee[0]].block(to, neggate_direction(affectee[1]))
+            self.state[affectee[0]].update_heat()
 
         index = BOARD_KEY_INDEX[to]
         self.hashstate = self.hashstate[:index] + piece.hashtype + self.hashstate[index+1:]
         index = BOARD_KEY_INDEX[origin]
         self.hashstate = self.hashstate[:index] + ' ' + self.hashstate[index+1:]
-        # return set(origin_affected).union([piece]) # the actor piece is passed in order to have it's heat recalculated
         piece.update_heat()      # the actor piece heat can be updated here
-        # return set(origin_affected).remove(piece)
-        return set(origin_affected)
 
     def process_actions(self, actions):
         # common routine of the exec_move and undo_move
-        affected_set = set()
         for act in actions:
-            affected = getattr(self, act[0])(*act[1])
-            if affected:
-                affected_set = affected_set.union(affected)
-        return affected_set
+            getattr(self, act[0])(*act[1])
 
-    def process_affected(self, affected):
-        for piece in affected:
-            for blocker in self.find_blockers(piece.location):
-                piece.block(blocker.location)
-            piece.update_heat()
-
-    def undo_move(self, undo_actions):
-        affected = self.process_actions(undo_actions)
-        self.process_affected(affected)
+    undo_move = process_actions
 
     def execute_move(self, move):
         actions, undo = move.actions()
-        affected = self.process_actions(actions)
-        self.process_affected(affected)
+        self.process_actions(actions)
         undo.append(('set_incheck', [self.white_checked, self.black_checked]))
         self.update_incheck(move.piece.color)
         return undo
@@ -319,16 +340,16 @@ class Board():
         if color == 'w':
             self.black_checked = self.is_in_check(self.black_king.location, 'w')
             if self.black_checked:
-                self.checkers = self.find_checkers(self.black_king.location, 'w')
+                self.checks = self.find_checkers(self.black_king.location, 'w')
             else:
-                self.checkers = []
+                self.checks = []
             self.pinners = self.find_pinners(self.black_king.location, 'w')
         else:
             self.white_checked = self.is_in_check(self.white_king.location, 'b')
             if self.white_checked:
-                self.checkers = self.find_checkers(self.white_king.location, 'b')
+                self.checks = self.find_checkers(self.white_king.location, 'b')
             else:
-                self.checkers = []
+                self.checks = []
             self.pinners = self.find_pinners(self.white_king.location, 'b')
 
     def prevalidate_move(self, move):
@@ -363,22 +384,23 @@ class Board():
         else:   # not moving the king
             consideration_heat = []
             # consider discovery
-            for piece in [ z.pinner for z in self.pinners ]:
-                if move.destination != piece.location:
-                    piece.unblock(move.origin)
-                    if not move_is_capture:                                                    # if capture, landing is already blocked
-                        piece.block(move.destination)                                      # this is needed to properly threat moves alongside the pinned line
-                    consideration_heat = piece.get_heat(consideration_heat)
-                    piece.block(move.origin)
+            for pin in self.pinners:
+                if move.destination != pin.pinner.location:
+                    pin.pinner.unblock(move.origin, pin.direction, pin.king_location)       # the limit after unblock will be either the move.destination or the king location
+                                                                                               # if it's move.destination the next block covers it
+                    if not move_is_capture:                                                    # if capture cannot occur on the pin line (landing is already blocked will mean it's not a pin)
+                        pin.pinner.block(move.destination, pin.direction)                  # this is needed to properly threat moves alongside the pinned line
+                    consideration_heat = pin.pinner.get_heat(consideration_heat)
                     if not move_is_capture:
-                        piece.unblock(move.destination)
+                        pin.pinner.unblock(move.destination, pin.direction, move.origin)   # silently fails if move.destination is not on the pin line
+                    pin.pinner.block(move.origin, pin.direction)
             # consider covering check
             if turns_king_in_check:
-                for piece in self.checkers:
-                    if move.destination != piece.location:
-                        piece.block(move.destination)
-                        consideration_heat = piece.get_heat(consideration_heat)
-                        piece.unblock(move.destination)
+                for check in self.checks:
+                    if move.destination != check.checker.location:
+                        check.checker.block(move.destination, check.direction)
+                        consideration_heat = check.checker.get_heat(consideration_heat)
+                        check.checker.unblock(move.destination, check.direction, check.king_location)
 
             if turns_king_location in consideration_heat:
                 return False
@@ -393,39 +415,66 @@ class Board():
             for i in range(len(INVERSE_HIT_MAP[location][d])):
                 hitter = INVERSE_HIT_MAP[location][d][i]
                 if self.state[hitter]:
-                    blockers.append(self.state[hitter])
+                    blockers.append((hitter, d))
                     break
 
         for d in ['NE','SE','SW','NW']:
             for i in range(len(INVERSE_HIT_MAP[location][d])):
                 hitter = INVERSE_HIT_MAP[location][d][i]
                 if self.state[hitter]:
-                    blockers.append(self.state[hitter])
+                    blockers.append((hitter, d))
                     break
 
         return blockers
+
+    def find_unblockers(self, location):
+        unblockers = {'SE': None, 'NE': None, 'W': None, 'SW': None, 'N': None, 'E': None, 'S': None, 'NW': None}
+
+        for d in ['N','E','S','W']:
+            for i in range(len(INVERSE_HIT_MAP[location][d])):
+                hitter = INVERSE_HIT_MAP[location][d][i]
+                if self.state[hitter]:
+                    unblockers[d] = hitter
+                    break
+
+        for d in ['NE','SE','SW','NW']:
+            for i in range(len(INVERSE_HIT_MAP[location][d])):
+                hitter = INVERSE_HIT_MAP[location][d][i]
+                if self.state[hitter]:
+                    unblockers[d] = hitter
+                    break
+
+        results = {}
+        for d in ['N','E','S','W', 'NE','SE','SW','NW']:
+            if unblockers[d]:
+                opposite = neggate_direction(d)
+                if unblockers[opposite]:
+                    results[unblockers[d]] = (location, opposite, unblockers[opposite])
+                else:
+                    results[unblockers[d]] = (location, opposite, None)
+        return results
 
     def find_checkers(self, location, by_color):
         checkers = []
         for hitter in INVERSE_HIT_MAP[location]['knight']:
             if self.state[hitter] and self.state[hitter].designation == by_color+'n':
-                checkers.append(self.state[hitter])
+                checkers.append(Checker(self.state[hitter], location))
                 break
 
         if by_color == 'w':
             for hitter in INVERSE_HIT_MAP[location]['wpawn']:
                 if self.state[hitter] and self.state[hitter].designation == 'wp':
-                    checkers.append(self.state[hitter])
+                    checkers.append(Checker(self.state[hitter], location))
                     break
         else:
             for hitter in INVERSE_HIT_MAP[location]['bpawn']:
                 if self.state[hitter] and self.state[hitter].designation == 'bp':
-                    checkers.append(self.state[hitter])
+                    checkers.append(Checker(self.state[hitter], location))
                     break
 
         for hitter in INVERSE_HIT_MAP[location]['king']:
             if self.state[hitter] and self.state[hitter].designation == by_color+'k':
-                checkers.append(self.state[hitter])
+                checkers.append(Checker(self.state[hitter], location))
                 break
 
         for d in ['N','E','S','W']:
@@ -433,7 +482,7 @@ class Board():
                 hitter = INVERSE_HIT_MAP[location][d][i]
                 if self.state[hitter]:
                     if self.state[hitter].designation == by_color+'q' or self.state[hitter].designation == by_color+'r':
-                        checkers.append(self.state[hitter])
+                        checkers.append(Checker(self.state[hitter], location, d))
                     break  # the direction is blocked if an enemy piece doesnt operate in that direction or own piece
 
         for d in ['NE','SE','SW','NW']:
@@ -441,7 +490,7 @@ class Board():
                 hitter = INVERSE_HIT_MAP[location][d][i]
                 if self.state[hitter]:
                     if self.state[hitter].designation == by_color+'q' or self.state[hitter].designation == by_color+'b':
-                        checkers.append(self.state[hitter])
+                        checkers.append(Checker(self.state[hitter], location, d))
                     break  # the direction is blocked if an enemy piece doesnt operate in that direction or own piece
 
         return checkers

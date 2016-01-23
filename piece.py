@@ -127,14 +127,14 @@ class Path():
             if square in self.walk:
                 self.walk = self.walk[:self.walk.index(square)+1]
 
-    def unblock(self, square):
+    def unblock(self, square, new_block):
         if square in self.squares:
-            self.values[square] = False
-            self.walk = []
-            for square in self.squares:
-                self.walk.append(square)
-                if self.values[square]:
-                    break
+            if not new_block or new_block in self.squares:
+                self.values[square] = False
+                if new_block:
+                    self.walk = self.squares[:self.squares.index(new_block)+1]
+                else:
+                    self.walk = self.squares
 
 class Piece():
     def __init__(self, board, color, type_, location):
@@ -269,17 +269,13 @@ class Piece():
                     self.non_directional_heat += self.raw_moves['t']
                 self.non_dir_move_types.append(move_type)
 
-    def block(self, square):
-        if (self.location, square) in SQ2PATHKEYS:
-            direction = SQ2PATH[(self.location, square)]
-            if direction in self.directions:
-                self.paths[direction].block(square)
+    def block(self, square, direction):
+        if direction in self.paths:
+            self.paths[direction].block(square)
 
-    def unblock(self, square):
-        if (self.location, square) in SQ2PATHKEYS:
-            direction = SQ2PATH[(self.location, square)]
-            if direction in self.directions:
-                self.paths[direction].unblock(square)
+    def unblock(self, square, direction, new_block):
+        if direction in self.paths:
+            self.paths[direction].unblock(square, new_block)
 
     def clear_heat(self):
         # substract old heat form the board.heat

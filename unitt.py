@@ -266,7 +266,7 @@ class BoardTest(unittest.TestCase):
         # |  |  |bn|  |  |  |  |  |
         # |  |  |  |  |  |  |  |  |
         # |wr|wn|wb|wq|wk|wb|  |wr|
-        self.assertEqual([black_queen], test_board.find_checkers('e1', 'b'))
+        self.assertEqual([black_queen], [ z.checker for z in test_board.find_checkers('e1', 'b') ])
 
         black_knight = test_board.state['c3']
         bk_fake_move = Move(black_knight, 'm', 'e3', 'Ne3')
@@ -292,7 +292,7 @@ class BoardTest(unittest.TestCase):
         # |  |  |  |  |  |  |  |  |
         # |  |  |bn|  |  |  |  |  |
         # |wr|wn|wb|wq|wk|wb|  |wr|
-        self.assertEqual(set([black_queen, black_knight]), set(test_board.find_checkers('e1', 'b')) )
+        self.assertEqual(set([black_queen, black_knight]), set([ z.checker for z in test_board.find_checkers('e1', 'b') ]) )
 
         white_bishop = test_board.state['f1']
         wb_move = Move(white_bishop, 'm', 'h3', 'Bh3')
@@ -311,9 +311,9 @@ class BoardTest(unittest.TestCase):
         # |  |  |  |  |  |  |  |  |
         # |  |  |bn|  |  |  |  |  |
         # |wr|wn|wb|wq|wk|  |br|wr|
-        self.assertEqual(set([black_queen, black_knight, black_rook]), set(test_board.find_checkers('e1', 'b')) )
-        self.assertEqual(set(['bq@e5', 'bq@d8', 'br@g1']), set([ str(z) for z in test_board.find_checkers('g5', 'b') ]) )
-        self.assertEqual(set(['bq@e5', 'bq@d8', 'bn@g8']), set([ str(z) for z in test_board.find_checkers('f6', 'b') ]) )
+        self.assertEqual(set([black_queen, black_knight, black_rook]), set([ z.checker for z in test_board.find_checkers('e1', 'b') ]) )
+        self.assertEqual(set(['bq@e5', 'bq@d8', 'br@g1']), set([ str(z.checker) for z in test_board.find_checkers('g5', 'b') ]) )
+        self.assertEqual(set(['bq@e5', 'bq@d8', 'bn@g8']), set([ str(z.checker) for z in test_board.find_checkers('f6', 'b') ]) )
 
     def test_find_pinners(self):
         test_board = Board(TEST_POSITION2)
