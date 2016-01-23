@@ -130,10 +130,10 @@ class Board():
             result += '\n'
         return result
 
-    def heatness(self):
+    def heatness(self, indent=0):
         result = '\n'
         for i in range(8,0,-1):
-            result += '|'
+            result += ' '*indent + '|'
             wh = ''
             bh = ''
             for j in range(97,105):
@@ -258,11 +258,11 @@ class Board():
             message = 'Are you blind - there is another piece at that spot: ' + repr(self.state[to])
             raise MoveException(message)
 
+        origin_affected = self.find_blockers(origin)
         piece.location = to
         self.state[to] = piece
         self.state[origin] = None
         piece.init_moves()
-        origin_affected = self.find_blockers(origin)
         to_affected = self.find_blockers(to)
         affected = origin_affected + to_affected
 
@@ -281,6 +281,7 @@ class Board():
         self.hashstate = self.hashstate[:index] + ' ' + self.hashstate[index+1:]
         # return set(origin_affected).union([piece]) # the actor piece is passed in order to have it's heat recalculated
         piece.update_heat()      # the actor piece heat can be updated here
+        # return set(origin_affected).remove(piece)
         return set(origin_affected)
 
     def process_actions(self, actions):

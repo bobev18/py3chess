@@ -201,7 +201,7 @@ class Player():
         # filter by matching input against generated moves (for the remaining piece candidates)
         notation_filtered = []
         for candidate_piece in relevant_pieces:
-            expansions = [ z for z in candidate_piece.naive_moves() if z.notation == move_input ]
+            expansions = [ z for z in self.game.valid_moves_of_piece(candidate_piece) if z.notation == move_input ]
             notation_filtered.extend(expansions)
         if len(notation_filtered) == 0:
             message = 'input ' + move_input + ' does not match any of the notations generated for the relevant pieces (' + str([ z.notation for z in notation_filtered ]) + ')'

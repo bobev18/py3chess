@@ -1,6 +1,7 @@
 from board import Board
 from piece import Piece
 from player import Player
+from move import Move
 
 INITIAL_POSITION = {
     'a8':'br', 'b8':'bn', 'c8':'bb', 'd8':'bq', 'e8':'bk', 'f8':'bb', 'g8':'bn', 'h8':'br',
@@ -43,6 +44,7 @@ class Game():
         self.special_moves = [[False, False, False, False, '']]         # to check past Moves of King or Rooks or enpassant setup
         self.backtrack = []       # past positions - to check for repetition draw
         self.score_cache = {}
+        self.move_cache = {'w': {}, 'b': {}}
         self.state = 'init'
         with open(logfile,'wt') as f:
             self.logfile = f
@@ -126,7 +128,15 @@ class Game():
     def valid_moves_of_piece(self, piece):
         valid_moves = []
         # for move in self.board.naive_moves(piece):
-        for move in piece.naive_moves():
+        for pre_move in piece.naive_moves():
+            # check for the move in cache
+            move_key = (piece.location,) + pre_move
+            if move_key in self.move_cache[self.turnning_player.color].keys():
+                move = self.move_cache[self.turnning_player.color][move_key]
+            else:
+                move = Move(piece, *pre_move)
+                self.move_cache[self.turnning_player.color][move_key] = move
+
             if self.validate_special_moves(move):
                 if self.board.prevalidate_move(move):
                     valid_moves.append(move)
@@ -162,6 +172,15 @@ class Game():
                 if isinstance(decoded_move, str):  # in ['draw', 'forefit', 'quit', 'exit']:
                     valid_input = decoded_move
                 else:
+                    # print('mv, st, mv in st', decoded_move, self.state, decoded_move in self.state)
+                    # fake_move = [ z for z in self.state if z.notation == decoded_move.notation][0]
+                    # print(' '*10, decoded_move.piece, '?', fake_move.piece, '=', decoded_move.piece == fake_move.piece)
+                    # print(' '*10, decoded_move.origin, '?', fake_move.origin, '=', decoded_move.origin == fake_move.origin)
+                    # print(' '*10, decoded_move.type_[0], '?', fake_move.type_[0], '=', decoded_move.type_[0] == fake_move.type_[0])
+                    # print(' '*10, decoded_move.destination, '?', fake_move.destination, '=', decoded_move.destination == fake_move.destination)
+                    # print(' '*10, str(decoded_move.promote_to), '?', str(fake_move.promote_to), '=', str(decoded_move.promote_to) == str(fake_move.promote_to))
+                    # print(' '*10, str(decoded_move.taken), '?', str(fake_move.taken), '=', str(decoded_move.taken) == str(fake_move.taken))
+                    # print(' '*10, str(decoded_move.catsling_rook), '?', str(fake_move.catsling_rook), '=', str(decoded_move.catsling_rook) == str(fake_move.catsling_rook))
                     if decoded_move in self.state:
                         valid_input = decoded_move
                     else:

@@ -1,5 +1,3 @@
-from move import Move
-
 CAPTURE_SIGN = 'x'
 
 ACT_MAP = {
@@ -170,28 +168,28 @@ class Piece():
         # moving to empty square
         for destination in self.raw_moves['m']:
             if not self.board.state[destination]:
-                collector.append(Move(self, 'm', destination, destination))
+                collector.append(('m', destination, destination))
         return collector
 
     def naive_m2(self, collector):
         # for pawn jumps over empty square
         for destination in self.raw_moves['m2']:
             if not self.board.state[destination] and ((self.color == 'w' and not self.board.state[destination[0]+'3']) or (self.color == 'b' and not self.board.state[destination[0]+'6'])):
-                collector.append(Move(self, 'm2', destination, destination))
+                collector.append(('m2', destination, destination))
         return collector
 
     def naive_mk(self, collector):
         # moving K to empty square
         for destination in self.raw_moves['mk']:
             if not self.board.state[destination]:
-                collector.append(Move(self, 'mk', destination, self.notation() + destination))
+                collector.append(('mk', destination, self.notation() + destination))
         return collector
 
     def naive_t(self, collector):
         # taking non empty square
         for destination in self.raw_moves['t']:
             if self.board.state[destination] and self.board.state[destination].color != self.color:
-                collector.append(Move(self, 't', destination, self.notation() + CAPTURE_SIGN + destination, self.board.state[destination]))
+                collector.append(('t', destination, self.notation() + CAPTURE_SIGN + destination, self.board.state[destination]))
         return collector
 
     def naive_p(self, collector):
@@ -199,7 +197,7 @@ class Piece():
         for destination in self.raw_moves['p']:
             if not self.board.state[destination]:
                 for option in ['N', 'B', 'R', 'Q']:
-                    collector.append(Move(self, 'p', destination, destination + option, option))
+                    collector.append(('p', destination, destination + option, option))
         return collector
 
     def naive_pr(self, collector):
@@ -207,7 +205,7 @@ class Piece():
         for destination in self.raw_moves['pr']:
             if self.board.state[destination] and self.board.state[destination].color != self.color:
                 for option in ['N', 'B', 'R', 'Q']:
-                    collector.append(Move(self, '+', destination, self.notation() + CAPTURE_SIGN + destination + option, [option, self.board.state[destination]]))
+                    collector.append(('+', destination, self.notation() + CAPTURE_SIGN + destination + option, (option, self.board.state[destination])))
         return collector
 
     def naive_e(self, collector):
@@ -215,7 +213,7 @@ class Piece():
         for destination in self.raw_moves['e']:
             opponent = self.board.state[destination[0] + self.location[1]]
             if opponent and opponent.color != self.color and opponent.type_ == 'p' and not self.board.state[destination]:
-                collector.append(Move(self, 'e', destination, self.notation() + CAPTURE_SIGN + destination, opponent))
+                collector.append(('e', destination, self.notation() + CAPTURE_SIGN + destination, opponent))
         return collector
 
     def naive_c(self, collector):
@@ -224,27 +222,27 @@ class Piece():
             if not self.board.state[destination]:
                 if self.color == 'w':
                     if destination[0] == 'g' and self.board.state['h1'] and self.board.state['h1'].designation == 'wr' and not self.board.state['f1']:
-                        collector.append(Move(self, 'c', destination, 'O-O', self.board.state['h1']))
+                        collector.append(('c', destination, 'O-O', self.board.state['h1']))
                     if destination[0] == 'c' and self.board.state['a1'] and self.board.state['a1'].designation == 'wr' and not self.board.state['d1'] and not self.board.state['b1']:
-                        collector.append(Move(self, 'c', destination, 'O-O-O', self.board.state['a1']))
+                        collector.append(('c', destination, 'O-O-O', self.board.state['a1']))
                 else:
                     if destination[0] == 'g' and self.board.state['h8'] and self.board.state['h8'].designation == 'br' and not self.board.state['f8']:
-                        collector.append(Move(self, 'c', destination, 'O-O', self.board.state['h8']))
+                        collector.append(('c', destination, 'O-O', self.board.state['h8']))
                     if destination[0] == 'c' and self.board.state['a8'] and self.board.state['a8'].designation == 'br' and not self.board.state['d8'] and not self.board.state['b8']:
-                        collector.append(Move(self, 'c', destination, 'O-O-O', self.board.state['a8']))
+                        collector.append(('c', destination, 'O-O-O', self.board.state['a8']))
         return collector
 
     def naive_d(self, collector):
         # directional -- expects blockage to represent board state
         for direction in self.directions:
             for destination in self.paths[direction].walk[:-1]:
-                collector.append(Move(self, 'm', destination, self.notation() + destination))
+                collector.append(('m', destination, self.notation() + destination))
             destination = self.paths[direction].walk[-1]
             if not self.board.state[destination]:
-                collector.append(Move(self, 'm', destination, self.notation() + destination))
+                collector.append(('m', destination, self.notation() + destination))
             else:
                 if self.board.state[destination].color != self.color:
-                    collector.append(Move(self, 't', destination, self.notation() + CAPTURE_SIGN + destination, self.board.state[destination]))
+                    collector.append(('t', destination, self.notation() + CAPTURE_SIGN + destination, self.board.state[destination]))
         return collector
 
     def naive_moves(self):

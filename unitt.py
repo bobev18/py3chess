@@ -121,25 +121,25 @@ class BoardTest(unittest.TestCase):
         #pawn capture right
         b2_moves = test_board.state['b2'].naive_moves()
         for move in b2_moves:
-            self.assertIsInstance(move, Move)
-        self.assertEqual(set(['b3', 'b4', 'bxc3']), set([ z.notation for z in b2_moves ]))
+            self.assertIsInstance(move, tuple)
+        self.assertEqual(set(['b3', 'b4', 'bxc3']), set([ z[2] for z in b2_moves ]))
         #pawn capture left
-        self.assertEqual(set(['d4', 'd3', 'dxc3']), set([ z.notation for z in test_board.state['d2'].naive_moves() ]))
+        self.assertEqual(set(['d4', 'd3', 'dxc3']), set([ z[2] for z in test_board.state['d2'].naive_moves() ]))
         #blocked pawn
         self.assertEqual([], test_board.state['c2'].naive_moves())
         e2_moves = test_board.state['e2'].naive_moves()
         self.assertEqual(1, len(e2_moves))
         e2_move = e2_moves[0]
-        self.assertEqual('e3', e2_move.notation)
+        self.assertEqual('e3', e2_move[2])
         #en passant without consideration of last move
-        self.assertIn('gxf6', [ z.notation for z in test_board.state['g5'].naive_moves() ])
+        self.assertIn('gxf6', [ z[2] for z in test_board.state['g5'].naive_moves() ])
         #promote pawn h7
-        self.assertEqual(set(['h8R', 'h8N', 'h8B', 'h8Q', 'hxg8R', 'hxg8N', 'hxg8B', 'hxg8Q']), set([ z.notation for z in test_board.state['h7'].naive_moves() ]))
+        self.assertEqual(set(['h8R', 'h8N', 'h8B', 'h8Q', 'hxg8R', 'hxg8N', 'hxg8B', 'hxg8Q']), set([ z[2] for z in test_board.state['h7'].naive_moves() ]))
 
         #knight at e4
-        self.assertEqual(set(['Nf6', 'Ng3', 'Nxc3', 'Nc5', 'Nd6']), set([ z.notation for z in test_board.state['e4'].naive_moves()]))
+        self.assertEqual(set(['Nf6', 'Ng3', 'Nxc3', 'Nc5', 'Nd6']), set([ z[2] for z in test_board.state['e4'].naive_moves()]))
         #knight at c3
-        self.assertEqual(set(['Nxd1', 'Nxa2', 'Nxe2', 'Nb5', 'Na4', 'Nxb1', 'Nd5', 'Nxe4']), set([ z.notation for z in test_board.state['c3'].naive_moves() ]))
+        self.assertEqual(set(['Nxd1', 'Nxa2', 'Nxe2', 'Nb5', 'Na4', 'Nxb1', 'Nd5', 'Nxe4']), set([ z[2] for z in test_board.state['c3'].naive_moves() ]))
 
     def test_naive_moves_for_bishops(self):
         test_board = Board(TEST_POSITION2)
@@ -153,16 +153,17 @@ class BoardTest(unittest.TestCase):
         # |wr|wn|wb|wq|wk|wb|  |wr|
 
         #white bishop at b5
-        self.assertEqual(set(['Ba4', 'Ba6', 'Bc6', 'Bxd7', 'Bc4', 'Bd3', 'Be2']), set([ z.notation for z in test_board.state['b5'].naive_moves() ]))
+        self.assertEqual(set(['Ba4', 'Ba6', 'Bc6', 'Bxd7', 'Bc4', 'Bd3', 'Be2']), set([ z[2] for z in test_board.state['b5'].naive_moves() ]))
         #bishop at c8
         Bc8_moves = test_board.state['c8'].naive_moves()
         self.assertEqual(1, len(Bc8_moves))
-        self.assertEqual(['t', 'c8', 'b7', 'Bxb7'], [Bc8_moves[0].type_, Bc8_moves[0].origin, Bc8_moves[0].destination, Bc8_moves[0].notation])
+        Bc8_move = Move(test_board.state['c8'], *Bc8_moves[0])
+        self.assertEqual(('t', 'c8', 'b7', 'Bxb7'), (Bc8_move.type_, Bc8_move.origin, Bc8_move.destination, Bc8_move.notation))
 
         #bishop at d7
-        self.assertEqual(set(['Bf5', 'Bg4', 'Be6', 'Bxb5', 'Bc6', 'Bh3']), set([ z.notation for z in test_board.state['d7'].naive_moves() ]))
+        self.assertEqual(set(['Bf5', 'Bg4', 'Be6', 'Bxb5', 'Bc6', 'Bh3']), set([ z[2] for z in test_board.state['d7'].naive_moves() ]))
         #bishop at c1
-        self.assertIn('Be3', [ z.notation for z in test_board.state['c1'].naive_moves() ])
+        self.assertIn('Be3', [ z[2] for z in test_board.state['c1'].naive_moves() ])
 
     def test_naive_moves_for_rooks(self):
         test_board = Board(TEST_POSITION2)
@@ -175,9 +176,9 @@ class BoardTest(unittest.TestCase):
         # |  |  |  |  |  |  |  |  |
         # |wr|wn|wb|wq|wk|wb|  |wr|
         #rook at a8
-        self.assertEqual(set(['Rxa1', 'Ra2', 'Ra3', 'Ra4', 'Ra5', 'Ra6', 'Ra7', 'Rb8']), set([ z.notation for z in test_board.state['a8'].naive_moves() ]))
+        self.assertEqual(set(['Rxa1', 'Ra2', 'Ra3', 'Ra4', 'Ra5', 'Ra6', 'Ra7', 'Rb8']), set([ z[2] for z in test_board.state['a8'].naive_moves() ]))
         #rook at b7
-        self.assertIn('Rxd7', [ z.notation for z in test_board.state['b7'].naive_moves() ])
+        self.assertIn('Rxd7', [ z[2] for z in test_board.state['b7'].naive_moves() ])
 
     def test_naive_moves_for_queens(self):
         test_board = Board(TEST_POSITION2)
@@ -192,9 +193,9 @@ class BoardTest(unittest.TestCase):
 
         #queen at e5
         self.assertEqual(set(['Qe7', 'Qe6', 'Qf6', 'Qg7', 'Qh8', 'Qf5', 'Qg5', 'Qh5', 'Qf4', 'Qg3', 'Qh2', 'Qxe4', 'Qd4', 'Qd5', 'Qc5', 'Qxb5', 'Qd6', 'Qc7', 'Qb8',]),
-            set([ z.notation for z in test_board.state['e5'].naive_moves() ]))
+            set([ z[2] for z in test_board.state['e5'].naive_moves() ]))
         #queen at d1
-        self.assertIn('Qg4', [ z.notation for z in test_board.state['d1'].naive_moves() ])
+        self.assertIn('Qg4', [ z[2] for z in test_board.state['d1'].naive_moves() ])
 
     def test_naive_moves_for_kings(self):
         test_board = Board(TEST_POSITION2)
@@ -209,13 +210,13 @@ class BoardTest(unittest.TestCase):
 
         #king at e8
         self.assertEqual(2, len(test_board.state['e8'].naive_moves()))
-        self.assertIn('Ke7', [ z.notation for z in test_board.state['e8'].naive_moves() ])
-        self.assertIn('Kf7', [ z.notation for z in test_board.state['e8'].naive_moves() ])
+        self.assertIn('Ke7', [ z[2] for z in test_board.state['e8'].naive_moves() ])
+        self.assertIn('Kf7', [ z[2] for z in test_board.state['e8'].naive_moves() ])
         #king at e1
-        self.assertIn('Ke2', [ z.notation for z in test_board.state['e1'].naive_moves() ])
+        self.assertIn('Ke2', [ z[2] for z in test_board.state['e1'].naive_moves() ])
 
         #castling without check validation
-        self.assertNotIn('O-O-O', [ z.notation for z in test_board.state['e8'].naive_moves() ])
+        self.assertNotIn('O-O-O', [ z[2] for z in test_board.state['e8'].naive_moves() ])
         test_board = Board(TEST_POSITION3)
         # |br|  |  |  |bk|  |  |  |
         # |  |wr|  |bb|  |  |  |  |
@@ -226,12 +227,12 @@ class BoardTest(unittest.TestCase):
         # |  |  |  |  |  |  |  |  |
         # |wr|  |  |  |wk|  |  |wr|
         #king at e8
-        self.assertIn('O-O-O', [ z.notation for z in test_board.state['e8'].naive_moves() ])
-        self.assertNotIn('O-O', [ z.notation for z in test_board.state['e8'].naive_moves() ])
+        self.assertIn('O-O-O', [ z[2] for z in test_board.state['e8'].naive_moves() ])
+        self.assertNotIn('O-O', [ z[2] for z in test_board.state['e8'].naive_moves() ])
 
         #king at e1
-        self.assertIn('O-O', [ z.notation for z in test_board.state['e1'].naive_moves() ])
-        self.assertIn('O-O-O', [ z.notation for z in test_board.state['e1'].naive_moves() ])
+        self.assertIn('O-O', [ z[2] for z in test_board.state['e1'].naive_moves() ])
+        self.assertIn('O-O-O', [ z[2] for z in test_board.state['e1'].naive_moves() ])
 
     def test_determining_checks(self):
         test_board = Board(TEST_POSITION2_NOE4)
@@ -353,7 +354,8 @@ class BoardTest(unittest.TestCase):
         # |wr|wn|wb|wq|wk|wb|  |wr|
 
         b1_moves = test_board.state['b1'].naive_moves()
-        capture_move = [ z for z in b1_moves if z.type_ == 't' ][0]
+        capture_move_tuple = [ z for z in b1_moves if z[0] == 't' ][0]
+        capture_move = Move(test_board.state['b1'], *capture_move_tuple)
         self.assertIsInstance(test_board.state['c3'], Piece)
         self.assertEqual('bn@c3', repr(test_board.state['c3']))
         self.assertEqual(14, len(test_board.black))
@@ -374,7 +376,8 @@ class BoardTest(unittest.TestCase):
         # |wr|  |  |  |wk|  |  |wr|
 
         e4_moves = test_board.state['e4'].naive_moves()
-        capture_move = [ z for z in e4_moves if z.type_ == 't' ][0]
+        capture_move_tuple = [ z for z in e4_moves if z[0] == 't' ][0]
+        capture_move = Move(test_board.state['e4'], *capture_move_tuple)
         self.assertIsInstance(test_board.state['c3'], Piece)
         self.assertEqual('bn@c3', repr(test_board.state['c3']))
         self.assertFalse(test_board.prevalidate_move(capture_move))
@@ -391,7 +394,8 @@ class BoardTest(unittest.TestCase):
         # |wr|wn|wb|wq|wk|wb|  |wr|
 
         b1_moves = test_board.state['b1'].naive_moves()
-        capture_move = [ z for z in b1_moves if z.type_ == 't' ][0]
+        capture_move_tuple = [ z for z in b1_moves if z[0] == 't' ][0]
+        capture_move = Move(test_board.state['b1'], *capture_move_tuple)
         self.assertIsInstance(test_board.state['c3'], Piece)
         self.assertEqual('bn@c3', repr(test_board.state['c3']))
         self.assertEqual(16, len(test_board.white))
@@ -446,9 +450,11 @@ class GameTest(unittest.TestCase):
         self.assertNotIn('Ke2', [ z.notation for z in test_game.valid_moves_of_piece_at('e1') ])
 
         # move black to switch turn (otherwise white pins are not calculated)
-        test_game.board.execute_move(test_game.board.state['g8'].naive_moves().pop())
+        some_black_move = Move(test_game.board.state['g8'], *test_game.board.state['g8'].naive_moves().pop())
+        test_game.board.execute_move(some_black_move)
         # confirm e4xc3 fails
-        e4xc3_move = [ z for z in test_game.board.state['e4'].naive_moves() if z.type_ == 't' ][0]
+        e4xc3_move_tuple = [ z for z in test_game.board.state['e4'].naive_moves() if z[0] == 't' ][0]
+        e4xc3_move = Move(test_game.board.state['e4'], *e4xc3_move_tuple)
         self.assertFalse(test_game.board.prevalidate_move(e4xc3_move))
         # cover the [e5-e4-e1] pin
         Re2_move = Move(test_game.board.state['h2'], 'm', 'e2', 'Re2')
@@ -468,7 +474,7 @@ class GameTest(unittest.TestCase):
         # |wr|  |  |  |wk|  |  |wr|
 
         #king at e1 should not expand queen side castle due to N@c3 hitting d1
-        naive_moves = set([ z.notation for z in test_game.board.state['e1'].naive_moves() ])
+        naive_moves = set([ z[2] for z in test_game.board.state['e1'].naive_moves() ])
         valid_moves = set([ z.notation for z in test_game.valid_moves_of_piece_at('e1') ])
         self.assertTrue(set(['O-O-O']), naive_moves - valid_moves)
 
@@ -757,7 +763,7 @@ class TemporaryGameTest(unittest.TestCase):
 
         moves_for_black = []
         for candidate_piece in test_game.board.black:
-            expansions = [ z.notation for z in candidate_piece.naive_moves() ]
+            expansions = [ z[2] for z in candidate_piece.naive_moves() ]
             moves_for_black.extend(expansions)
 
         self.assertEqual(len(set(moves_for_black)), len(moves_for_black)) # true if all generated notations are unique
