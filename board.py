@@ -373,30 +373,37 @@ class Board():
 
         if move_piece.type_ == 'k':
             # king's landing
-            is_in_check = self.is_in_check(move.destination, opposite_color)
+            if self.is_in_check(move.destination, opposite_color):
+                return False
+            is_in_check = False
             if move.type_ == 'c':
                 # king's origin
-                is_in_check = is_in_check or self.is_in_check(move.origin, opposite_color)
+                if turns_king_in_check:
+                    return False
                 if move.notation.count('O') == 2:
                     jump_over = 'f' + castle_row
                 else:
                     jump_over = 'd' + castle_row
                 # jump over
-                is_in_check = is_in_check or self.is_in_check(jump_over, opposite_color)
-            return not is_in_check   # False == invalid move
+                if self.is_in_check(jump_over, opposite_color):
+                    return False
+            return True
         else:   # not moving the king
-            is_in_check = False
             # consider discovery
             for pin in self.pinners:
-                is_in_check = is_in_check or move_piece == pin.pinnee and move.destination != pin.pinner.location and move.destination not in pin.pinner.paths[pin.direction].squares
+                if move_piece == pin.pinnee and move.destination != pin.pinner.location and move.destination not in pin.pinner.paths[pin.direction].squares:
+                    return False
             # consider covering check
             if turns_king_in_check:
                 for check in self.checks:
                     if check.checker.paths:
-                        is_in_check = is_in_check or move.destination != check.checker.location and check.direction in check.checker.paths and move.destination not in check.checker.paths[check.direction].walk
+                        if move.destination != check.checker.location and check.direction in check.checker.paths and move.destination not in check.checker.paths[check.direction].walk:
+                            return False
                     else:
-                        is_in_check = is_in_check or move.destination != check.checker.location
-            return not is_in_check
+                        if move.destination != check.checker.location:
+                            return False
+
+            return True
 
     def is_in_check(self, location, by_color):
         return self.heat[by_color][location] != 0
