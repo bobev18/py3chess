@@ -355,8 +355,8 @@ class Board():
                 self.checks = []
             self.pinners = self.find_pinners(self.white_king.location, 'b')
 
-    def prevalidate_move(self, move):
-        if move.piece.color == 'w':
+    def prevalidate_move(self, move_piece, move):
+        if move_piece.color == 'w':
             opposite_color = 'b'
             castle_row = '1'
             turns_king_location = self.white_king.location
@@ -371,7 +371,7 @@ class Board():
 
         move_is_capture = move.type_ == 't' or move.type_ == 'e' or move.type_ == '+'
 
-        if move.piece.type_ == 'k':
+        if move_piece.type_ == 'k':
             # king's landing
             is_in_check = self.is_in_check(move.destination, opposite_color)
             if move.type_ == 'c':
@@ -388,7 +388,7 @@ class Board():
             is_in_check = False
             # consider discovery
             for pin in self.pinners:
-                is_in_check = is_in_check or move.piece == pin.pinnee and move.destination != pin.pinner.location and move.destination not in pin.pinner.paths[pin.direction].squares
+                is_in_check = is_in_check or move_piece == pin.pinnee and move.destination != pin.pinner.location and move.destination not in pin.pinner.paths[pin.direction].squares
             # consider covering check
             if turns_king_in_check:
                 for check in self.checks:
@@ -397,72 +397,6 @@ class Board():
                     else:
                         is_in_check = is_in_check or move.destination != check.checker.location
             return not is_in_check
-
-    def prevalidate_move_old(self, move, verbose=False):
-        if move.piece.color == 'w':
-            opposite_color = 'b'
-            castle_row = '1'
-            turns_king_location = self.white_king.location
-            opponent_pieces = self.black
-            turns_king_in_check = self.white_checked
-        else:
-            opposite_color = 'w'
-            castle_row = '8'
-            turns_king_location = self.black_king.location
-            opponent_pieces = self.white
-            turns_king_in_check = self.black_checked
-
-        move_is_capture = move.type_ == 't' or move.type_ == 'e' or move.type_ == '+'
-
-        if move.piece.type_ == 'k':
-            # king's landing
-            is_in_check = self.is_in_check(move.destination, opposite_color)
-            if move.type_ == 'c':
-                # king's origin
-                is_in_check = is_in_check or self.is_in_check(move.origin, opposite_color)
-                if move.notation.count('O') == 2:
-                    jump_over = 'f' + castle_row
-                else:
-                    jump_over = 'd' + castle_row
-                # jump over
-                is_in_check = is_in_check or self.is_in_check(jump_over, opposite_color)
-            return not is_in_check   # False == invalid move
-        else:   # not moving the king
-            if verbose:
-                print('pinners', self.pinners)
-                print('checks', self.checks)
-            consideration_heat = []
-            # consider discovery
-            for pin in self.pinners:
-                if move.destination != pin.pinner.location:
-                    pin.pinner.unblock(move.origin, pin.direction, pin.king_location)       # the limit after unblock will be either the move.destination or the king location
-                                                                                               # if it's move.destination the next block covers it
-                    if not move_is_capture:                                                    # if capture cannot occur on the pin line (landing is already blocked will mean it's not a pin)
-                        pin.pinner.block(move.destination, pin.direction)                  # this is needed to properly threat moves alongside the pinned line
-                    consideration_heat = pin.pinner.get_heat(consideration_heat)
-                    if verbose:
-                        print(self.debug_heatness(consideration_heat))
-                    if not move_is_capture:
-                        pin.pinner.unblock(move.destination, pin.direction, move.origin)   # silently fails if move.destination is not on the pin line
-                    pin.pinner.block(move.origin, pin.direction)
-            # consider covering check
-            if turns_king_in_check:
-                for check in self.checks:
-                    if move.destination != check.checker.location:
-                        check.checker.block(move.destination, check.direction)
-                        consideration_heat = check.checker.get_heat(consideration_heat)
-                        if verbose:
-                            print(self.debug_heatness(consideration_heat))
-                        check.checker.unblock(move.destination, check.direction, check.king_location)
-
-            if verbose:
-                print('turns_king_location', turns_king_location, 'final heat')
-                print(self.debug_heatness(consideration_heat, 4))
-                print('K in heat', turns_king_location in consideration_heat)
-                
-            if turns_king_location in consideration_heat:
-                return False
-            return True
 
     def is_in_check(self, location, by_color):
         return location in self.heat[by_color]

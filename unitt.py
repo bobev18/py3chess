@@ -380,7 +380,7 @@ class BoardTest(unittest.TestCase):
         capture_move = Move(test_board.state['e4'], *capture_move_tuple)
         self.assertIsInstance(test_board.state['c3'], Piece)
         self.assertEqual('bn@c3', repr(test_board.state['c3']))
-        self.assertFalse(test_board.prevalidate_move(capture_move))
+        self.assertFalse(test_board.prevalidate_move(test_board.state['e4'], capture_move))
 
     def test_undo_move(self):
         test_board = Board(TEST_POSITION1)
@@ -455,7 +455,7 @@ class GameTest(unittest.TestCase):
         # confirm e4xc3 fails
         e4xc3_move_tuple = [ z for z in test_game.board.state['e4'].naive_moves() if z[0] == 't' ][0]
         e4xc3_move = Move(test_game.board.state['e4'], *e4xc3_move_tuple)
-        self.assertFalse(test_game.board.prevalidate_move(e4xc3_move))
+        self.assertFalse(test_game.board.prevalidate_move(test_game.board.state['e4'], e4xc3_move))
         # cover the [e5-e4-e1] pin
         Re2_move = Move(test_game.board.state['h2'], 'm', 'e2', 'Re2')
         test_game.board.execute_move(Re2_move)
@@ -464,12 +464,12 @@ class GameTest(unittest.TestCase):
         test_game.board.execute_move(Ng8_move)
 
         # retry e4xc3
-        self.assertTrue(test_game.board.prevalidate_move(e4xc3_move))
+        self.assertTrue(test_game.board.prevalidate_move(test_game.board.state['e4'], e4xc3_move))
 
         Nd6_move = Move(test_game.board.state['e4'], 'm', 'd6', 'Nd6')
         test_game.board.execute_move(Nd6_move)
 
-        self.assertFalse(test_game.board.prevalidate_move(Nh3_move))
+        self.assertFalse(test_game.board.prevalidate_move(test_game.board.state['g8'], Nh3_move))
 
 
 
@@ -678,18 +678,18 @@ class GameTest(unittest.TestCase):
         # |wr|  |  |  |wk|  |  |wr|
 
         decoded_move = test_game.whites_player.decode_move('Ke2')
-        self.assertFalse(test_game.board.prevalidate_move(decoded_move))
+        self.assertFalse(test_game.board.prevalidate_move(test_game.board.state['e1'], decoded_move))
 
         some_other_white_move = test_game.whites_player.decode_move('Nd4')
-        self.assertTrue(test_game.board.prevalidate_move(some_other_white_move))
+        self.assertTrue(test_game.board.prevalidate_move(test_game.board.state['e2'], some_other_white_move))
         test_game.board.execute_move(some_other_white_move)
 
         knight_away_move = test_game.blacks_player.decode_move('Nxb5')
-        self.assertTrue(test_game.board.prevalidate_move(knight_away_move))
+        self.assertTrue(test_game.board.prevalidate_move(test_game.board.state['c3'], knight_away_move))
         test_game.board.execute_move(knight_away_move)
 
         decoded_move = test_game.whites_player.decode_move('Ke2')
-        self.assertTrue(test_game.board.prevalidate_move(decoded_move))
+        self.assertTrue(test_game.board.prevalidate_move(test_game.board.state['e1'], decoded_move))
         test_game.board.execute_move(decoded_move)
 
     def test_heat(self):
