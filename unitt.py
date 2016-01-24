@@ -450,8 +450,8 @@ class GameTest(unittest.TestCase):
         self.assertNotIn('Ke2', [ z.notation for z in test_game.valid_moves_of_piece_at('e1') ])
 
         # move black to switch turn (otherwise white pins are not calculated)
-        some_black_move = Move(test_game.board.state['g8'], *test_game.board.state['g8'].naive_moves().pop())
-        test_game.board.execute_move(some_black_move)
+        Nh3_move = Move(test_game.board.state['g8'], 'm', 'h3', 'Nh3')
+        test_game.board.execute_move(Nh3_move)
         # confirm e4xc3 fails
         e4xc3_move_tuple = [ z for z in test_game.board.state['e4'].naive_moves() if z[0] == 't' ][0]
         e4xc3_move = Move(test_game.board.state['e4'], *e4xc3_move_tuple)
@@ -459,6 +459,10 @@ class GameTest(unittest.TestCase):
         # cover the [e5-e4-e1] pin
         Re2_move = Move(test_game.board.state['h2'], 'm', 'e2', 'Re2')
         test_game.board.execute_move(Re2_move)
+        # move black to switch turn (otherwise white pins are not calculated)
+        Ng8_move = Move(test_game.board.state['h3'], 'm', 'g8', 'Ng8')
+        test_game.board.execute_move(Ng8_move)
+
         # retry e4xc3
         self.assertTrue(test_game.board.prevalidate_move(e4xc3_move))
 
