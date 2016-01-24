@@ -125,7 +125,7 @@ class Board():
         self.white = []
         self.black = []
         self.all = []
-        self.heat = {'w': [], 'b': []}
+        self.heat = {'w': { z:0 for z in ORDERED_BOARD_KEYS }, 'b': { z:0 for z in ORDERED_BOARD_KEYS }}
         self.state = EMPTYBOARD.copy()
         self.hashstate = ' '*64
         if construction_state == {}:
@@ -158,12 +158,12 @@ class Board():
             bh = ''
             for j in range(97,105):
                 loc = chr(j)+str(i)
-                if loc in self.heat['w']:
-                    wh += str(self.heat['w'].count(loc))
+                if self.heat['w'][loc] != 0:
+                    wh += str(self.heat['w'][loc])
                 else:
                     wh += ' '
-                if loc in self.heat['b']:
-                    bh += str(self.heat['b'].count(loc))
+                if self.heat['b'][loc] != 0:
+                    bh += str(self.heat['b'][loc])
                 else:
                     bh += ' '
                 wh += '|'
@@ -206,7 +206,7 @@ class Board():
                     self.white_king = self.state[square]
                 if init_state[square] == 'bk':
                     self.black_king = self.state[square]
-        self.heat = {'w': [], 'b': []}
+        self.heat = {'w': { z:0 for z in ORDERED_BOARD_KEYS }, 'b': { z:0 for z in ORDERED_BOARD_KEYS }}
         # generate heat
         for piece in self.all:
             piece.update_heat()
@@ -399,7 +399,7 @@ class Board():
             return not is_in_check
 
     def is_in_check(self, location, by_color):
-        return location in self.heat[by_color]
+        return self.heat[by_color][location] != 0
 
     def find_blockers(self, location):
         blockers = []
