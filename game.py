@@ -131,17 +131,40 @@ class Game():
         for pre_move in piece.naive_moves():
             # check for the move in cache
             move_key = (piece.color, piece.location) + pre_move
+            cache_used = False
             try:
             # if move_key in self.move_cache.keys():
                 move = self.move_cache[move_key]
+                cache_used = True
             except KeyError:
             # else:
                 move = Move(piece, *pre_move)
                 self.move_cache[move_key] = move
 
+            move.piece = piece
             if self.validate_special_moves(move):
                 if self.board.prevalidate_move(move):
                     valid_moves.append(move)
+                # v1 = self.board.prevalidate_move(move)
+                # v2 = self.board.prevalidate_move_old(move)
+                # if v1 != v2:
+                #     print(self.board)
+                #     print(self.board.heatness())
+                #     print('turning color', self.turnning_player.color, 'move.piece.color', move.piece.color)
+                #     print("turn''s K location, based on move.piece.color")
+                #     if move.piece.color == 'w':
+                #         print(self.board.white_king.location)
+                #     else:
+                #         print(self.board.black_king.location)
+
+                #     print()
+                #     print('piece', piece, 'pre_move', pre_move, 'move', move.piece, move, 'cache_used', cache_used)
+                #     print('new validation', v1, ' VS old validation', v2)
+                #     print('re-call old validation')
+                #     # self.board.prevalidate_move_old(move, True)
+                #     print('-'*30)
+                # if v1:
+                #     valid_moves.append(move)
 
         return valid_moves
 

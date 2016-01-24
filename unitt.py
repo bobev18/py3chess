@@ -466,6 +466,12 @@ class GameTest(unittest.TestCase):
         # retry e4xc3
         self.assertTrue(test_game.board.prevalidate_move(e4xc3_move))
 
+        Nd6_move = Move(test_game.board.state['e4'], 'm', 'd6', 'Nd6')
+        test_game.board.execute_move(Nd6_move)
+
+        self.assertFalse(test_game.board.prevalidate_move(Nh3_move))
+
+
 
         test_game = Game(board_position=TEST_POSITION3)
         # |br|  |  |  |bk|  |  |  |
@@ -804,6 +810,104 @@ class TemporaryGameTest(unittest.TestCase):
         test_game.whites_player.simulate(['Kd1', '2.Qd2', 'Qe1',         'Qc2', 'Qc1', 'Qd2', 'Qe1', 'Qe2', 'Qe1', 'exit'])
         test_game.blacks_player.simulate(['Qd5', 'Qh1+', 'undo', 'Qb3+', 'Qb7', 'Qd5', 'Qh1', 'Qh5', 'Qh1', 'Qd5', 'exit'])
         self.assertEqual('player w left the game', test_game.start(verbose=False))
+
+
+    def test_validate_pin_of_cached_ambiguous_move(self):
+        # one sequence of moves get's move Rbd1 cached with Move.piece as the rook coming form f1. Then undo few moves and
+        #  follow another squence that allows rook from a1 to be able to execute Rbd1. Pin check references the cached Move.piece.location thus fails
+        position = {'e2':'  ','c8':'  ','e1':'  ','b6':'  ','e8':'bk','e7':'  ','g5':'  ','b1':'wq','a2':'  ','g6':'  ','e6':'  ','f6':'  ','h4':'  ','h7':'bp','g1':'wk','a5':'wp','b2':'  ','d3':'wp','c1':'  ','e3':'  ','c4':'  ','a6':'bp','a4':'  ','d8':'  ','f3':'wp','a8':'br','d2':'  ','c6':'  ','c7':'bp','g8':'  ','d1':'  ','f2':'wp','f1':'wr','g3':'  ','g2':'  ','b8':'  ','c2':'wp','f8':'  ','b4':'bq','b7':'bp','f5':'  ','f4':'  ','d4':'bp','h3':'wp','a3':'  ','c3':'  ','b3':'  ','d7':'  ','b5':'  ','e4':'wn','h6':'  ','d5':'  ','h2':'  ','h8':'br','a1':'wr','h1':'  ','g4':'  ','g7':'bp','h5':'  ','c5':'  ','a7':'bb','f7':'bp','e5':'  ','d6':'  '}
+        test_game = Game(board_position=position)
+        game_state = test_game.determine_game_state()
+
+        Qb2_move = [ z for z in game_state if z.notation == 'Qb2'][0]
+        undo1 = test_game.board.execute_move(Qb2_move)
+        test_game.undo_stack.append(undo1)
+        test_game.turnning_player = test_game.blacks_player
+        test_game.record_history(Qb2_move)
+        game_state = test_game.determine_game_state()
+
+        Qxb2_move = [ z for z in game_state if z.notation == 'Qxb2'][0]
+        undo2 = test_game.board.execute_move(Qxb2_move)
+        test_game.undo_stack.append(undo2)
+        test_game.turnning_player = test_game.whites_player
+        test_game.record_history(Qxb2_move)
+        game_state = test_game.determine_game_state()
+
+        Rfb1_move = [ z for z in game_state if z.notation == 'Rb1' and z.origin == 'f1'][0]
+        undo3 = test_game.board.execute_move(Rfb1_move)
+        test_game.undo_stack.append(undo3)
+        test_game.turnning_player = test_game.blacks_player
+        test_game.record_history(Rfb1_move)
+        game_state = test_game.determine_game_state()
+
+        Qxc2_move = [ z for z in game_state if z.notation == 'Qxc2'][0]
+        undo4 = test_game.board.execute_move(Qxc2_move)
+        test_game.undo_stack.append(undo2)
+        test_game.turnning_player = test_game.whites_player
+        test_game.record_history(Qxc2_move)
+        game_state = test_game.determine_game_state()
+
+        # print('UNDOIT')
+
+        test_game.board.undo_move(undo4)
+        test_game.history.pop()
+        test_game.special_moves.pop()
+        test_game.backtrack.pop()
+
+        test_game.board.undo_move(undo3)
+        test_game.history.pop()
+        test_game.special_moves.pop()
+        test_game.backtrack.pop()
+
+        test_game.board.undo_move(undo2)
+        test_game.history.pop()
+        test_game.special_moves.pop()
+        test_game.backtrack.pop()
+        
+        test_game.board.undo_move(undo1)
+        test_game.history.pop()
+        test_game.special_moves.pop()
+        test_game.backtrack.pop()
+
+        game_state = test_game.determine_game_state()
+
+        Qe1_move = [ z for z in game_state if z.notation == 'Qe1'][0]
+        undo1 = test_game.board.execute_move(Qe1_move)
+        test_game.turnning_player = test_game.blacks_player
+        test_game.record_history(Qe1_move)
+        game_state = test_game.determine_game_state()
+
+        Qxe1_move = [ z for z in game_state if z.notation == 'Qxe1'][0]
+        undo4 = test_game.board.execute_move(Qxe1_move)
+        test_game.turnning_player = test_game.whites_player
+        test_game.record_history(Qxe1_move)
+        game_state = test_game.determine_game_state()
+
+        Rab1_move = [ z for z in game_state if z.notation == 'Rb1' and z.origin == 'a1'][0]
+        undo3 = test_game.board.execute_move(Rab1_move)
+        test_game.turnning_player = test_game.blacks_player
+        test_game.record_history(Rab1_move)
+        game_state = test_game.determine_game_state()
+        
+        Bb6_move = [ z for z in game_state if z.notation == 'Bb6'][0]
+        undo2 = test_game.board.execute_move(Bb6_move)
+        test_game.turnning_player = test_game.whites_player
+        test_game.record_history(Bb6_move)
+        game_state = test_game.determine_game_state()
+
+        valids = test_game.valid_moves_of_piece(test_game.board.state['b1'])
+        self.assertIn('Rd1', [ z.notation for z in valids])
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -272,3 +272,15 @@ FIXED - it was occurring for pawns at positions capable of en passant -- turns o
 BUG: all considerations along updating blocks after executing moves, fall apart when undo is called, because it directly works with the `process_acctions` method
 BUG: initializing `affected_set` in `process_actions` was in the cycle
 FIXED
+
+BUG: discovered that bunch of moves are mis validated in the prior implementation of prevalidate - most likely introduced with move caching
+OLD: 16082256    8.428    0.000    8.428    0.000 {method 'remove' of 'list' objects}
+NEW: 26434470   14.719    0.000   14.719    0.000 {method 'remove' of 'list' objects}
+WONTFIX - since the new implementation fixes that
+
+BUG: non king move validation did non consider non directional checks
+FIXED
+BUG: pin validations didn't restrict for the move piece to be the pinnee (if comparison with move.piece is done, causes mismatch on abiguos moves pulled from cache)
+FIXED & added test
+
+

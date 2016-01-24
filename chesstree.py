@@ -61,6 +61,11 @@ class AI:
 
     def score_node(self, node):
         undo = self.game.board.execute_move(node.move)
+        if self.game.turnning_player == self.game.whites_player:
+            self.game.turnning_player = self.game.blacks_player
+        else:
+            self.game.turnning_player = self.game.whites_player
+        self.game.record_history(node.move)
         game_state = self.game.determine_game_state()
         try:
             score = self.score_cache[self.game.board.hashstate]
@@ -72,6 +77,13 @@ class AI:
             node.subnodes = sorted([ Node(node.path, node.depth_level + 1, not node.color, z) for z in game_state ], key=lambda x: x.path)
 
         self.game.board.undo_move(undo)
+        if self.game.turnning_player == self.game.whites_player:
+            self.game.turnning_player = self.game.blacks_player
+        else:
+            self.game.turnning_player = self.game.whites_player
+        self.game.history.pop()
+        self.game.special_moves.pop()
+        self.game.backtrack.pop()
         return score
 
     def expand_node(self, node):
