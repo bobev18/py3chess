@@ -40,8 +40,12 @@ class AI:
 
     def evaluator(self, game_state, board):
         if game_state == 'mate':
+            print('mate', game_state, 'turning pl', self.game.turnning_player.color)
+            print(board)
             return 1000
         elif game_state == 'stalemate':
+            print('stalemate', game_state, 'turning pl', self.game.turnning_player.color)
+            print(board)
             return 500*self.draw_desire
         else:
             def pieceset_value(pieceset):
@@ -66,6 +70,8 @@ class AI:
         else:
             self.game.turnning_player = self.game.whites_player
         self.game.record_history(node.move)
+        self.game.whites_player.is_in_check = self.game.board.white_checked
+        self.game.blacks_player.is_in_check = self.game.board.black_checked
         game_state = self.game.determine_game_state()
         try:
             score = self.score_cache[self.game.board.hashstate]
@@ -84,16 +90,20 @@ class AI:
         self.game.history.pop()
         self.game.special_moves.pop()
         self.game.backtrack.pop()
+        print('cutoffnode', node, node.move, score)
         return score
 
     def expand_node(self, node):
         # this method is called for nodes that are already executed onto the game object
         game_state = self.game.determine_game_state()   # returns 'mate', 'stalemate', or list of all valid expansions
         if isinstance(game_state, list):
+            print(node, game_state)
             node.subnodes = sorted([ Node(node.path, node.depth_level + 1, not node.color, z) for z in game_state ], key=lambda x: x.path)
             return None
         else:
-            return self.evaluator(game_state, None)    #board is irrelevant because evaluator does not reference board when gamestate type is str
+            print('NOT LIST', node, game_state, self.evaluator(game_state, None))
+            # return self.evaluator(game_state, None)    #board is irrelevant because evaluator does not reference board when gamestate type is str
+            return Score(self.evaluator(game_state, None), node.path)    #board is irrelevant because evaluator does not reference board when gamestate type is str
 
     def evaluate_position(self, by_color, cutoff_depth):
         game_state = self.game.determine_game_state()
@@ -107,7 +117,8 @@ class AI:
                 oposite_color = 'w'
                 color_optimum = min
             root_node = Node('', 0, oposite_color, MoveMockup())
-            game_state.sort(key = lambda x: x.notation)
+            # game_state.sort(key = lambda x: x.notation)
+            game_state = [ z for z in game_state if z.notation == 'Qa3' ]
             first_move = game_state.pop()
             first_node = Node(root_node.path, root_node.depth_level + 1, by_color=='w', first_move)
             optimum = self.evaluate(first_node, cutoff_depth)
@@ -129,7 +140,7 @@ class AI:
         # print('evaluate with arguments:', node, cutoff_depth)
         # if upper_level_optimum: print('upper_level_optimum.value', upper_level_optimum.value)
         if node.depth_level == cutoff_depth:
-            # print('cutoff node:::', node.notation, node.path, node.score.value)
+            # print('cutoff node:::', node.move.notation, node.path, )#node.score.value)
             return Score(self.score_node(node), node.path)
         else:
             # PLACE GAME IN THE RELEVANT NODE
@@ -138,6 +149,8 @@ class AI:
                 self.game.turnning_player = self.game.blacks_player
             else:
                 self.game.turnning_player = self.game.whites_player
+            self.game.whites_player.is_in_check = self.game.board.white_checked
+            self.game.blacks_player.is_in_check = self.game.board.black_checked
             self.game.record_history(node.move)
 
             if len(node.subnodes) == 0:
@@ -174,10 +187,32 @@ class AI:
             return local_optimum
 
 
+# sacrifice pos
+position = {
+    'a8':'  ','b8':'  ','c8':'bk','d8':'br','e8':'  ','f8':'  ','g8':'  ','h8':'br',
+    'a7':'bp','b7':'bp','c7':'  ','d7':'bq','e7':'  ','f7':'bp','g7':'bp','h7':'bp',
+    'a6':'  ','b6':'  ','c6':'  ','d6':'  ','e6':'  ','f6':'bn','g6':'  ','h6':'  ',
+    'a5':'  ','b5':'wn','c5':'bb','d5':'  ','e5':'  ','f5':'  ','g5':'  ','h5':'  ',
+    'a4':'  ','b4':'  ','c4':'wp','d4':'bp','e4':'  ','f4':'wb','g4':'  ','h4':'  ',
+    'a3':'  ','b3':'  ','c3':'  ','d3':'  ','e3':'  ','f3':'  ','g3':'  ','h3':'wq',
+    'a2':'wp','b2':'  ','c2':'  ','d2':'  ','e2':'  ','f2':'wp','g2':'wp','h2':'wp',
+    'a1':'  ','b1':'wr','c1':'  ','d1':'  ','e1':'  ','f1':'wr','g1':'wk','h1':'  '
+}
+# |  |  |bk|br|  |  |  |br|
+# |bb|bp|  |bq|  |bp|bp|bp|
+# |  |  |  |  |  |bn|  |  |
+# |  |wn|bb|  |  |  |  |  |
+# |  |  |wp|bp|  |wb|  |  |
+# |  |  |  |  |  |  |  |wq|
+# |wp|  |  |  |  |wp|wp|wp|
+# |  |wr|  |  |  |wr|wk|  |
 
 
 
-position = {'e2':'  ','c8':'  ','e1':'  ','b6':'  ','e8':'bk','e7':'  ','g5':'  ','b1':'  ','a2':'  ','g6':'  ','e6':'  ','f6':'  ','h4':'  ','h7':'bp','g1':'wk','a5':'wp','b2':'  ','d3':'wp','c1':'  ','e3':'  ','c4':'  ','a6':'bp','a4':'  ','d8':'  ','f3':'wp','a8':'br','d2':'  ','c6':'  ','c7':'bp','g8':'  ','d1':'wq','f2':'wp','f1':'wr','g3':'  ','g2':'  ','b8':'  ','c2':'wp','f8':'  ','b4':'bq','b7':'bp','f5':'  ','f4':'  ','d4':'bp','h3':'wp','a3':'  ','c3':'  ','b3':'  ','d7':'  ','b5':'  ','e4':'wn','h6':'  ','d5':'  ','h2':'  ','h8':'br','a1':'wr','h1':'  ','g4':'  ','g7':'bp','h5':'  ','c5':'  ','a7':'bb','f7':'bp','e5':'  ','d6':'  '}
+
+
+
+# position = {'e2':'  ','c8':'  ','e1':'  ','b6':'  ','e8':'bk','e7':'  ','g5':'  ','b1':'  ','a2':'  ','g6':'  ','e6':'  ','f6':'  ','h4':'  ','h7':'bp','g1':'wk','a5':'wp','b2':'  ','d3':'wp','c1':'  ','e3':'  ','c4':'  ','a6':'bp','a4':'  ','d8':'  ','f3':'wp','a8':'br','d2':'  ','c6':'  ','c7':'bp','g8':'  ','d1':'wq','f2':'wp','f1':'wr','g3':'  ','g2':'  ','b8':'  ','c2':'wp','f8':'  ','b4':'bq','b7':'bp','f5':'  ','f4':'  ','d4':'bp','h3':'wp','a3':'  ','c3':'  ','b3':'  ','d7':'  ','b5':'  ','e4':'wn','h6':'  ','d5':'  ','h2':'  ','h8':'br','a1':'wr','h1':'  ','g4':'  ','g7':'bp','h5':'  ','c5':'  ','a7':'bb','f7':'bp','e5':'  ','d6':'  '}
 # |br|  |  |  |bk|  |  |br|
 # |bb|bp|bp|  |  |bp|bp|bp|
 # |bp|  |  |  |  |  |  |  |
@@ -195,3 +230,5 @@ test_ai = AI(3, test_game) # this cutoff value is not used, but the one passed i
 cProfile.run('test = test_ai.evaluate_position("w", 4)')
 print(test_game.board)
 print('optimal move with score', test.value, 'and move path:', test.optimal_cutoff_path)
+
+
